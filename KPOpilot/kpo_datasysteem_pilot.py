@@ -235,7 +235,7 @@ class KPOpilot:
                 # Create the dockwidget (after translation) and keep reference
                 self.dockwidget = KPOpilotDockWidget()
 
-                self.explorer = KPOExplorer(self.iface, self.dockwidget)
+                self.explorer = KPOExplorer(self.iface, self.dockwidget, self.plugin_dir)
 
             # connect to provide cleanup on closing of dockwidget
             self.dockwidget.closingPlugin.connect(self.onClosePlugin)

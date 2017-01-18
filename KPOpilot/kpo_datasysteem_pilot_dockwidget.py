@@ -50,17 +50,43 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         self.logosLabel.setPixmap(QtGui.QPixmap(self.plugin_dir + '/images/partner_logos.png'))
 
-
+    # General functions
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
         event.accept()
 
+    def setComboBox(self, list):
+        pass
 
-    def getSelectedLayer(self):
-        layer_id = self.layersCombo.currentSlection()
-        return layer_id
+    def setTable(self,dict):
+        pass
 
-    def setLayersList(self, layers_list):
-        self.layersCombo.clear()
-        self.layersCombo.setText(layers_list)
+    def setText(self,list):
+        pass
+
+    def ifShow(self):
+        pass
+
+
+    # Knooppunten
+
+    # Verstedelijking
+
+    # Koppelingen
+
+    # Bereikbaarheid
+
+    # General
+
+
+
+
+
+    # def getSelectedLayer(self):
+    #     layer_id = self.layersCombo.currentSlection()
+    #     return layer_id
+    #
+    # def setLayersList(self, layers_list):
+    #     self.layersCombo.clear()
+    #     self.layersCombo.setText(layers_list)

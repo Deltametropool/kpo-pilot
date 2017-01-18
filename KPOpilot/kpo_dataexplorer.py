@@ -28,26 +28,41 @@ from PyQt4 import QtCore, QtGui, uic
 from qgis.core import *
 from qgis.gui import *
 
+import os.path
+
 from . import utility_functions as uf
 
 class KPOExplorer(QtCore.QObject):
 
-    def __init__(self, iface, dockwidget):
+    def __init__(self, iface, dockwidget, plugin_dir):
 
         self.iface = iface
         self.dlg = dockwidget
+        self.plugin_dir = plugin_dir
 
-        self.dlg.button.clicked.connect(self.updateLayers)
+        # self.dlg.button.clicked.connect(self.updateLayers)
 
-        print 'Hello world!'
+    def clearQInterface(self):
+        pass
+
+    def openQInterface(self):
+        pass
+
+    def readDataModel(self):
+
+        self.iface.project.read(QFileInfo(self.plugin_dir + 'project'))
+        pass
 
 
-    def updateLayers(self):
-        layers = []
-        # fill the list
-        self.dlg.setLayersList(layers)
 
 
-        self.dlg.layersCombo.clear()
-        self.dlg.layersCombo.setText(layers)
-        self.layersCombo.currentSlection()
+
+    # def updateLayers(self):
+    #     layers = []
+    #     # fill the list
+    #     self.dlg.setLayersList(layers)
+    #
+    #
+    #     self.dlg.layersCombo.clear()
+    #     self.dlg.layersCombo.setText(layers)
+    #     self.layersCombo.currentSlection()
