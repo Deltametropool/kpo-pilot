@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>350</width>
-    <height>631</height>
+    <height>620</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,7 +19,7 @@
   <property name="minimumSize">
    <size>
     <width>350</width>
-    <height>464</height>
+    <height>533</height>
    </size>
   </property>
   <property name="autoFillBackground">
@@ -32,7 +32,7 @@
    <string>Knooppunten Ontwikkeling - pilot</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
-   <layout class="QVBoxLayout" name="verticalLayout_7">
+   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="10,1">
     <property name="leftMargin">
      <number>5</number>
     </property>
@@ -59,11 +59,14 @@
       <property name="elideMode">
        <enum>Qt::ElideRight</enum>
       </property>
-      <widget class="QWidget" name="capaciteitTab">
+      <widget class="QWidget" name="knooppuntenTab">
        <attribute name="title">
-        <string>Capaciteit</string>
+        <string>Knooppunten</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,8">
+       <attribute name="toolTip">
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Knooppunten drukte en capaciteit&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5" stretch="1,3">
         <property name="leftMargin">
          <number>5</number>
         </property>
@@ -77,11 +80,11 @@
          <number>5</number>
         </property>
         <item>
-         <widget class="QGroupBox" name="groupBox_2">
+         <widget class="QGroupBox" name="housingDemandBox">
           <property name="title">
-           <string>Demand</string>
+           <string>Housing Demand</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_4">
+          <layout class="QGridLayout" name="gridLayout_2" columnstretch="2,1">
            <property name="leftMargin">
             <number>5</number>
            </property>
@@ -94,66 +97,71 @@
            <property name="bottomMargin">
             <number>5</number>
            </property>
-           <item>
-            <layout class="QGridLayout" name="gridLayout_2" columnstretch="3,0">
-             <item row="0" column="0">
-              <widget class="QComboBox" name="comboBox">
-               <item>
-                <property name="text">
-                 <string>Today's situation</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>WLO Laag 2040</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>WLO Hoog 2040</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Priemus</string>
-                </property>
-               </item>
-              </widget>
+           <item row="0" column="0">
+            <widget class="QComboBox" name="scenarioSelectCombo">
+             <item>
+              <property name="text">
+               <string>Current scenario</string>
+              </property>
              </item>
-             <item row="0" column="1">
-              <widget class="QCheckBox" name="checkBox">
-               <property name="text">
-                <string>Show</string>
-               </property>
-              </widget>
+             <item>
+              <property name="text">
+               <string>WLO Laag 2040</string>
+              </property>
              </item>
-             <item row="1" column="0" colspan="2">
-              <widget class="QPlainTextEdit" name="plainTextEdit">
-               <property name="frameShape">
-                <enum>QFrame::NoFrame</enum>
-               </property>
-               <property name="frameShadow">
-                <enum>QFrame::Plain</enum>
-               </property>
-               <property name="plainText">
-                <string>woningen op loopafstand
-woningen op fietsafstand
-woningen buiten invloedsgebieden
-(verdeeld door nearest station)</string>
-               </property>
-              </widget>
+             <item>
+              <property name="text">
+               <string>WLO Hoog 2040</string>
+              </property>
              </item>
-            </layout>
+             <item>
+              <property name="text">
+               <string>Primus</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="scenarioShowCheck">
+             <property name="text">
+              <string>Show</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QPlainTextEdit" name="scenarioSummaryText">
+             <property name="frameShape">
+              <enum>QFrame::NoFrame</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Plain</enum>
+             </property>
+             <property name="undoRedoEnabled">
+              <bool>false</bool>
+             </property>
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+             <property name="plainText">
+              <string>xxxx totaal huishuiden
+xxxx huishouden op loopafstand
+xxxx huishouden op fietsafstand
+xxxx huishuoden buiten invloedsgebieden</string>
+             </property>
+             <property name="placeholderText">
+              <string>summary of scenario attributes</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_3">
+         <widget class="QGroupBox" name="knooppuntenStatusBox">
           <property name="title">
-           <string>Knooppunten</string>
+           <string>Knooppunten status</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
+          <layout class="QGridLayout" name="gridLayout" columnstretch="2,1">
            <property name="leftMargin">
             <number>5</number>
            </property>
@@ -166,67 +174,73 @@ woningen buiten invloedsgebieden
            <property name="bottomMargin">
             <number>5</number>
            </property>
-           <item>
-            <layout class="QGridLayout" name="gridLayout" rowstretch="0,3,0" columnstretch="3,0">
-             <item row="0" column="0">
-              <widget class="QComboBox" name="comboBox_2">
-               <item>
-                <property name="text">
-                 <string>in- en uitstappers</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>fietsstalingen</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>perron</string>
-                </property>
-               </item>
-              </widget>
+           <item row="0" column="0">
+            <widget class="QComboBox" name="knooppuntenAttributeCombo">
+             <item>
+              <property name="text">
+               <string>in- en uitstappers</string>
+              </property>
              </item>
-             <item row="0" column="1">
-              <widget class="QCheckBox" name="checkBox_2">
-               <property name="text">
-                <string>Show</string>
-               </property>
-              </widget>
+             <item>
+              <property name="text">
+               <string>fietsenstallingen</string>
+              </property>
              </item>
-             <item row="1" column="0" colspan="2">
-              <widget class="QTableWidget" name="tableWidget">
-               <property name="sortingEnabled">
-                <bool>true</bool>
-               </property>
-               <attribute name="horizontalHeaderDefaultSectionSize">
-                <number>80</number>
-               </attribute>
-               <column>
-                <property name="text">
-                 <string>Station</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Kapaciteit</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>% change</string>
-                </property>
-               </column>
-              </widget>
+             <item>
+              <property name="text">
+               <string>perrons</string>
+              </property>
              </item>
-             <item row="2" column="0" colspan="2">
-              <widget class="QPushButton" name="pushButton">
-               <property name="text">
-                <string>Summary Chart</string>
-               </property>
-              </widget>
+             <item>
+              <property name="text">
+               <string>stijgpunten</string>
+              </property>
              </item>
-            </layout>
+             <item>
+              <property name="text">
+               <string>loopstromen</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="knooppuntenShowCheck">
+             <property name="text">
+              <string>Show</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QTableWidget" name="knooppuntenSummaryTable">
+             <property name="sortingEnabled">
+              <bool>true</bool>
+             </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>80</number>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Station</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Value</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>% change</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="knooppuntenChartButton">
+             <property name="text">
+              <string>Summary Chart</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -251,11 +265,17 @@ woningen buiten invloedsgebieden
          <number>5</number>
         </property>
         <item>
-         <widget class="QGroupBox" name="groupBox_5">
-          <property name="title">
-           <string>Intensity</string>
+         <widget class="QGroupBox" name="opportunitiesBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_3">
+          <property name="title">
+           <string>Development opportunities</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_3" columnstretch="2,1,1">
            <property name="leftMargin">
             <number>5</number>
            </property>
@@ -268,66 +288,113 @@ woningen buiten invloedsgebieden
            <property name="bottomMargin">
             <number>5</number>
            </property>
-           <item>
-            <layout class="QGridLayout" name="gridLayout_4" columnstretch="3,0">
-             <item row="0" column="0">
-              <widget class="QComboBox" name="comboBox_3">
-               <item>
-                <property name="text">
-                 <string>population</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>property value (WOZ)</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>built density</string>
-                </property>
-               </item>
-              </widget>
+           <item row="1" column="2">
+            <widget class="QCheckBox" name="intensityShowCheck">
+             <property name="text">
+              <string>Show</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="intensityLabel">
+             <property name="text">
+              <string>Set maximum intensity:</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="3">
+            <widget class="QLabel" name="accessibilityLabel">
+             <property name="text">
+              <string>Set minimum accessibility (PTAL):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QComboBox" name="intensitySelectCombo">
+             <item>
+              <property name="text">
+               <string>population</string>
+              </property>
              </item>
-             <item row="0" column="1">
-              <widget class="QCheckBox" name="checkBox_3">
-               <property name="text">
-                <string>Show</string>
-               </property>
-              </widget>
+             <item>
+              <property name="text">
+               <string>property value (WOZ)</string>
+              </property>
              </item>
-             <item row="1" column="0" colspan="2">
-              <widget class="QCheckBox" name="checkBox_4">
-               <property name="text">
-                <string>Relation with accessibility (PTAL)</string>
-               </property>
-              </widget>
+             <item>
+              <property name="text">
+               <string>built density</string>
+              </property>
              </item>
-             <item row="2" column="0" colspan="2">
-              <widget class="QComboBox" name="comboBox_4">
-               <item>
-                <property name="text">
-                 <string>Accessibility 6, low intensity</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Accessibility 4+, low intensity</string>
-                </property>
-               </item>
-              </widget>
-             </item>
-            </layout>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QSlider" name="intensityValueSlider">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="singleStep">
+              <number>10</number>
+             </property>
+             <property name="value">
+              <number>100</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="tickPosition">
+              <enum>QSlider::TicksBelow</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0">
+            <widget class="QSlider" name="accessibilityValueSlider">
+             <property name="maximum">
+              <number>8</number>
+             </property>
+             <property name="singleStep">
+              <number>1</number>
+             </property>
+             <property name="pageStep">
+              <number>1</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="tickPosition">
+              <enum>QSlider::TicksBelow</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QLabel" name="intensityValueLabel">
+             <property name="text">
+              <string>Value</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="1" colspan="2">
+            <widget class="QLabel" name="accessibilityValueLabel">
+             <property name="text">
+              <string>Value</string>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_4">
+         <widget class="QGroupBox" name="locationsBox">
           <property name="title">
-           <string>Planned locations</string>
+           <string>Development locations</string>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout_2">
+          <layout class="QGridLayout" name="gridLayout_4" rowstretch="0,1,5,0" columnstretch="2,1" rowminimumheight="0,0,0,0">
            <property name="leftMargin">
             <number>5</number>
            </property>
@@ -340,59 +407,61 @@ woningen buiten invloedsgebieden
            <property name="bottomMargin">
             <number>5</number>
            </property>
-           <item>
-            <layout class="QGridLayout" name="gridLayout_3" columnstretch="3,0">
-             <item row="0" column="0">
-              <widget class="QComboBox" name="comboBox_5">
-               <item>
-                <property name="text">
-                 <string>Plancapaciteit</string>
-                </property>
-               </item>
-               <item>
-                <property name="text">
-                 <string>Leegstanden</string>
-                </property>
-               </item>
-              </widget>
+           <item row="0" column="0">
+            <widget class="QComboBox" name="locationSelectCombo">
+             <item>
+              <property name="text">
+               <string>Plancapaciteit</string>
+              </property>
              </item>
-             <item row="0" column="1">
-              <widget class="QCheckBox" name="checkBox_5">
-               <property name="text">
-                <string>Show</string>
-               </property>
-              </widget>
+             <item>
+              <property name="text">
+               <string>Leegstanden</string>
+              </property>
              </item>
-             <item row="2" column="0" colspan="2">
-              <widget class="QPushButton" name="pushButton_2">
-               <property name="text">
-                <string>Summary Chart</string>
-               </property>
-              </widget>
-             </item>
-             <item row="1" column="0" colspan="2">
-              <widget class="QTableWidget" name="tableWidget_2">
-               <attribute name="horizontalHeaderDefaultSectionSize">
-                <number>83</number>
-               </attribute>
-               <column>
-                <property name="text">
-                 <string>Name</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Size</string>
-                </property>
-               </column>
-               <column>
-                <property name="text">
-                 <string>Accessibility</string>
-                </property>
-               </column>
-              </widget>
-             </item>
-            </layout>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="locationShowCheck">
+             <property name="text">
+              <string>Show</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QTextEdit" name="locationSummaryText"/>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QTableWidget" name="locationAttributeTable">
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>80</number>
+             </attribute>
+             <attribute name="horizontalHeaderMinimumSectionSize">
+              <number>30</number>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Name</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Size</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Accessibility</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QPushButton" name="locationChartButton">
+             <property name="text">
+              <string>Summary Chart</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -403,65 +472,368 @@ woningen buiten invloedsgebieden
        <attribute name="title">
         <string>Koppelingen</string>
        </attribute>
-       <widget class="QTableWidget" name="tableWidget_3">
-        <property name="geometry">
-         <rect>
-          <x>30</x>
-          <y>270</y>
-          <width>256</width>
-          <height>192</height>
-         </rect>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="leftMargin">
+         <number>5</number>
         </property>
-       </widget>
-       <widget class="QPushButton" name="pushButton_3">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>480</y>
-          <width>211</width>
-          <height>32</height>
-         </rect>
+        <property name="topMargin">
+         <number>5</number>
         </property>
-        <property name="text">
-         <string>Summary chart</string>
+        <property name="rightMargin">
+         <number>5</number>
         </property>
-       </widget>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="connectionsBox">
+          <property name="title">
+           <string>Connection potential</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7" columnstretch="2,1">
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item row="0" column="0" colspan="2">
+            <widget class="QCheckBox" name="overlapShowCheck">
+             <property name="text">
+              <string>Station influence overlap locations</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QComboBox" name="routesSelectCombo">
+             <item>
+              <property name="text">
+               <string>Routes from stations</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="routesShowCheck">
+             <property name="text">
+              <string>Show</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="importantLocationsBox">
+          <property name="title">
+           <string>Important locations</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_6" columnstretch="2,1" rowminimumheight="0,3,0">
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QComboBox" name="importantSelectCombo">
+             <item>
+              <property name="text">
+               <string>Belangrijk locaties</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="importantShowCheck">
+             <property name="text">
+              <string>Show</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0" colspan="2">
+            <widget class="QTableWidget" name="importantAttributeTable">
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>80</number>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Location</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Stations</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Accessibility</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QPushButton" name="importantChartButton">
+             <property name="text">
+              <string>Summary Chart</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="bereikbaarheidTab">
        <attribute name="title">
         <string>Bereikbaarheid</string>
        </attribute>
-       <widget class="QCheckBox" name="checkBox_6">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>10</y>
-          <width>231</width>
-          <height>20</height>
-         </rect>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="leftMargin">
+         <number>5</number>
         </property>
-        <property name="text">
-         <string>OV accessibility (PTAL)</string>
+        <property name="topMargin">
+         <number>5</number>
         </property>
-       </widget>
-       <widget class="QGroupBox" name="groupBox">
-        <property name="geometry">
-         <rect>
-          <x>70</x>
-          <y>280</y>
-          <width>120</width>
-          <height>80</height>
-         </rect>
+        <property name="rightMargin">
+         <number>5</number>
         </property>
-        <property name="title">
-         <string>OV Frequency</string>
+        <property name="bottomMargin">
+         <number>5</number>
         </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="generalTab">
-       <attribute name="title">
-        <string>General</string>
-       </attribute>
+        <item>
+         <widget class="QGroupBox" name="isochroneBox">
+          <property name="title">
+           <string>Isochrones from stations</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item>
+            <widget class="QCheckBox" name="isochroneWalkCheck">
+             <property name="text">
+              <string>Walking (10 min - 800 m)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="isochroneBikeCheck">
+             <property name="text">
+              <string>Cycling (10 min - 3000 m)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="isochroneOvCheck">
+             <property name="text">
+              <string>OV (10 min)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="ptalBox">
+          <property name="title">
+           <string>OV Accessibility (PTAL)</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1">
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item>
+            <widget class="QComboBox" name="ptalSelectCombo">
+             <item>
+              <property name="text">
+               <string>Levels</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Index</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="ptalShowCheck">
+             <property name="text">
+              <string>Show</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="frequencyBox">
+          <property name="title">
+           <string>OV Frequency</string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_5" columnstretch="2,1">
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item row="0" column="0">
+            <widget class="QComboBox" name="linkSelectCombo">
+             <item>
+              <property name="text">
+               <string>All OV links</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Rail links</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Metro links</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tram links</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Bus links</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Veerboot links</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="linkFrequencyCheck">
+             <property name="text">
+              <string>Show</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QComboBox" name="stopSelectCombo">
+             <item>
+              <property name="text">
+               <string>All OV stops</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Bus stops</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tram stops</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Metro stations</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Rail stations</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Ferry terminals</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="stopFrequencyCheck">
+             <property name="text">
+              <string>Show</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
+            <widget class="QTableWidget" name="stopSummaryTable">
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>50</number>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Stop</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Bus</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Tram</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Metro</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Rail</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
