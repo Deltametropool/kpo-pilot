@@ -56,3 +56,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.closingPlugin.emit()
         event.accept()
 
+
+    def getSelectedLayer(self):
+        layer_id = self.layersCombo.currentSlection()
+        return layer_id
+
+    def setLayersList(self, layers_list):
+        self.layersCombo.clear()
+        self.layersCombo.setText(layers_list)

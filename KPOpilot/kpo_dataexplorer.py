@@ -28,7 +28,7 @@ from PyQt4 import QtCore, QtGui, uic
 from qgis.core import *
 from qgis.gui import *
 
-
+from . import utility_functions as uf
 
 class KPOExplorer(QtCore.QObject):
 
@@ -37,4 +37,17 @@ class KPOExplorer(QtCore.QObject):
         self.iface = iface
         self.dlg = dockwidget
 
+        self.dlg.button.clicked.connect(self.updateLayers)
+
         print 'Hello world!'
+
+
+    def updateLayers(self):
+        layers = []
+        # fill the list
+        self.dlg.setLayersList(layers)
+
+
+        self.dlg.layersCombo.clear()
+        self.dlg.layersCombo.setText(layers)
+        self.layersCombo.currentSlection()
