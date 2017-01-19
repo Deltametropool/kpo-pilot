@@ -32,7 +32,7 @@
    <string>Knooppunten Ontwikkeling - pilot</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
-   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="10,1">
+   <layout class="QVBoxLayout" name="verticalLayout_2" stretch="10">
     <property name="leftMargin">
      <number>5</number>
     </property>
@@ -59,6 +59,55 @@
       <property name="elideMode">
        <enum>Qt::ElideRight</enum>
       </property>
+      <widget class="QWidget" name="introductionTab">
+       <attribute name="title">
+        <string>Introduction</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,8,1">
+        <property name="leftMargin">
+         <number>10</number>
+        </property>
+        <property name="topMargin">
+         <number>10</number>
+        </property>
+        <property name="rightMargin">
+         <number>10</number>
+        </property>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="introductionLabel">
+          <property name="text">
+           <string>Project Summary</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QTextEdit" name="introductionSummaryText">
+          <property name="acceptDrops">
+           <bool>false</bool>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::NoFrame</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Plain</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="logosLabel">
+          <property name="text">
+           <string>This is for the logos</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="knooppuntenTab">
        <attribute name="title">
         <string>Knooppunten</string>
@@ -713,6 +762,38 @@ xxxx huishuoden buiten invloedsgebieden</string>
            <property name="bottomMargin">
             <number>5</number>
            </property>
+           <item row="3" column="0" colspan="2">
+            <widget class="QTableWidget" name="stopSummaryTable">
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>50</number>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Stop</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Bus</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Tram</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Metro</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Rail</string>
+              </property>
+             </column>
+            </widget>
+           </item>
            <item row="0" column="0">
             <widget class="QComboBox" name="linkSelectCombo">
              <item>
@@ -795,36 +876,23 @@ xxxx huishuoden buiten invloedsgebieden</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="0" colspan="2">
-            <widget class="QTableWidget" name="stopSummaryTable">
-             <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>50</number>
-             </attribute>
-             <column>
+           <item row="2" column="0">
+            <widget class="QComboBox" name="frequencyTimeCombo">
+             <item>
               <property name="text">
-               <string>Stop</string>
+               <string>Ochtend spits</string>
               </property>
-             </column>
-             <column>
+             </item>
+             <item>
               <property name="text">
-               <string>Bus</string>
+               <string>Middag dal</string>
               </property>
-             </column>
-             <column>
+             </item>
+             <item>
               <property name="text">
-               <string>Tram</string>
+               <string>Avond spits</string>
               </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Metro</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Rail</string>
-              </property>
-             </column>
+             </item>
             </widget>
            </item>
           </layout>
@@ -832,13 +900,6 @@ xxxx huishuoden buiten invloedsgebieden</string>
         </item>
        </layout>
       </widget>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLabel" name="logosLabel">
-      <property name="text">
-       <string>This is for the logos</string>
-      </property>
      </widget>
     </item>
    </layout>

@@ -60,8 +60,9 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
                                           'fietsstallingen',
                                           'perrons',
                                           'stijgpunten',
-                                          'loopstromen']}
-
+                                          'loopstromen']
+        }
+        # let's not do this for now
         self.gui_naming_english = {}
 
 
@@ -71,15 +72,17 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         for widget in self.children():
             name = widget.objectName()
             if name in self.gui_name_dutch.keys():
-                if isinstance(widget, QComboBox):
+                if isinstance(widget, QtGui.QComboBox):
                     widget.addItems(self.gui_name_dutch[name])
-                if isinstance(widget, QGroupBox):
+                if isinstance(widget, QtGui.QGroupBox):
                     pass
 
+    # we don't need this function because setLanguage does it all
     def setComboBox(self):
-        if self.language = 'dutch':
-            scenarios = self.gui_name_dutch[]
-            self.scenarioSelectCombo.addItems(self.gui_name_dutch)
+        if self.language == 'dutch':
+            pass
+            #scenarios = self.gui_name_dutch[]
+            #self.scenarioSelectCombo.addItems(self.gui_name_dutch)
 
     def setTableField(self, gui_name, dict):
         pass
@@ -104,11 +107,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def onShowKnooppunten(self):
         pass
 
-
+    # we don't need this function because the labels are hardcoded
     def setScenarioSelectCombo(self,scenarios):
         scenarios = ['Huiding scenario', ]
-            self.networkCombo.clear()
-            self.networkCombo.addItems(scenarios)
+        self.networkCombo.clear()
+        self.networkCombo.addItems(scenarios)
 
 
     def updateScenarioSummaryText(self,scenario_summary):
