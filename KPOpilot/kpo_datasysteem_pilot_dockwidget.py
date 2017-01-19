@@ -26,7 +26,6 @@ import os
 from PyQt4 import QtGui, uic
 from PyQt4.QtCore import pyqtSignal
 
-
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
     os.path.dirname(__file__), 'kpo_datasysteem_pilot_dockwidget_base.ui'))
 
@@ -46,11 +45,9 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.setupUi(self)
 
         self.plugin_dir = os.path.dirname(__file__)
-
-
         self.logosLabel.setPixmap(QtGui.QPixmap(self.plugin_dir + '/images/partner_logos.png'))
 
-    # General functions
+
 
     def closeEvent(self, event):
         self.closingPlugin.emit()

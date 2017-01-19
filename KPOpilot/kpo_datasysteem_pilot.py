@@ -79,11 +79,12 @@ class KPOpilot:
         self.toolbar.setObjectName(u'KPOpilot')
 
         #print "** INITIALIZING KPOpilot"
-        if has_pydevd and is_debug:
-            pydevd.settrace('localhost', port=53100, stdoutToServer=True, stderrToServer=True, suspend=False)
 
         self.pluginIsActive = False
         self.dockwidget = None
+
+        if has_pydevd and is_debug:
+            pydevd.settrace('localhost', port=53100, stdoutToServer=True, stderrToServer=True, suspend=False)
 
 
     # noinspection PyMethodMayBeStatic
@@ -234,7 +235,7 @@ class KPOpilot:
             if self.dockwidget == None:
                 # Create the dockwidget (after translation) and keep reference
                 self.dockwidget = KPOpilotDockWidget()
-
+                # create the class that handles layers and map interaction
                 self.explorer = KPOExplorer(self.iface, self.dockwidget, self.plugin_dir)
 
             # connect to provide cleanup on closing of dockwidget

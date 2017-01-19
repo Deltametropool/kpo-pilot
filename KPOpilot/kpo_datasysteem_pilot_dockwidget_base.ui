@@ -148,9 +148,6 @@ xxxx huishouden op loopafstand
 xxxx huishouden op fietsafstand
 xxxx huishuoden buiten invloedsgebieden</string>
              </property>
-             <property name="placeholderText">
-              <string>summary of scenario attributes</string>
-             </property>
             </widget>
            </item>
           </layout>
