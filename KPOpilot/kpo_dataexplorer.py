@@ -44,16 +44,29 @@ class KPOExplorer(QtCore.QObject):
 
         # self.dlg.button.clicked.connect(self.updateLayers)
 
-    def clearQInterface(self):
-        pass
-
-    def openQInterface(self):
-        pass
-
+    '''Initial setup'''
     def readDataModel(self):
-        self.iface.project.read(QFileInfo(self.plugin_dir + 'project'))
-        return self.iface.project.read() # True if successful
+        self.iface.project.read(QFileInfo(self.plugin_dir +'data/project.qgs'))
 
+
+    def getModelLayers(self, geom='all', provider='all'):
+        """Return list of valid QgsVectorLayer in QgsMapCanvas, with specific geometry type and/or data provider"""
+        layers_list = []
+        for layer in iface.mapCanvas().layers():
+            add_layer = False
+            if layer.isValid() and layer.type() == QgsMapLayer.VectorLayer:
+                if layer.hasGeometryType() and (geom is 'all' or layer.geometryType() in geom):
+                    if provider is 'all' or layer.dataProvider().name() in provider:
+                        add_layer = True
+            if add_layer:
+                layers_list.append(layer)
+        return layers_list
+
+    '''Knooppunten'''
+    def setKnooppuntenCombo(self):
+        pass
+
+    # MapTip setup
     def createMapTip(self, layer, fields, mouse_location):
         self.tip = QgsMapTip()
 
@@ -66,13 +79,18 @@ class KPOExplorer(QtCore.QObject):
 
             pointQgs = self.lastMapPosition
             pointQt = self.canvas.mouseLastXY()
-            self.canvas.showMapTip(self.layer, pointQgs, pointQt,
-                                   self.canvas)
+            self.canvas.showMapTip(self.layer, pointQgs, pointQt, self.canvas)
+
+    # Selecting
 
     def setFeatureSelection(self, features, layer):
         if features:
             if layer.isValid():
                 layer.setSelectedFeatures(features)
+
+
+
+    # Canvas control
 
     def setExtentToLayer(self,layer):
         if layer.isValid():
@@ -90,7 +108,6 @@ class KPOExplorer(QtCore.QObject):
         self.QgsMapLayerRegistry.instance().addMapLayer(layer)
         # set the map canvas layer set
         self.canvas.setLayerSet([QgsMapCanvasLayer(layer)])
-        pass
 
 
 

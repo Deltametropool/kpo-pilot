@@ -47,34 +47,109 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.plugin_dir = os.path.dirname(__file__)
         self.logosLabel.setPixmap(QtGui.QPixmap(self.plugin_dir + '/images/partner_logos.png'))
 
+        # Dictionary containing all language in type/element/naming structure
+        self.language = 'dutch'
+        self.gui_name_dutch = {
+            'housingDemandBox': 'Huisaanbod',
+            'knooppuntenStatusBox': 'Knooppunten status',
+            'scenarioSelectBox': ['Huidig scenario',
+                                  'WLO Laag 2040',
+                                  'WLO Hoog 2040',
+                                  'Primus'],
+            'knooppuntenAttributeCombo': ['In- en uitstappers',
+                                          'fietsstallingen',
+                                          'perrons',
+                                          'stijgpunten',
+                                          'loopstromen']}
+
+        self.gui_naming_english = {}
+
+
+    '''General'''
+    # Updating GUI elements
+    def setLanguage(self):
+        for widget in self.children():
+            name = widget.objectName()
+            if name in self.gui_name_dutch.keys():
+                if isinstance(widget, QComboBox):
+                    widget.addItems(self.gui_name_dutch[name])
+                if isinstance(widget, QGroupBox):
+                    pass
+
+    def setComboBox(self):
+        if self.language = 'dutch':
+            scenarios = self.gui_name_dutch[]
+            self.scenarioSelectCombo.addItems(self.gui_name_dutch)
+
+    def setTableField(self, gui_name, dict):
+        pass
+
+    def setTextField(self, gui_name, list):
+        pass
+
+    def setValue(self, gui_name, integer):
+        pass
 
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
         event.accept()
 
-    def setComboBox(self, list):
-        pass
-
-    def setTable(self,dict):
-        pass
-
-    def setText(self,list):
-        pass
 
     def ifShow(self):
         pass
 
 
-    # Knooppunten
+    '''Knooppunten'''
+    def onShowKnooppunten(self):
+        pass
 
-    # Verstedelijking
 
-    # Koppelingen
+    def setScenarioSelectCombo(self,scenarios):
+        scenarios = ['Huiding scenario', ]
+            self.networkCombo.clear()
+            self.networkCombo.addItems(scenarios)
 
-    # Bereikbaarheid
 
-    # General
+    def updateScenarioSummaryText(self,scenario_summary):
+        pass
+
+
+    def showScenario(self):
+        pass
+
+
+    def hideScenario(self):
+        pass
+
+
+    def setKnooppuntenAttributeCombo(self):
+        pass
+
+
+    def showKnooppuntenAttribute(self):
+        pass
+
+
+    def hideKnooppuntenAttribute(self):
+        pass
+
+
+    def updateKnooppuntenSummaryTable(self):
+        pass
+
+    def showKnooppuntenSummaryGraph(self):
+        pass
+
+    '''Verstedelijking'''
+
+
+    '''Koppelingen'''
+
+
+    '''Bereikbaarheid'''
+
+
 
 
 
