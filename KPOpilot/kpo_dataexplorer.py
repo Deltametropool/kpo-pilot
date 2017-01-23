@@ -41,8 +41,8 @@ class KPOExplorer(QtCore.QObject):
         self.plugin_dir = plugin_dir
         self.canvas = self.iface.mapCanvas()
 
-
-        # self.dlg.button.clicked.connect(self.updateLayers)
+        # Signals
+        self.dlg.scenarioSelectBox.activated.connect(self.updateScenarioSummaryText)
 
     '''Initial setup'''
     def readDataModel(self):
@@ -63,8 +63,23 @@ class KPOExplorer(QtCore.QObject):
         return layers_list
 
     '''Knooppunten'''
-    def setKnooppuntenCombo(self):
+    def updateScenarioSummaryText(self):
+        scenario = self.dlg.getScenario()
+
+
+
+    def showScenario(self):
         pass
+
+
+    def hideScenario(self):
+        pass
+
+    '''Verstedelijking'''
+
+    '''Koppelingen'''
+
+    '''Bereikbaarheid'''
 
     # MapTip setup
     def createMapTip(self, layer, fields, mouse_location):
@@ -93,12 +108,7 @@ class KPOExplorer(QtCore.QObject):
     # Canvas control
 
 
-    def showScenario(self):
-        pass
 
-
-    def hideScenario(self):
-        pass
 
     '''General'''
 
@@ -135,8 +145,17 @@ class KPOExplorer(QtCore.QObject):
 
         return value
 
-    def setDataTable(self, table_widget, row, column, entry):
-        table_widget.setItem(row, column, entry)
+
+    def setTextField(self, gui_name, text_list):
+        self.dlg.setTextField(gui_name, text_list)
+
+
+    def setLabelValue(self, gui_name, value):
+        self.dlg.setLabelValue(gui_name, value)
+
+
+    def setDataTable(self, gui_name, row, column, entry):
+        self.dlg.setDataTable(gui_name, row, column, entry)
 
 
     '''Knooppunten'''

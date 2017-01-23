@@ -102,16 +102,32 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 elif isinstance(widget, QtGui.QTabWidget):
                     widget.setHorizontalHeaderLabels(self.gui_name_dutch[name])
 
+    def getWidget(self,gui_name):
+        for widget in self.children():
+            name = widget.objectName()
+            if name == gui_name:
+                return widget
 
-    def setTableField(self, gui_name, dict):
+
+    def setTextField(self, gui_name, text_list):
+        widget = self.getWidget(gui_name)
+        widget.clear()
+        for line in list:
+            widget.append(line)
+
+
+    def setLabelValue(self, gui_name, value):
+        widget = self.getWidget(gui_name)
+        widget.setText(value)
+
+
+    def setDataTable(self, gui_name, row, column, entry):
+        widget = self.getWidget(gui_name)
+        widget.setItem(row, column, entry)
+
+
+    def showGraph(self):
         pass
-
-    def setTextField(self, gui_name, list):
-        pass
-
-    def setValue(self, gui_name, integer):
-        pass
-
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
