@@ -50,6 +50,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # Dictionary containing all language in type/element/naming structure
         self.language = 'dutch'
         self.gui_name_dutch = {
+            'vragenTabWidget' : ['Introductie',
+                                 'Knooppunten',
+                                 'Verstedelijking',
+                                 'Koppelingen',
+                                 'Bereikbaarheid'],
+            'introductionLabel' : 'Project samenvatting',
+            'introductionSummaryText' : '',
             'housingDemandBox': 'Huisaanbod',
             'knooppuntenStatusBox': 'Knooppunten status',
             'scenarioSelectBox': ['Huidig scenario',
@@ -72,17 +79,29 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         for widget in self.children():
             name = widget.objectName()
             if name in self.gui_name_dutch.keys():
-                if isinstance(widget, QtGui.QComboBox):
+                # Labels
+                if isinstance(widget, QtGui.QLabel):
+                    widget.setText(self.gui_name_dutch[name])
+                # GroupBox
+                elif isinstance(widget, QtGui.QGroupBox):
+                    widget.setTitle(self.gui_name_dutch[name])
+                # Tabs
+                elif isinstance(widget, QtGui.QTabWidget):
+                    for index, name in enumerate(self.gui_name_dutch[name]):
+                        widget.setTabText(index, name)
+                # ComboBox
+                elif isinstance(widget, QtGui.QComboBox):
                     widget.addItems(self.gui_name_dutch[name])
-                if isinstance(widget, QtGui.QGroupBox):
-                    pass
+                # CheckBox
+                elif isinstance(widget, QtGui.QCheckBox):
+                    widget.setText(self.gui_name_dutch[name])
+                # Button
+                elif isinstance(widget, QtGui.QPushButton):
+                    widget.setText(self.gui_name_dutch[name])
+                # Table
+                elif isinstance(widget, QtGui.QTabWidget):
+                    widget.setHorizontalHeaderLabels(self.gui_name_dutch[name])
 
-    # we don't need this function because setLanguage does it all
-    def setComboBox(self):
-        if self.language == 'dutch':
-            pass
-            #scenarios = self.gui_name_dutch[]
-            #self.scenarioSelectCombo.addItems(self.gui_name_dutch)
 
     def setTableField(self, gui_name, dict):
         pass
@@ -102,40 +121,16 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def ifShow(self):
         pass
 
+    '''Introductie'''
+    # Is the introduction static?
 
     '''Knooppunten'''
     def onShowKnooppunten(self):
         pass
 
-    # we don't need this function because the labels are hardcoded
-    def setScenarioSelectCombo(self,scenarios):
-        scenarios = ['Huiding scenario', ]
-        self.networkCombo.clear()
-        self.networkCombo.addItems(scenarios)
-
 
     def updateScenarioSummaryText(self,scenario_summary):
-        pass
-
-
-    def showScenario(self):
-        pass
-
-
-    def hideScenario(self):
-        pass
-
-
-    def setKnooppuntenAttributeCombo(self):
-        pass
-
-
-    def showKnooppuntenAttribute(self):
-        pass
-
-
-    def hideKnooppuntenAttribute(self):
-        pass
+        self.scenarioSummaryText.setPlainText(scenario_summary)
 
 
     def updateKnooppuntenSummaryTable(self):

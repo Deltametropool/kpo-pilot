@@ -92,6 +92,16 @@ class KPOExplorer(QtCore.QObject):
 
     # Canvas control
 
+
+    def showScenario(self):
+        pass
+
+
+    def hideScenario(self):
+        pass
+
+    '''General'''
+
     def setExtentToLayer(self,layer):
         if layer.isValid():
             self.canvas.setExtent(layer.extent())
@@ -109,7 +119,34 @@ class KPOExplorer(QtCore.QObject):
         # set the map canvas layer set
         self.canvas.setLayerSet([QgsMapCanvasLayer(layer)])
 
+    def getLayerByName(self, name):
+        layer = None
+        for i in QgsMapLayerRegistry.instance().mapLayers().values():
+            if i.name() == name:
+                layer = i
+        return layer
 
+    def getFeatureValue(self, layer, id_field, id, value_field):
+
+        exp = QgsExpression('%s = %s' % (id_field, id))
+        request = QgsFeatureRequest(exp)
+        fet = layer.getFeatures(request)
+        value = fet[value_field]
+
+        return value
+
+    def setDataTable(self, table_widget, row, column, entry):
+        table_widget.setItem(row, column, entry)
+
+
+    '''Knooppunten'''
+    def setScenarioSummaryTable(self):
+
+
+
+        scenario = self.dlg.getScenario()
+
+        get
 
     # def updateLayers(self):
     #     layers = []
