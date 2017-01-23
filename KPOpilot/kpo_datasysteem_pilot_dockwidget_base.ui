@@ -582,7 +582,7 @@ p, li { white-space: pre-wrap; }
          <number>5</number>
         </property>
         <item>
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="overbelastBox">
           <property name="title">
            <string>Overbelast stations</string>
           </property>
@@ -600,7 +600,7 @@ p, li { white-space: pre-wrap; }
             <number>5</number>
            </property>
            <item>
-            <widget class="QComboBox" name="knooppuntenAttributeCombo_2">
+            <widget class="QComboBox" name="overbelastAttributeCombo">
              <item>
               <property name="text">
                <string>in- en uitstappers</string>
@@ -629,7 +629,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="knooppuntenShowCheck_2">
+            <widget class="QCheckBox" name="overbelastShowCheck">
              <property name="text">
               <string>Show</string>
              </property>
@@ -639,7 +639,7 @@ p, li { white-space: pre-wrap; }
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="connectionsBox">
+         <widget class="QGroupBox" name="overlapBox">
           <property name="title">
            <string>Overlap locations</string>
           </property>
@@ -664,7 +664,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item>
-            <widget class="QTableWidget" name="importantAttributeTable_2">
+            <widget class="QTableWidget" name="overlapAttributeTable">
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>80</number>
              </attribute>
