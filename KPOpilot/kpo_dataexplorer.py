@@ -40,9 +40,20 @@ class KPOExplorer(QtCore.QObject):
         self.dlg = dockwidget
         self.plugin_dir = plugin_dir
         self.canvas = self.iface.mapCanvas()
+        self.legend = self.iface.legendInterface()
 
-        # Signals
+        # Knooppunten
         self.dlg.scenarioSelectBox.activated.connect(self.updateScenarioSummaryText)
+        self.dlg.scenarioShowCheck.stateChanged.connect(self.showScenario)
+        self.dlg.knooppuntenAttributeCombo.activated.connect(self.updateScenarioSummaryText)
+        self.dlg.knooppuntenShowCheck.stateChanged.connect(self.showKnooppunten)
+        self.dlg.knooppuntenChartButton.clicked.connect(self.showKnooppuntenGraph)
+
+        # Verstedelijking
+
+        # Koppeling
+
+        # Bereikbaarheid
 
     '''Initial setup'''
     def readDataModel(self):
@@ -65,21 +76,66 @@ class KPOExplorer(QtCore.QObject):
     '''Knooppunten'''
     def updateScenarioSummaryText(self):
         scenario = self.dlg.getScenario()
+        scenario_summary = {'Huidig':{'total':45324, 'walking':100, 'cycling':30, 'outside':10},
+                            'Hoog': {'total':100, 'walking':90, 'cycling':325, 'outside':10},
+                            'Laag': {'total':200, 'walking':100, 'cycling':60, 'outside':10},
+                            'Primus': {'total':3430, 'walking':100, 'cycling':88, 'outside':10}}
 
+        if self.dlg.language = 'dutch':
+            summary_text = ['%i totaal huishoudens' % scenario_summary[scenario]['total'],
+                            '%i huishoudens op loopafstand' % scenario_summary[scenario]['walking'],
+                            '%i huishoudens op loopafstand' % scenario_summary[scenario]['cycling'],
+                            '%i huishoudens op loopafstand' % scenario_summary[scenario]['outside']]
+
+        self.setTextField('scenarioSummaryText', summary_text)
 
 
     def showScenario(self):
-        pass
+        scenario = self.dlg.getScenario()
+        scenario_layers = {'Huidig': ['ov_stops', 'station_isochrones'],
+                           'Hoog': ['ov_stops'],
+                           'Laag': ['station_isochrones'],
+                           'Primus': []}
+        layers = scenario_layers[scenario]
+        self.showLayersInCanvas(layers)
+
+    def updateScenarioSummaryText(self):
+        self.updateTable('ov_stops', )
+
+    def updateScenarioSummaryText(self):
+        data_layer = self.getLayerByName('ov_stops')
+        data_layer_fields = data_layer.fields()
+
+        table = 'knooppuntenSummaryTable'
+        table_widget = self.dlg.getWidget(table)
+        table_widget.setDataTableSize(data_layer.featureCount())
+        table_headers = table.horizontalHeaders()
+
+        for row, fet in enumerate(data_layer.getFeatures()):
+            for column, name in table_headers:
+                table_widget,setItem(row, column, QTableWidgetItem(fet[name]))
 
 
-    def hideScenario(self):
+
+    def showKnooppunten(self):
         pass
+
+    def showKnooppuntenGraph(self):
+        pass
+
 
     '''Verstedelijking'''
 
     '''Koppelingen'''
 
     '''Bereikbaarheid'''
+
+
+
+
+
+
+    '''General'''
 
     # MapTip setup
     def createMapTip(self, layer, fields, mouse_location):
@@ -97,21 +153,12 @@ class KPOExplorer(QtCore.QObject):
             self.canvas.showMapTip(self.layer, pointQgs, pointQt, self.canvas)
 
     # Selecting
-
     def setFeatureSelection(self, features, layer):
         if features:
             if layer.isValid():
                 layer.setSelectedFeatures(features)
 
-
-
     # Canvas control
-
-
-
-
-    '''General'''
-
     def setExtentToLayer(self,layer):
         if layer.isValid():
             self.canvas.setExtent(layer.extent())
@@ -123,12 +170,16 @@ class KPOExplorer(QtCore.QObject):
                 self.canvast.setExtent(layer.boundingBoxOfSelected())
                 self.canvas.refresh()
 
-    def addLayersToCanvas(self, layers):
-        # add layer to the registry
-        self.QgsMapLayerRegistry.instance().addMapLayer(layer)
-        # set the map canvas layer set
-        self.canvas.setLayerSet([QgsMapCanvasLayer(layer)])
 
+    def showLayersInCanvas(self, layers):
+        current_layers = self.legend.layers()
+        for layer in current_layers:
+            if layer in layers:
+                self.iface.setLayerVisible(layer, True)
+            else:
+                self.iface.setLayerVisible(layer, False)
+
+    # Data reading
     def getLayerByName(self, name):
         layer = None
         for i in QgsMapLayerRegistry.instance().mapLayers().values():
@@ -155,8 +206,21 @@ class KPOExplorer(QtCore.QObject):
 
 
     def setDataTable(self, gui_name, row, column, entry):
-        self.dlg.setDataTable(gui_name, row, column, entry)
+        self.dlg.setDataTableField(gui_name, row, column, entry)
 
+
+    def updateTable(self, data_layer, gui_name):
+        data_layer = self.getLayerByName(data_layer)
+        data_layer_fields = data_layer.fields()
+
+        table = gui_name
+        table_widget = self.dlg.getWidget(table)
+        table_widget.setDataTableSize(data_layer.featureCount())
+        table_headers = table.horizontalHeaders()
+
+        for row, fet in enumerate(data_layer.getFeatures()):
+            for column, name in table_headers:
+                table_widget,setItem(row, column, QTableWidgetItem(fet[name]))
 
     '''Knooppunten'''
     def setScenarioSummaryTable(self):

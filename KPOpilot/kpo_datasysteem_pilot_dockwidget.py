@@ -118,11 +118,19 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def setLabelValue(self, gui_name, value):
         widget = self.getWidget(gui_name)
+        widget.clearContent()
         widget.setText(value)
 
 
-    def setDataTable(self, gui_name, row, column, entry):
+    def setDataTableSize(self, gui_name, rows):
+        if rows.type() == int:
+            table = self.getWidget(gui_name)
+            table.setRowCount(rows)
+
+
+    def setDataTableField(self, gui_name, row, column, value):
         widget = self.getWidget(gui_name)
+        entry = QTableWidgetItem(value)
         widget.setItem(row, column, entry)
 
 
