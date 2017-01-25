@@ -73,6 +73,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.gui_naming_english = {}
 
 
+
     '''General'''
     # Updating GUI elements
     def setLanguage(self):
@@ -103,6 +104,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     widget.setHorizontalHeaderLabels(self.gui_name_dutch[name])
 
 
+
     '''General'''
     def getWidget(self,gui_name):
         for widget in self.children():
@@ -114,7 +116,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def setTextField(self, gui_name, text_list):
         field = self.getWidget(gui_name)
         field.clear()
-        for line in list:
+        for line in text_list:
             field.append(line)
 
 
@@ -142,8 +144,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         slider.setSingleStep(step)
 
 
-
-    def showGraph(self):
+    def showChart(self):
         pass
 
 

@@ -32,7 +32,7 @@ import os.path
 
 from . import utility_functions as uf
 
-class KPOExplorer(QtCore.QObject):
+class KPOExplorer():
 
     def __init__(self, iface, dockwidget, plugin_dir):
 
@@ -43,34 +43,34 @@ class KPOExplorer(QtCore.QObject):
         self.legend = self.iface.legendInterface()
 
         # Knooppunten
-        self.dlg.scenarioSelectBox.activated.connect(self.updateScenarioSummaryText,
-                                                     self.showScenario)
+        self.dlg.scenarioSelectCombo.activated.connect(self.updateScenarioSummaryText)
+        self.dlg.scenarioSelectCombo.activated.connect(self.showScenario)
         self.dlg.scenarioShowCheck.stateChanged.connect(self.showScenario)
-        self.dlg.knooppuntenAttributeCombo.activated.connect(self.updateKnooppuntenSummaryTable,
-                                                             self.showKnooppunten)
+        self.dlg.knooppuntenAttributeCombo.activated.connect(self.updateKnooppuntenSummaryTable)
+        self.dlg.knooppuntenAttributeCombo.activated.connect(self.showKnooppunten)
         self.dlg.knooppuntenShowCheck.stateChanged.connect(self.showKnooppunten)
         self.dlg.knooppuntenChartButton.clicked.connect(self.showKnooppuntenChart)
 
         # Verstedelijking
-        self.dlg.intensitySelectCombo.activated.connect(self.setIntensityValueSlider,
-                                                        self.setAccessibilityValueSlider,
-                                                        self.showIntensity)
+        self.dlg.intensitySelectCombo.activated.connect(self.setIntensityValueSlider)
+        self.dlg.intensitySelectCombo.activated.connect(self.setAccessibilityValueSlider)
+        self.dlg.intensitySelectCombo.activated.connect(self.showIntensity)
         self.dlg.intensityShowCheck.stateChanged.connect(self.showIntensity)
-        self.dlg.intensityValueSlider.sliderMoved.connect(self.updateIntensityValue)
-        self.dlg.intensityValueSlider.sliderMoved.connect(self.updateIntensityValue)
-        self.dlg.locationSelectCombo.activated.connect(self.updateLocationSummaryText,
-                                                       self.updateLocationAttributeTable,
-                                                       self.showLocations)
+        self.dlg.intensityValueSlider.valueChanged.connect(self.updateIntensityValue)
+        self.dlg.accessibilityValueSlider.valueChanged.connect(self.updateAccessibilityValue)
+        self.dlg.locationSelectCombo.activated.connect(self.updateLocationSummaryText)
+        self.dlg.locationSelectCombo.activated.connect(self.updateLocationAttributeTable)
+        self.dlg.locationSelectCombo.activated.connect(self.showLocations)
         self.dlg.locationShowCheck.stateChanged.connect(self.showLocations)
         self.dlg.locationChartButton.clicked.connect(self.showLocationChart)
 
         # Koppelingen
         self.dlg.overbelastAttributeCombo.activated.connect(self.showOverbelast)
         self.dlg.overbelastShowCheck.stateChanged.connect(self.showOverbelast)
-        self.dlg.routesShowCheck.stateChanged.connect(self.showRoutes,
-                                                      self.updateOverlapAttributeTable)
-        self.dlg.importantSelectCombo.activated.connect(self.updateImportantAttributeTable,
-                                                            self.showImportant)
+        self.dlg.routesShowCheck.stateChanged.connect(self.showRoutes)
+        self.dlg.routesShowCheck.stateChanged.connect(self.updateOverlapAttributeTable)
+        self.dlg.importantSelectCombo.activated.connect(self.updateImportantAttributeTable)
+        self.dlg.importantSelectCombo.activated.connect(self.showImportant)
         self.dlg.importantShowCheck.stateChanged.connect(self.showImportant)
         self.dlg.importantChartButton.clicked.connect(self.showImportantChart)
 
@@ -85,6 +85,7 @@ class KPOExplorer(QtCore.QObject):
         self.dlg.stopSelectCombo.activated.connect(self.showStopFrequency)
         self.dlg.stopFrequencyCheck.stateChanged.connect(self.showStopFrequency)
         self.dlg.frequencyTimeCombo.activated.connect(self.updateStopSummaryTable)
+
 
     def readDataModel(self):
         self.iface.project.read(QFileInfo(self.plugin_dir +'data/project.qgs'))
@@ -107,12 +108,12 @@ class KPOExplorer(QtCore.QObject):
     '''Knooppunten'''
     def updateScenarioSummaryText(self):
         scenario = self.dlg.getScenario()
-        scenario_summary = {'Huidig':{'total':45324, 'walking':100, 'cycling':30, 'outside':10},
-                            'Hoog': {'total':100, 'walking':90, 'cycling':325, 'outside':10},
-                            'Laag': {'total':200, 'walking':100, 'cycling':60, 'outside':10},
+        scenario_summary = {'Current scenario':{'total':45324, 'walking':100, 'cycling':30, 'outside':10},
+                            'WLO Hoog 2040': {'total':100, 'walking':90, 'cycling':325, 'outside':10},
+                            'WLO Laag 2040': {'total':200, 'walking':100, 'cycling':60, 'outside':10},
                             'Primus': {'total':3430, 'walking':100, 'cycling':88, 'outside':10}}
 
-        if self.dlg.language = 'dutch':
+        if self.dlg.language == 'dutch':
             summary_text = ['%i totaal huishoudens' % scenario_summary[scenario]['total'],
                             '%i huishoudens op loopafstand' % scenario_summary[scenario]['walking'],
                             '%i huishoudens op loopafstand' % scenario_summary[scenario]['cycling'],
@@ -167,10 +168,15 @@ class KPOExplorer(QtCore.QObject):
         self.dlg.updateIntensityValue()
 
 
+    def updateIntensityValue(self):
+        pass
+
     def setAccessibilityValueSlider(self):
         self.dlg.updateIntensityValue()
         pass
 
+    def updateAccessibilityValue(self):
+        pass
 
     def updateLocationSelectCombo(self):
         pass
