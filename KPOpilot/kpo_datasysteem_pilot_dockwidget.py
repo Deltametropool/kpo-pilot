@@ -184,23 +184,26 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     '''Koppelingen'''
-    def getKnooppunt(self):
-        return self.knooppuntenAttributeCombo.currentText()
+    def getOverbelast(self):
+        return self.overbelastAttributeCombo.currentText()
 
 
-    '''Bereikbaarheid'''
-    def getKnooppunt(self):
-        return self.knooppuntenAttributeCombo.currentText()
+    def getLocations(self):
+        return self.importantSelectCombo.currentText()
 
 
+    '''Mobiliteit'''
+    def getPTAL(self):
+        return self.ptalSelectCombo.currentText()
 
 
+    def getLinks(self):
+        return self.linkSelectCombo.currentText()
 
 
-    # def getSelectedLayer(self):
-    #     layer_id = self.layersCombo.currentSlection()
-    #     return layer_id
-    #
-    # def setLayersList(self, layers_list):
-    #     self.layersCombo.clear()
-    #     self.layersCombo.setText(layers_list)
+    def getStops(self):
+        return self.stopSelectCombo.currentText()
+
+
+    def getTime(self):
+        return self.frequencyTimeCombo.currentText()

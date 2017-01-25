@@ -150,12 +150,16 @@ class KPOExplorer(QtCore.QObject):
 
 
     '''Verstedelijking'''
-    def updateIntensitySelectCombo(self):
-        pass
-
-
     def showIntensity(self):
-        pass
+        intensity = self.dlg.getIntensity()
+        intensity_layers = {'all': ['ov_stops', 'station_isochrones'],
+                            'residents': ['ov_stops'],
+                            'workers': ['station_isochrones'],
+                            'students': [],
+                            'WOZ': [],
+                            'density': []}
+        layers = intensity_layers[intensity]
+        self.showLayersInCanvas(layers)
 
 
     def setIntensityValueSlider(self):
@@ -242,15 +246,7 @@ class KPOExplorer(QtCore.QObject):
         self.updateTable('ov_stops', 'stopSummaryTable')
 
 
-
-
-
-
-
-
-
     '''General'''
-
     # MapTip setup
     def createMapTip(self, layer, fields, mouse_location):
         self.tip = QgsMapTip()
@@ -261,7 +257,6 @@ class KPOExplorer(QtCore.QObject):
 
     def showMapTip(self):
         if self.canvas.underMouse():
-
             pointQgs = self.lastMapPosition
             pointQt = self.canvas.mouseLastXY()
             self.canvas.showMapTip(self.layer, pointQgs, pointQt, self.canvas)
@@ -302,7 +297,6 @@ class KPOExplorer(QtCore.QObject):
         return layer
 
     def getFeatureValue(self, layer, id_field, id, value_field):
-
         exp = QgsExpression('%s = %s' % (id_field, id))
         request = QgsFeatureRequest(exp)
         fet = layer.getFeatures(request)
@@ -337,21 +331,3 @@ class KPOExplorer(QtCore.QObject):
                 if name in layer_fields:
                     table_widget.setItem(row, column, QTableWidgetItem(fet[name]))
 
-    '''Knooppunten'''
-    def setScenarioSummaryTable(self):
-
-
-
-        scenario = self.dlg.getScenario()
-
-        get
-
-    # def updateLayers(self):
-    #     layers = []
-    #     # fill the list
-    #     self.dlg.setLayersList(layers)
-    #
-    #
-    #     self.dlg.layersCombo.clear()
-    #     self.dlg.layersCombo.setText(layers)
-    #     self.layersCombo.currentSlection()
