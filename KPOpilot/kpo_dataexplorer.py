@@ -65,11 +65,10 @@ class KPOExplorer(QtCore.QObject):
         self.dlg.locationChartButton.clicked.connect(self.showLocationChart)
 
         # Koppelingen
-        self.dlg.overbelastAttributeCombo.activated.connect(self.updateScenarioSummaryText,
-                                                            self.showOverbelast)
+        self.dlg.overbelastAttributeCombo.activated.connect(self.showOverbelast)
         self.dlg.overbelastShowCheck.stateChanged.connect(self.showOverbelast)
-        self.dlg.routesShowCheck.stateChanged.connect(self.showOverlap,
-                                                      self.updateoverlapAttributeTable)
+        self.dlg.routesShowCheck.stateChanged.connect(self.showRoutes,
+                                                      self.updateOverlapAttributeTable)
         self.dlg.importantSelectCombo.activated.connect(self.updateImportantAttributeTable,
                                                             self.showImportant)
         self.dlg.importantShowCheck.stateChanged.connect(self.showImportant)
@@ -103,6 +102,7 @@ class KPOExplorer(QtCore.QObject):
             if add_layer:
                 layers_list.append(layer)
         return layers_list
+
 
     '''Knooppunten'''
     def updateScenarioSummaryText(self):
@@ -153,6 +153,7 @@ class KPOExplorer(QtCore.QObject):
     def updateIntensitySelectCombo(self):
         pass
 
+
     def showIntensity(self):
         pass
 
@@ -188,12 +189,60 @@ class KPOExplorer(QtCore.QObject):
 
 
     '''Koppelingen'''
+    def showOverbelast(self):
+        pass
+
+
+    def showRoutes(self):
+        pass
+
+
+    def updateOverlapAttributeTable(self):
+        pass
+
+
+    def showImportant(self):
+        pass
+
+
     def updateImportantAttributeTable(self):
         self.updateTable('ov_stops', 'importantAttributeTable')
 
+
+    def showImportantChart(self):
+        pass
+
+
     '''Bereikbaarheid'''
+    def showWalk(self):
+        pass
+
+
+    def showCycling(self):
+        pass
+
+
+    def showOV(self):
+        pass
+
+
+    def showPTAL(self):
+        pass
+
+
+    def showLinkFrequency(self):
+        pass
+
+
+    def showStopFrequency(self):
+        pass
+
+
     def updateStopSummaryTable(self):
         self.updateTable('ov_stops', 'stopSummaryTable')
+
+
+
 
 
 
