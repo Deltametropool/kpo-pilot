@@ -102,6 +102,8 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 elif isinstance(widget, QtGui.QTabWidget):
                     widget.setHorizontalHeaderLabels(self.gui_name_dutch[name])
 
+
+    '''General'''
     def getWidget(self,gui_name):
         for widget in self.children():
             name = widget.objectName()
@@ -110,16 +112,16 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def setTextField(self, gui_name, text_list):
-        widget = self.getWidget(gui_name)
-        widget.clear()
+        field = self.getWidget(gui_name)
+        field.clear()
         for line in list:
-            widget.append(line)
+            field.append(line)
 
 
     def setLabelValue(self, gui_name, value):
-        widget = self.getWidget(gui_name)
-        widget.clearContent()
-        widget.setText(value)
+        label = self.getWidget(gui_name)
+        label.clearContent()
+        label.setText(value)
 
 
     def setDataTableSize(self, gui_name, rows):
@@ -129,13 +131,21 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
 
     def setDataTableField(self, gui_name, row, column, value):
-        widget = self.getWidget(gui_name)
+        table = self.getWidget(gui_name)
         entry = QTableWidgetItem(value)
-        widget.setItem(row, column, entry)
+        table.setItem(row, column, entry)
+
+
+    def setSliderRange(self, gui_name, min, max, step):
+        slider = self.getWidget(gui_name)
+        slider.setRange(min, max)
+        slider.setSingleStep(step)
+
 
 
     def showGraph(self):
         pass
+
 
     def closeEvent(self, event):
         self.closingPlugin.emit()
@@ -145,32 +155,42 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def ifShow(self):
         pass
 
-    '''Introductie'''
-    # Is the introduction static?
 
     '''Knooppunten'''
-    def onShowKnooppunten(self):
-        pass
+    def getScenario(self):
+        return self.scenarioSelectCombo.currentText()
 
 
-    def updateScenarioSummaryText(self,scenario_summary):
-        self.scenarioSummaryText.setPlainText(scenario_summary)
+    def getKnooppunt(self):
+        return self.knooppuntenAttributeCombo.currentText()
 
-
-    def updateKnooppuntenSummaryTable(self):
-        pass
-
-    def showKnooppuntenSummaryGraph(self):
-        pass
 
     '''Verstedelijking'''
+    def getIntensity(self):
+        return self.intensitySelectCombo.currentText()
+
+
+    def getIntensityValue(self):
+        return self.intensityValueLabel.text()
+
+
+    def updateIntensityValue(self):
+        value = self.intensityValueSlider.tickPosition()
+        self.setLabelValue('intensityValueLabel', value)
+
+
+    def getLocation(self):
+        return self.locationSelectCombo.currentText()
 
 
     '''Koppelingen'''
+    def getKnooppunt(self):
+        return self.knooppuntenAttributeCombo.currentText()
 
 
     '''Bereikbaarheid'''
-
+    def getKnooppunt(self):
+        return self.knooppuntenAttributeCombo.currentText()
 
 
 

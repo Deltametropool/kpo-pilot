@@ -43,19 +43,50 @@ class KPOExplorer(QtCore.QObject):
         self.legend = self.iface.legendInterface()
 
         # Knooppunten
-        self.dlg.scenarioSelectBox.activated.connect(self.updateScenarioSummaryText)
+        self.dlg.scenarioSelectBox.activated.connect(self.updateScenarioSummaryText,
+                                                     self.showScenario)
         self.dlg.scenarioShowCheck.stateChanged.connect(self.showScenario)
-        self.dlg.knooppuntenAttributeCombo.activated.connect(self.updateScenarioSummaryText)
+        self.dlg.knooppuntenAttributeCombo.activated.connect(self.updateKnooppuntenSummaryTable,
+                                                             self.showKnooppunten)
         self.dlg.knooppuntenShowCheck.stateChanged.connect(self.showKnooppunten)
-        self.dlg.knooppuntenChartButton.clicked.connect(self.showKnooppuntenGraph)
+        self.dlg.knooppuntenChartButton.clicked.connect(self.showKnooppuntenChart)
 
         # Verstedelijking
+        self.dlg.intensitySelectCombo.activated.connect(self.setIntensityValueSlider,
+                                                        self.setAccessibilityValueSlider,
+                                                        self.showIntensity)
+        self.dlg.intensityShowCheck.stateChanged.connect(self.showIntensity)
+        self.dlg.intensityValueSlider.sliderMoved.connect(self.updateIntensityValue)
+        self.dlg.intensityValueSlider.sliderMoved.connect(self.updateIntensityValue)
+        self.dlg.locationSelectCombo.activated.connect(self.updateLocationSummaryText,
+                                                       self.updateLocationAttributeTable,
+                                                       self.showLocations)
+        self.dlg.locationShowCheck.stateChanged.connect(self.showLocations)
+        self.dlg.locationChartButton.clicked.connect(self.showLocationChart)
 
-        # Koppeling
+        # Koppelingen
+        self.dlg.overbelastAttributeCombo.activated.connect(self.updateScenarioSummaryText,
+                                                            self.showOverbelast)
+        self.dlg.overbelastShowCheck.stateChanged.connect(self.showOverbelast)
+        self.dlg.routesShowCheck.stateChanged.connect(self.showOverlap,
+                                                      self.updateoverlapAttributeTable)
+        self.dlg.importantSelectCombo.activated.connect(self.updateImportantAttributeTable,
+                                                            self.showImportant)
+        self.dlg.importantShowCheck.stateChanged.connect(self.showImportant)
+        self.dlg.importantChartButton.clicked.connect(self.showImportantChart)
 
-        # Bereikbaarheid
+        # Mobiliteit
+        self.dlg.isochroneWalkCheck.stateChanged.connect(self.showWalk)
+        self.dlg.isochroneWalkCheck.stateChanged.connect(self.showCycling)
+        self.dlg.isochroneWalkCheck.stateChanged.connect(self.showOV)
+        self.dlg.ptalSelectCombo.activated.connect(self.showPTAL)
+        self.dlg.ptalShowCheck.stateChanged.connect(self.showPTAL)
+        self.dlg.linkSelectCombo.activated.connect(self.showLinkFrequency)
+        self.dlg.linkFrequencyCheck.stateChanged.connect(self.showLinkFrequency)
+        self.dlg.stopSelectCombo.activated.connect(self.showStopFrequency)
+        self.dlg.stopFrequencyCheck.stateChanged.connect(self.showStopFrequency)
+        self.dlg.frequencyTimeCombo.activated.connect(self.updateStopSummaryTable)
 
-    '''Initial setup'''
     def readDataModel(self):
         self.iface.project.read(QFileInfo(self.plugin_dir +'data/project.qgs'))
 
@@ -99,36 +130,70 @@ class KPOExplorer(QtCore.QObject):
         layers = scenario_layers[scenario]
         self.showLayersInCanvas(layers)
 
-    def updateScenarioSummaryText(self):
-        self.updateTable('ov_stops', )
 
-    def updateScenarioSummaryText(self):
-        data_layer = self.getLayerByName('ov_stops')
-        data_layer_fields = data_layer.fields()
-
-        table = 'knooppuntenSummaryTable'
-        table_widget = self.dlg.getWidget(table)
-        table_widget.setDataTableSize(data_layer.featureCount())
-        table_headers = table.horizontalHeaders()
-
-        for row, fet in enumerate(data_layer.getFeatures()):
-            for column, name in table_headers:
-                table_widget,setItem(row, column, QTableWidgetItem(fet[name]))
-
+    def updateKnooppuntenSummaryTable(self):
+        self.updateTable('ov_stops', 'knooppuntenSummaryTable')
 
 
     def showKnooppunten(self):
-        pass
+        knooppunten = self.dlg.getScenario()
+        scenario_layers = {'Huidig': ['ov_stops', 'station_isochrones'],
+                           'Hoog': ['ov_stops'],
+                           'Laag': ['station_isochrones'],
+                           'Primus': []}
+        layers = scenario_layers[knooppunten]
+        self.showLayersInCanvas(layers)
 
-    def showKnooppuntenGraph(self):
+
+    def showKnooppuntenChart(self):
         pass
 
 
     '''Verstedelijking'''
+    def updateIntensitySelectCombo(self):
+        pass
+
+    def showIntensity(self):
+        pass
+
+
+    def setIntensityValueSlider(self):
+        self.dlg.setSlider('intensityValueSlider', 0, 100)
+        self.dlg.updateIntensityValue()
+
+
+    def setAccessibilityValueSlider(self):
+        self.dlg.updateIntensityValue()
+        pass
+
+
+    def updateLocationSelectCombo(self):
+        pass
+
+
+    def showLocations(self):
+        pass
+
+
+    def updateLocationSummaryText(self):
+        pass
+
+
+    def updateLocationAttributeTable(self):
+        self.updateTable('ov_stops', 'locationAttributeTable')
+
+
+    def showLocationChart(self):
+        pass
+
 
     '''Koppelingen'''
+    def updateImportantAttributeTable(self):
+        self.updateTable('ov_stops', 'importantAttributeTable')
 
     '''Bereikbaarheid'''
+    def updateStopSummaryTable(self):
+        self.updateTable('ov_stops', 'stopSummaryTable')
 
 
 
@@ -210,17 +275,18 @@ class KPOExplorer(QtCore.QObject):
 
 
     def updateTable(self, data_layer, gui_name):
-        data_layer = self.getLayerByName(data_layer)
-        data_layer_fields = data_layer.fields()
+        layer = self.getLayerByName(data_layer)
+        layer_fields = layer.fields()
 
         table = gui_name
         table_widget = self.dlg.getWidget(table)
-        table_widget.setDataTableSize(data_layer.featureCount())
+        table_widget.setDataTableSize(layer.featureCount())
         table_headers = table.horizontalHeaders()
 
-        for row, fet in enumerate(data_layer.getFeatures()):
+        for row, fet in enumerate(layer.getFeatures()):
             for column, name in table_headers:
-                table_widget,setItem(row, column, QTableWidgetItem(fet[name]))
+                if name in layer_fields:
+                    table_widget.setItem(row, column, QTableWidgetItem(fet[name]))
 
     '''Knooppunten'''
     def setScenarioSummaryTable(self):
