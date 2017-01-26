@@ -73,7 +73,6 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.gui_naming_english = {}
 
 
-
     '''General'''
     # Updating GUI elements
     def setLanguage(self):
@@ -104,42 +103,40 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
                     widget.setHorizontalHeaderLabels(self.gui_name_dutch[name])
 
 
-
     '''General'''
-    def getWidget(self,gui_name):
-        for widget in self.children():
-            name = widget.objectName()
-            if name == gui_name:
-                return widget
-
-
     def setTextField(self, gui_name, text_list):
-        field = self.getWidget(gui_name)
+        field = self.findChild(QtGui.QPlainTextEdit, gui_name)
         field.clear()
         for line in text_list:
-            field.append(line)
+            field.appendPlainText(line)
 
 
     def setLabelValue(self, gui_name, value):
-        label = self.getWidget(gui_name)
-        label.clearContent()
+        label = self.findChild(QtGui.QLabel, gui_name)
+        label.clear()
         label.setText(value)
 
 
+    def getDataTableHeaders(self, gui_name):
+        table = self.findChild(QtGui.QTableWidget, gui_name)
+        column_count = table.columnCount()
+        columns = [table.horizontalHeaderItem(index).text() for index in range(column_count)]
+        return columns
+
+
     def setDataTableSize(self, gui_name, rows):
-        if rows.type() == int:
-            table = self.getWidget(gui_name)
-            table.setRowCount(rows)
+        table = self.findChild(QtGui.QTableWidget, gui_name)
+        table.setRowCount(rows)
 
 
     def setDataTableField(self, gui_name, row, column, value):
-        table = self.getWidget(gui_name)
+        table = self.findChild(QtGui.QTableWidget, gui_name)
         entry = QTableWidgetItem(value)
         table.setItem(row, column, entry)
 
 
     def setSliderRange(self, gui_name, min, max, step):
-        slider = self.getWidget(gui_name)
+        slider = self.findChild(QtGui.QSlider, gui_name)
         slider.setRange(min, max)
         slider.setSingleStep(step)
 
@@ -153,13 +150,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         event.accept()
 
 
-    def ifShow(self):
-        pass
-
-
     '''Knooppunten'''
     def getScenario(self):
         return self.scenarioSelectCombo.currentText()
+
+
+    def clearScenarioSummary(self):
+        self.scenarioSummaryText.clear()
 
 
     def getKnooppunt(self):
@@ -171,17 +168,21 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return self.intensitySelectCombo.currentText()
 
 
-    def getIntensityValue(self):
-        return self.intensityValueLabel.text()
-
-
     def updateIntensityValue(self):
-        value = self.intensityValueSlider.tickPosition()
+        value = str(self.intensityValueSlider.value())
         self.setLabelValue('intensityValueLabel', value)
 
 
+    def updateAccessibilityValue(self):
+        value = str(self.accessibilityValueSlider.value())
+        self.setLabelValue('accessibilityValueLabel', value)
+
     def getLocation(self):
         return self.locationSelectCombo.currentText()
+
+
+    def clearLocationSummary(self):
+        self.locationSummaryText.clear()
 
 
     '''Koppelingen'''

@@ -42,6 +42,8 @@ class KPOExplorer():
         self.canvas = self.iface.mapCanvas()
         self.legend = self.iface.legendInterface()
 
+        self.dlg.visibilityChanged.connect(self.onShow)
+
         # Knooppunten
         self.dlg.scenarioSelectCombo.activated.connect(self.updateScenarioSummaryText)
         self.dlg.scenarioSelectCombo.activated.connect(self.showScenario)
@@ -56,8 +58,8 @@ class KPOExplorer():
         self.dlg.intensitySelectCombo.activated.connect(self.setAccessibilityValueSlider)
         self.dlg.intensitySelectCombo.activated.connect(self.showIntensity)
         self.dlg.intensityShowCheck.stateChanged.connect(self.showIntensity)
-        self.dlg.intensityValueSlider.valueChanged.connect(self.updateIntensityValue)
-        self.dlg.accessibilityValueSlider.valueChanged.connect(self.updateAccessibilityValue)
+        self.dlg.intensityValueSlider.valueChanged.connect(self.setIntensityValueSlider)
+        self.dlg.accessibilityValueSlider.valueChanged.connect(self.setAccessibilityValueSlider)
         self.dlg.locationSelectCombo.activated.connect(self.updateLocationSummaryText)
         self.dlg.locationSelectCombo.activated.connect(self.updateLocationAttributeTable)
         self.dlg.locationSelectCombo.activated.connect(self.showLocations)
@@ -87,6 +89,12 @@ class KPOExplorer():
         self.dlg.frequencyTimeCombo.activated.connect(self.updateStopSummaryTable)
 
 
+    def onShow(self):
+        self.dlg.clearScenarioSummary()
+        self.dlg.clearLocationSummary()
+        self.dlg.updateIntensityValue()
+        self.dlg.updateAccessibilityValue()
+
     def readDataModel(self):
         self.iface.project.read(QFileInfo(self.plugin_dir +'data/project.qgs'))
 
@@ -114,22 +122,25 @@ class KPOExplorer():
                             'Primus': {'total':3430, 'walking':100, 'cycling':88, 'outside':10}}
 
         if self.dlg.language == 'dutch':
-            summary_text = ['%i totaal huishoudens' % scenario_summary[scenario]['total'],
-                            '%i huishoudens op loopafstand' % scenario_summary[scenario]['walking'],
-                            '%i huishoudens op loopafstand' % scenario_summary[scenario]['cycling'],
-                            '%i huishoudens op loopafstand' % scenario_summary[scenario]['outside']]
+            summary_text = ['%i  totaal huishoudens' % scenario_summary[scenario]['total'],
+                            '%i  huishoudens op loopafstand' % scenario_summary[scenario]['walking'],
+                            '%i  huishoudens op loopafstand' % scenario_summary[scenario]['cycling'],
+                            '%i  huishoudens op loopafstand' % scenario_summary[scenario]['outside']]
 
         self.setTextField('scenarioSummaryText', summary_text)
 
 
     def showScenario(self):
-        scenario = self.dlg.getScenario()
-        scenario_layers = {'Huidig': ['ov_stops', 'station_isochrones'],
-                           'Hoog': ['ov_stops'],
-                           'Laag': ['station_isochrones'],
-                           'Primus': []}
-        layers = scenario_layers[scenario]
-        self.showLayersInCanvas(layers)
+        if self.dlg.scenarioShowCheck.isChecked():
+            scenario = self.dlg.getScenario()
+            scenario_layers = {'Current scenario': ['ov_stops', 'station_isochrones'],
+                               'WLO Hoog 2040': ['ov_stops'],
+                               'WLO Laag 2040': ['station_isochrones'],
+                               'Primus': []}
+            layers = scenario_layers[scenario]
+            self.showLayersInCanvas(layers)
+        else:
+            self.showLayersInCanvas([])
 
 
     def updateKnooppuntenSummaryTable(self):
@@ -137,13 +148,17 @@ class KPOExplorer():
 
 
     def showKnooppunten(self):
-        knooppunten = self.dlg.getScenario()
-        scenario_layers = {'Huidig': ['ov_stops', 'station_isochrones'],
-                           'Hoog': ['ov_stops'],
-                           'Laag': ['station_isochrones'],
-                           'Primus': []}
-        layers = scenario_layers[knooppunten]
-        self.showLayersInCanvas(layers)
+        if self.dlg.knooppuntenShowCheck.isChecked():
+            knooppunten = self.dlg.getKnooppunt()
+            knooppunten_layers = {'in- en uitstappers': ['ov_stops', 'station_isochrones'],
+                                  'fietsenstallingen': ['ov_stops'],
+                                  'perrons': ['station_isochrones'],
+                                  'stijgpunten': [],
+                                  'loopstromen': ['ov_stops', 'station_isochrones']}
+            layers = knooppunten_layers[knooppunten]
+            self.showLayersInCanvas(layers)
+        else:
+            self.showLayersInCanvas([])
 
 
     def showKnooppuntenChart(self):
@@ -152,31 +167,29 @@ class KPOExplorer():
 
     '''Verstedelijking'''
     def showIntensity(self):
-        intensity = self.dlg.getIntensity()
-        intensity_layers = {'all': ['ov_stops', 'station_isochrones'],
-                            'residents': ['ov_stops'],
-                            'workers': ['station_isochrones'],
-                            'students': [],
-                            'WOZ': [],
-                            'density': []}
-        layers = intensity_layers[intensity]
-        self.showLayersInCanvas(layers)
+        if self.dlg.intensityShowCheck.isChecked():
+            intensity = self.dlg.getIntensity()
+            intensity_layers = {'all population': ['ov_stops', 'station_isochrones'],
+                                'residents': ['ov_stops'],
+                                'workers': ['station_isochrones'],
+                                'students': [],
+                                'property value (WOZ)': [],
+                                'built density': []}
+            layers = intensity_layers[intensity]
+            self.showLayersInCanvas(layers)
+        else:
+            self.showLayersInCanvas([])
 
 
     def setIntensityValueSlider(self):
-        self.dlg.setSlider('intensityValueSlider', 0, 100)
+        self.dlg.setSliderRange('intensityValueSlider', 0, 100, 10)
         self.dlg.updateIntensityValue()
 
-
-    def updateIntensityValue(self):
-        pass
 
     def setAccessibilityValueSlider(self):
-        self.dlg.updateIntensityValue()
-        pass
+        self.dlg.setSliderRange('accessibilityValueSlider', 0, 8, 1)
+        self.dlg.updateAccessibilityValue()
 
-    def updateAccessibilityValue(self):
-        pass
 
     def updateLocationSelectCombo(self):
         pass
@@ -289,10 +302,10 @@ class KPOExplorer():
     def showLayersInCanvas(self, layers):
         current_layers = self.legend.layers()
         for layer in current_layers:
-            if layer in layers:
-                self.iface.setLayerVisible(layer, True)
+            if layer.name() in layers:
+                self.legend.setLayerVisible(layer, True)
             else:
-                self.iface.setLayerVisible(layer, False)
+                self.legend.setLayerVisible(layer, False)
 
     # Data reading
     def getLayerByName(self, name):
@@ -326,14 +339,12 @@ class KPOExplorer():
     def updateTable(self, data_layer, gui_name):
         layer = self.getLayerByName(data_layer)
         layer_fields = layer.fields()
+        self.dlg.setDataTableSize(gui_name, layer.featureCount())
 
-        table = gui_name
-        table_widget = self.dlg.getWidget(table)
-        table_widget.setDataTableSize(layer.featureCount())
-        table_headers = table.horizontalHeaders()
+        table_headers = self.dlg.getDataTableHeaders(gui_name)
 
         for row, fet in enumerate(layer.getFeatures()):
-            for column, name in table_headers:
+            for name in table_headers:
                 if name in layer_fields:
-                    table_widget.setItem(row, column, QTableWidgetItem(fet[name]))
+                    self.dlg.setDataTableField(gui_name, row, column, QtGui.QTableWidgetItem(fet[name]))
 
