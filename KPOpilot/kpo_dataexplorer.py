@@ -28,9 +28,7 @@ from PyQt4 import QtCore, QtGui, uic
 from qgis.core import *
 from qgis.gui import *
 
-import os.path
-
-from . import utility_functions as uf
+from PyQt4.QtCore import QFileInfo
 
 class KPOExplorer():
 
@@ -41,6 +39,15 @@ class KPOExplorer():
         self.plugin_dir = plugin_dir
         self.canvas = self.iface.mapCanvas()
         self.legend = self.iface.legendInterface()
+        # self.project = QgsProject.instance()
+        # self.bridge = QgsLayerTreeMapCanvasBridge(QgsProject.instance().layerTreeRoot(), self.canvas)
+        # self.bridge = QgsLayerTreeMapCanvasBridge(self.project.layerTreeRoot(), self.canvas)
+
+        # self.layer_tree_root = QgsProject.instance().layerTreeRoot()
+        # self.bridge = QgsLayerTreeMapCanvasBridge(self.layer_tree_root, self.canvas)
+        # self.bridge.setCanvasLayers()
+
+
 
         self.dlg.visibilityChanged.connect(self.onShow)
 
@@ -70,7 +77,6 @@ class KPOExplorer():
         self.dlg.overbelastAttributeCombo.activated.connect(self.showOverbelast)
         self.dlg.overbelastShowCheck.stateChanged.connect(self.showOverbelast)
         self.dlg.routesShowCheck.stateChanged.connect(self.showRoutes)
-        self.dlg.routesShowCheck.stateChanged.connect(self.updateOverlapAttributeTable)
         self.dlg.importantSelectCombo.activated.connect(self.updateImportantAttributeTable)
         self.dlg.importantSelectCombo.activated.connect(self.showImportant)
         self.dlg.importantShowCheck.stateChanged.connect(self.showImportant)
@@ -90,16 +96,40 @@ class KPOExplorer():
 
 
     def onShow(self):
+        self.readDataModel()
+
+        # Knooppunten
         self.showIntensity()
         self.updateScenarioSummaryText()
         self.showKnooppunten()
         self.updateKnooppuntenSummaryTable()
+
+        # Verstedelijking
         self.dlg.updateIntensityValue()
         self.dlg.updateAccessibilityValue()
+        self.updateLocationSummaryText()
+        self.updateLocationAttributeTable()
+
+        # Koppelingen
+        self.showOverbelast()
+        self.showRoutes()
+        self.showImportant()
+        self.updateImportantAttributeTable()
+
+        # Mobiliteit
+        self.showWalk()
+        self.showCycling()
+        self.showOV()
+        self.showPTAL()
+        self.showLinkFrequency()
+        self.showStopFrequency()
+        self.updateStopSummaryTable()
+
 
 
     def readDataModel(self):
-        self.iface.project.read(QFileInfo(self.plugin_dir +'data/project.qgs'))
+        project_path = self.plugin_dir + '/data/project.qgs'
+        self.iface.addProject(project_path)
 
 
     def getModelLayers(self, geom='all', provider='all'):
@@ -134,34 +164,38 @@ class KPOExplorer():
 
 
     def showScenario(self):
+        scenario = self.dlg.getScenario()
+        scenario_layers = {'Current scenario': ['ov_stops', 'station_isochrones'],
+                           'WLO Hoog 2040': ['ov_stops'],
+                           'WLO Laag 2040': ['station_isochrones'],
+                           'Primus': [],
+                           'all': ['ov_stops', 'station_isochrones']} # These are all the scenario associated layers
+
         if self.dlg.scenarioShowCheck.isChecked():
-            scenario = self.dlg.getScenario()
-            scenario_layers = {'Current scenario': ['ov_stops', 'station_isochrones'],
-                               'WLO Hoog 2040': ['ov_stops'],
-                               'WLO Laag 2040': ['station_isochrones'],
-                               'Primus': []}
-            layers = scenario_layers[scenario]
-            self.showLayersInCanvas(layers)
+            self.hideLayersInCanvas(scenario_layers['all'])
+            self.showLayersInCanvas(scenario_layers[scenario])
         else:
-            self.showLayersInCanvas([])
+            self.hideLayersInCanvas(scenario_layers['all'])
 
 
     def updateKnooppuntenSummaryTable(self):
-        self.updateTable('ov_stops', 'knooppuntenSummaryTable')
+        self.updateTable('spoor', 'knooppuntenSummaryTable')
 
 
     def showKnooppunten(self):
+        knooppunten = self.dlg.getKnooppunt()
+        knooppunten_layers = {'in- en uitstappers': ['ov_stops', 'station_isochrones'],
+                              'fietsenstallingen': ['ov_stops'],
+                              'perrons': ['station_isochrones'],
+                              'stijgpunten': [],
+                              'loopstromen': ['ov_stops', 'station_isochrones'],
+                              'all': ['ov_stops', 'station_isochrones']} # These are all the knooppunt associated layers
+
         if self.dlg.knooppuntenShowCheck.isChecked():
-            knooppunten = self.dlg.getKnooppunt()
-            knooppunten_layers = {'in- en uitstappers': ['ov_stops', 'station_isochrones'],
-                                  'fietsenstallingen': ['ov_stops'],
-                                  'perrons': ['station_isochrones'],
-                                  'stijgpunten': [],
-                                  'loopstromen': ['ov_stops', 'station_isochrones']}
-            layers = knooppunten_layers[knooppunten]
-            self.showLayersInCanvas(layers)
+            self.hideLayersInCanvas(knooppunten_layers['all'])
+            self.showLayersInCanvas(knooppunten_layers[knooppunten])
         else:
-            self.showLayersInCanvas([])
+            self.hideLayersInCanvas(knooppunten_layers['all'])
 
 
     def showKnooppuntenChart(self):
@@ -170,18 +204,20 @@ class KPOExplorer():
 
     '''Verstedelijking'''
     def showIntensity(self):
+        intensity = self.dlg.getIntensity()
+        intensity_layers = {'all population': ['ov_stops', 'station_isochrones'],
+                            'residents': ['ov_stops'],
+                            'workers': ['station_isochrones'],
+                            'students': [],
+                            'property value (WOZ)': [],
+                            'built density': [],
+                            'all' : ['ov_stops', 'station_isochrones']}
+
         if self.dlg.intensityShowCheck.isChecked():
-            intensity = self.dlg.getIntensity()
-            intensity_layers = {'all population': ['ov_stops', 'station_isochrones'],
-                                'residents': ['ov_stops'],
-                                'workers': ['station_isochrones'],
-                                'students': [],
-                                'property value (WOZ)': [],
-                                'built density': []}
-            layers = intensity_layers[intensity]
-            self.showLayersInCanvas(layers)
+            self.hideLayersInCanvas(intensity_layers['all'])
+            self.showLayersInCanvas(intensity_layers[intensity])
         else:
-            self.showLayersInCanvas([])
+            self.hideLayersInCanvas(intensity_layers['all'])
 
 
     def setIntensityValueSlider(self):
@@ -194,16 +230,29 @@ class KPOExplorer():
         self.dlg.updateAccessibilityValue()
 
 
-    def updateLocationSelectCombo(self):
-        pass
-
-
     def showLocations(self):
-        pass
+        location = self.dlg.getLocation()
+        location_layers = {'Plancapaciteit': ['ov_frequency', 'station_isochrones'],
+                           'Leegstanden': ['wlo_40_laag'],
+                           'all': ['ov_frequency', 'station_isochrones','wlo_40_laag']}
+
+        if self.dlg.locationShowCheck.isChecked():
+            self.hideLayersInCanvas(location_layers['all'])
+            self.showLayersInCanvas(location_layers[location])
+        else:
+            self.hideLayersInCanvas(location_layers['all'])
 
 
     def updateLocationSummaryText(self):
-        pass
+        location = self.dlg.getLocation()
+        location_summary = {'Plancapaciteit': {'total': 45324, 'walking': 100, 'cycling': 30, 'outside': 10},
+                            'Leegstanden': {'total': 100, 'walking': 90, 'cycling': 325, 'outside': 10}}
+
+        if self.dlg.language == 'dutch':
+            summary_text = ['%i  totaal huishoudens' % location_summary[location]['total'],
+                            '%i  huishoudens op loopafstand' % location_summary[location]['walking']]
+
+        self.setTextField('locationSummaryText', summary_text)
 
 
     def updateLocationAttributeTable(self):
@@ -216,19 +265,43 @@ class KPOExplorer():
 
     '''Koppelingen'''
     def showOverbelast(self):
-        pass
+        overbelast = self.dlg.getOverbelast()
+        overbelast_layers = {'in- en uitstappers': ['ov_stops', 'station_isochrones'],
+                              'fietsenstallingen': ['ov_stops'],
+                              'perrons': ['station_isochrones'],
+                              'stijgpunten': [],
+                              'loopstromen': ['ov_stops', 'station_isochrones'],
+                              'all': ['ov_stops', 'station_isochrones']}
+
+        if self.dlg.overbelastShowCheck.isChecked():
+            self.hideLayersInCanvas(overbelast_layers['all'])
+            self.showLayersInCanvas(overbelast_layers[overbelast])
+        else:
+            self.hideLayersInCanvas(overbelast_layers['all'])
 
 
     def showRoutes(self):
-        pass
+        routes_layers = ['ov_stops', 'station_isochrones']
 
-
-    def updateOverlapAttributeTable(self):
-        pass
+        if self.dlg.routesShowCheck.isChecked():
+            self.showLayersInCanvas(routes_layers)
+            self.updateTable('spoor', 'overlapAttributeTable')
+        else:
+            self.hideLayersInCanvas(routes_layers)
+            self.dlg.hideDataTable('overlapAttributeTable')
 
 
     def showImportant(self):
-        pass
+        locations = self.dlg.getLocations()
+        locations_layers = {'Belangrijk locaties': ['ov_frequency', 'station_isochrones'],
+                            'Magneten': ['wlo_40_laag'],
+                            'all': ['ov_frequency', 'station_isochrones', 'wlo_40_laag']}
+
+        if self.dlg.importantShowCheck.isChecked():
+            self.hideLayersInCanvas(locations_layers['all'])
+            self.showLayersInCanvas(locations_layers[locations])
+        else:
+            self.hideLayersInCanvas(locations_layers['all'])
 
 
     def updateImportantAttributeTable(self):
@@ -241,31 +314,53 @@ class KPOExplorer():
 
     '''Bereikbaarheid'''
     def showWalk(self):
-        pass
+        if self.dlg.isochroneWalkCheck.isChecked():
+            self.showLayersInCanvas('station_isochrones')
+        else:
+            self.hideLayersInCanvas('station_isochrones')
 
 
     def showCycling(self):
-        pass
+        if self.dlg.isochroneBikeCheck.isChecked():
+            self.showLayersInCanvas('station_isochrones')
+        else:
+            self.hideLayersInCanvas('station_isochrones')
 
 
     def showOV(self):
-        pass
+        if self.dlg.isochroneOvCheck.isChecked():
+            self.showLayersInCanvas('station_isochrones')
+        else:
+            self.hideLayersInCanvas('station_isochrones')
 
 
     def showPTAL(self):
-        pass
+        ptal = self.dlg.getPTAL()
+        if self.dlg.ptalShowCheck.isChecked():
+            self.showLayersInCanvas(ptal)
+        else:
+            self.hideLayersInCanvas(ptal)
 
 
     def showLinkFrequency(self):
-        pass
+        links = self.dlg.getLinks()
+        if self.dlg.linkFrequencyCheck.isChecked():
+            self.showLayersInCanvas(links)
+        else:
+            self.hideLayersInCanvas(links)
 
 
     def showStopFrequency(self):
-        pass
+        stops = self.dlg.getStops()
+        if self.dlg.ptalShowCheck.isChecked():
+            self.showLayersInCanvas(stops)
+        else:
+            self.hideLayersInCanvas(stops)
 
 
     def updateStopSummaryTable(self):
-        self.updateTable('spoor', 'stopSummaryTable')
+        time = self.dlg.getTime()
+        self.updateTable(time, 'stopSummaryTable')
 
 
     '''General'''
@@ -276,6 +371,7 @@ class KPOExplorer():
 
     def changeMapTip(self):
         pass
+
 
     def showMapTip(self):
         if self.canvas.underMouse():
@@ -295,6 +391,7 @@ class KPOExplorer():
             self.canvas.setExtent(layer.extent())
             self.canvas.refresh()
 
+
     def setExtentToSelection(self,layer):
         if layer.isValid():
             if layer.selectedFeatures():
@@ -307,8 +404,15 @@ class KPOExplorer():
         for layer in current_layers:
             if layer.name() in layers:
                 self.legend.setLayerVisible(layer, True)
-            else:
+
+
+
+    def hideLayersInCanvas(self, layers):
+        current_layers = self.legend.layers()
+        for layer in current_layers:
+            if layer.name() in layers:
                 self.legend.setLayerVisible(layer, False)
+
 
     # Data reading
     def getLayerByName(self, name):

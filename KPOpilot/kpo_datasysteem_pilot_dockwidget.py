@@ -105,10 +105,17 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     '''General'''
     def setTextField(self, gui_name, text_list):
+        # Cant we just one type of TextEdit??????
         field = self.findChild(QtGui.QPlainTextEdit, gui_name)
-        field.clear()
-        for line in text_list:
-            field.appendPlainText(line)
+        if not field:
+            field2 = self.findChild(QtGui.QTextEdit, gui_name)
+            field2  .clear()
+            for line in text_list:
+                field2.append(line)
+        else:
+            field.clear()
+            for line in text_list:
+                field.appendPlainText(line)
 
 
     def setLabelValue(self, gui_name, value):
@@ -133,6 +140,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         table = self.findChild(QtGui.QTableWidget, gui_name)
         entry = QtGui.QTableWidgetItem(value)
         table.setItem(row, column, entry)
+
+
+    def hideDataTable(self,gui_name):
+        table = self.findChild(QtGui.QTableWidget, gui_name)
+        table.clear()
 
 
     def setSliderRange(self, gui_name, min, max, step):
