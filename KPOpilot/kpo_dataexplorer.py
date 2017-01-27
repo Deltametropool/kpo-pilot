@@ -90,10 +90,13 @@ class KPOExplorer():
 
 
     def onShow(self):
-        self.dlg.clearScenarioSummary()
-        self.dlg.clearLocationSummary()
+        self.showIntensity()
+        self.updateScenarioSummaryText()
+        self.showKnooppunten()
+        self.updateKnooppuntenSummaryTable()
         self.dlg.updateIntensityValue()
         self.dlg.updateAccessibilityValue()
+
 
     def readDataModel(self):
         self.iface.project.read(QFileInfo(self.plugin_dir +'data/project.qgs'))
@@ -204,7 +207,7 @@ class KPOExplorer():
 
 
     def updateLocationAttributeTable(self):
-        self.updateTable('ov_stops', 'locationAttributeTable')
+        self.updateTable('spoor', 'locationAttributeTable')
 
 
     def showLocationChart(self):
@@ -229,7 +232,7 @@ class KPOExplorer():
 
 
     def updateImportantAttributeTable(self):
-        self.updateTable('ov_stops', 'importantAttributeTable')
+        self.updateTable('spoor', 'importantAttributeTable')
 
 
     def showImportantChart(self):
@@ -262,7 +265,7 @@ class KPOExplorer():
 
 
     def updateStopSummaryTable(self):
-        self.updateTable('ov_stops', 'stopSummaryTable')
+        self.updateTable('spoor', 'stopSummaryTable')
 
 
     '''General'''
@@ -338,13 +341,14 @@ class KPOExplorer():
 
     def updateTable(self, data_layer, gui_name):
         layer = self.getLayerByName(data_layer)
-        layer_fields = layer.fields()
+        layer_fields = [field.name() for field in layer.fields()]
         self.dlg.setDataTableSize(gui_name, layer.featureCount())
 
         table_headers = self.dlg.getDataTableHeaders(gui_name)
 
         for row, fet in enumerate(layer.getFeatures()):
-            for name in table_headers:
+            for column, name in enumerate(table_headers):
                 if name in layer_fields:
-                    self.dlg.setDataTableField(gui_name, row, column, QtGui.QTableWidgetItem(fet[name]))
+                    if fet[name]:
+                        self.dlg.setDataTableField(gui_name, row, column, fet[name])
 

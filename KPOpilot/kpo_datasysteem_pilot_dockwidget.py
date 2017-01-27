@@ -131,7 +131,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def setDataTableField(self, gui_name, row, column, value):
         table = self.findChild(QtGui.QTableWidget, gui_name)
-        entry = QTableWidgetItem(value)
+        entry = QtGui.QTableWidgetItem(value)
         table.setItem(row, column, entry)
 
 
