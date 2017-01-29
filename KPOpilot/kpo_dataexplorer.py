@@ -28,7 +28,7 @@ from PyQt4 import QtCore, QtGui, uic
 from qgis.core import *
 from qgis.gui import *
 
-from PyQt4.QtCore import QFileInfo
+from PyQt4.QtCore import QFileInfo, QTimer, SIGNAL
 
 class KPOExplorer():
 
@@ -39,15 +39,12 @@ class KPOExplorer():
         self.plugin_dir = plugin_dir
         self.canvas = self.iface.mapCanvas()
         self.legend = self.iface.legendInterface()
-        # self.project = QgsProject.instance()
-        # self.bridge = QgsLayerTreeMapCanvasBridge(QgsProject.instance().layerTreeRoot(), self.canvas)
-        # self.bridge = QgsLayerTreeMapCanvasBridge(self.project.layerTreeRoot(), self.canvas)
-
-        # self.layer_tree_root = QgsProject.instance().layerTreeRoot()
-        # self.bridge = QgsLayerTreeMapCanvasBridge(self.layer_tree_root, self.canvas)
-        # self.bridge.setCanvasLayers()
-
-
+        self.timerMapTips = QTimer(self.canvas)
+        self.tip = QgsMapTip()
+        self.dlg.connect(self.canvas, SIGNAL("xyCoordinates(const QgsPoint&)"),
+                     self.mapTipXYChanged)
+        self.dlg.connect(self.timerMapTips, SIGNAL("timeout()"),
+                     self.showMapTip)
 
         self.dlg.visibilityChanged.connect(self.onShow)
 
@@ -360,24 +357,29 @@ class KPOExplorer():
 
     def updateStopSummaryTable(self):
         time = self.dlg.getTime()
-        self.updateTable(time, 'stopSummaryTable')
+        self.updateTable('spoor', 'stopSummaryTable')
 
 
     '''General'''
     # MapTip setup
-    def createMapTip(self, layer, fields, mouse_location):
-        self.tip = QgsMapTip()
-
-
-    def changeMapTip(self):
-        pass
+    def mapTipXYChanged(self, p):
+        if self.canvas.underMouse():  # Only if mouse is over the map
+            # Here you could check if your custom MapTips button is active or sth
+            self.lastMapPosition = QgsPoint(p.x(), p.y())
+            self.tip.clear(self.canvas)
+            self.timerMapTips.start(750)  # time in milliseconds
 
 
     def showMapTip(self):
+        self.timerMapTips.stop()
+
+        layer = self.iface.activeLayer()
+
         if self.canvas.underMouse():
             pointQgs = self.lastMapPosition
             pointQt = self.canvas.mouseLastXY()
-            self.canvas.showMapTip(self.layer, pointQgs, pointQt, self.canvas)
+            self.tip.showMapTip(layer, pointQgs, pointQt, self.canvas)
+
 
     # Selecting
     def setFeatureSelection(self, features, layer):
