@@ -162,11 +162,11 @@ class KPOExplorer():
 
     def showScenario(self):
         scenario = self.dlg.getScenario()
-        scenario_layers = {'Current scenario': ['ov_stops', 'station_isochrones'],
-                           'WLO Hoog 2040': ['ov_stops'],
-                           'WLO Laag 2040': ['station_isochrones'],
-                           'Primus': [],
-                           'all': ['ov_stops', 'station_isochrones']} # These are all the scenario associated layers
+        scenario_layers = {'Current scenario': ['Invloedsgebieden', 'loop', 'fiets'],
+                           'WLO Hoog 2040': ['loop', 'fiets'],
+                           'WLO Laag 2040': ['Housing_demand_scenarios', 'loop', 'fiets'],
+                           'Primus': ['loop', 'fiets'],
+                           'all': ['Housing_demand_scenarios', 'loop', 'fiets']} # These are all the scenario associated layers
 
         if self.dlg.scenarioShowCheck.isChecked():
             self.hideLayersInCanvas(scenario_layers['all'])
@@ -181,12 +181,12 @@ class KPOExplorer():
 
     def showKnooppunten(self):
         knooppunten = self.dlg.getKnooppunt()
-        knooppunten_layers = {'in- en uitstappers': ['ov_stops', 'station_isochrones'],
-                              'fietsenstallingen': ['ov_stops'],
-                              'perrons': ['station_isochrones'],
-                              'stijgpunten': [],
-                              'loopstromen': ['ov_stops', 'station_isochrones'],
-                              'all': ['ov_stops', 'station_isochrones']} # These are all the knooppunt associated layers
+        knooppunten_layers = {'in- en uitstappers': ['Knooppunten','loop', 'fiets'],
+                              'fietsenstallingen': ['loop', 'fiets'],
+                              'perrons': ['loop', 'fiets'],
+                              'stijgpunten': ['loop', 'fiets'],
+                              'loopstromen': ['loop', 'fiets'],
+                              'all': ['Knooppunten', 'loop', 'fiets']} # These are all the knooppunt associated layers
 
         if self.dlg.knooppuntenShowCheck.isChecked():
             self.hideLayersInCanvas(knooppunten_layers['all'])

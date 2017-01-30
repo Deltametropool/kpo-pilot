@@ -73,6 +73,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.gui_naming_english = {}
 
 
+        self.knooppuntenChartButton.hide()
+        self.locationChartButton.hide()
+        self.importantChartButton.hide()
+
+
     '''General'''
     # Updating GUI elements
     def setLanguage(self):
