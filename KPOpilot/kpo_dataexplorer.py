@@ -125,7 +125,7 @@ class KPOExplorer():
 
 
     def readDataModel(self):
-        project_path = self.plugin_dir + '/data/project.qgs'
+        project_path = self.plugin_dir + '/data/kpo_datasysteem_sample.qgs'
         self.iface.addProject(project_path)
 
 
