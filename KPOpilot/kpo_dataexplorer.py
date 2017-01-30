@@ -39,13 +39,13 @@ class KPOExplorer():
         self.plugin_dir = plugin_dir
         self.canvas = self.iface.mapCanvas()
         self.legend = self.iface.legendInterface()
-        self.timerMapTips = QTimer(self.canvas)
-        self.tip = QgsMapTip()
-        self.dlg.connect(self.canvas, SIGNAL("xyCoordinates(const QgsPoint&)"),
-                     self.mapTipXYChanged)
-        self.dlg.connect(self.timerMapTips, SIGNAL("timeout()"),
-                     self.showMapTip)
-
+        # self.timerMapTips = QTimer(self.canvas)
+        # self.tip = QgsMapTip()
+        # self.dlg.connect(self.canvas, SIGNAL("xyCoordinates(const QgsPoint&)"),
+        #              self.mapTipXYChanged)
+        # self.dlg.connect(self.timerMapTips, SIGNAL("timeout()"),
+        #              self.showMapTip)
+        #
         self.dlg.visibilityChanged.connect(self.onShow)
 
         # Knooppunten
@@ -64,10 +64,10 @@ class KPOExplorer():
         self.dlg.intensityShowCheck.stateChanged.connect(self.showIntensity)
         self.dlg.intensityValueSlider.valueChanged.connect(self.setIntensityValueSlider)
         self.dlg.accessibilityValueSlider.valueChanged.connect(self.setAccessibilityValueSlider)
-        self.dlg.locationSelectCombo.activated.connect(self.updateLocationSummaryText)
-        self.dlg.locationSelectCombo.activated.connect(self.updateLocationAttributeTable)
-        self.dlg.locationSelectCombo.activated.connect(self.showLocations)
-        self.dlg.locationShowCheck.stateChanged.connect(self.showLocations)
+        self.dlg.locationSelectCombo.activated.connect(self.updateDevelopmentSummaryText)
+        self.dlg.locationSelectCombo.activated.connect(self.updateDevelopmentAttributeTable)
+        self.dlg.locationSelectCombo.activated.connect(self.showDevelopments)
+        self.dlg.locationShowCheck.stateChanged.connect(self.showDevelopments)
         self.dlg.locationChartButton.clicked.connect(self.showLocationChart)
 
         # Koppelingen
@@ -104,16 +104,16 @@ class KPOExplorer():
         # Verstedelijking
         self.dlg.updateIntensityValue()
         self.dlg.updateAccessibilityValue()
-        self.updateLocationSummaryText()
-        self.updateLocationAttributeTable()
+        self.updateDevelopmentSummaryText()
+        self.updateDevelopmentAttributeTable()
 
-        # Koppelingen
+        # # Koppelingen
         self.showOverbelast()
         self.showRoutes()
         self.showImportant()
         self.updateImportantAttributeTable()
 
-        # Mobiliteit
+        # # Mobiliteit
         self.showWalk()
         self.showCycling()
         self.showOV()
@@ -175,10 +175,6 @@ class KPOExplorer():
             self.hideLayersInCanvas(scenario_layers['all'])
 
 
-    def updateKnooppuntenSummaryTable(self):
-        self.updateTable('spoor', 'knooppuntenSummaryTable')
-
-
     def showKnooppunten(self):
         knooppunten = self.dlg.getKnooppunt()
         knooppunten_layers = {'in- en uitstappers': ['Knooppunten','loop', 'fiets'],
@@ -195,6 +191,26 @@ class KPOExplorer():
             self.hideLayersInCanvas(knooppunten_layers['all'])
 
 
+    def updateKnooppuntenSummaryTable(self):
+        knooppunten = self.dlg.getKnooppunt()
+        knooppunten_field_links = {'in- en uitstappers': {'Station': 'station_name',
+                                                          'Value': 'passengers',
+                                                          '% change': 'passengers_change'},
+                                   'fietsenstallingen': {'Station': 'station_name',
+                                                          'Value': 'passengers',
+                                                          '% change': 'passengers_change'},
+                                   'perrons': {'Station': 'station_name',
+                                                          'Value': 'passengers',
+                                                          '% change': 'passengers_change'},
+                                   'stijgpunten': {'Station': 'station_name',
+                                                          'Value': 'passengers',
+                                                          '% change': 'passengers_change'},
+                                   'loopstromen': {'Station': 'station_name',
+                                                          'Value': 'passengers',
+                                                          '% change': 'passengers_change'}}
+        self.updateTable('Knooppunten', 'knooppuntenSummaryTable', knooppunten_field_links[knooppunten])
+
+
     def showKnooppuntenChart(self):
         pass
 
@@ -202,20 +218,12 @@ class KPOExplorer():
     '''Verstedelijking'''
     def showIntensity(self):
         intensity = self.dlg.getIntensity()
-        intensity_layers = {'all population': ['ov_stops', 'station_isochrones'],
-                            'residents': ['ov_stops'],
-                            'workers': ['station_isochrones'],
-                            'students': [],
-                            'property value (WOZ)': [],
-                            'built density': [],
-                            'all' : ['ov_stops', 'station_isochrones']}
-
         if self.dlg.intensityShowCheck.isChecked():
-            self.hideLayersInCanvas(intensity_layers['all'])
-            self.showLayersInCanvas(intensity_layers[intensity])
-        else:
-            self.hideLayersInCanvas(intensity_layers['all'])
+            self.showLayersInCanvas('Intensity')
 
+        else:
+            self.hideLayersInCanvas('Intensity')
+            # vl.setSubsetString( 'Counties = "Norwich"' )
 
     def setIntensityValueSlider(self):
         self.dlg.setSliderRange('intensityValueSlider', 0, 100, 10)
@@ -227,33 +235,46 @@ class KPOExplorer():
         self.dlg.updateAccessibilityValue()
 
 
-    def showLocations(self):
-        location = self.dlg.getLocation()
-        location_layers = {'Plancapaciteit': ['ov_frequency', 'station_isochrones'],
-                           'Leegstanden': ['wlo_40_laag'],
-                           'all': ['ov_frequency', 'station_isochrones','wlo_40_laag']}
-
+    def showDevelopments(self):
         if self.dlg.locationShowCheck.isChecked():
-            self.hideLayersInCanvas(location_layers['all'])
-            self.showLayersInCanvas(location_layers[location])
+            self.showLayersInCanvas('Development_locations')
         else:
-            self.hideLayersInCanvas(location_layers['all'])
+            self.hideLayersInCanvas('Development_locations')
 
 
-    def updateLocationSummaryText(self):
-        location = self.dlg.getLocation()
-        location_summary = {'Plancapaciteit': {'total': 45324, 'walking': 100, 'cycling': 30, 'outside': 10},
-                            'Leegstanden': {'total': 100, 'walking': 90, 'cycling': 325, 'outside': 10}}
+    def updateDevelopmentSummaryText(self):
+        development = self.dlg.getDevelopment()
+        data = self.getLayerByName('Development_locations_summary')
+        if data.isValid():
+            for fet in data.getFeatures():
+                if fet['locations_set'] == development.lower():
+                    total = fet['new_households']
+                    walking = fet['within_walking_dist']
+                    cycling = fet['within_cycling_dist']
+                    ov = fet['within_ov_dist']
+                    outside = fet['outside_influence']
 
-        if self.dlg.language == 'dutch':
-            summary_text = ['%i  totaal huishoudens' % location_summary[location]['total'],
-                            '%i  huishoudens op loopafstand' % location_summary[location]['walking']]
+                    summary_text = ['%s totaal huishoudens' % total,
+                                    '%s  huishoudens op loopafstand' % walking,
+                                    '%s  huishoudens op fietsafstand' % cycling,
+                                    '%s  huishoudens op dichtbij openbaar vervoer' % ov,
+                                    '%s  huishoudens ver weg' % outside]
 
-        self.setTextField('locationSummaryText', summary_text)
+                    self.setTextField('locationSummaryText', summary_text)
 
 
-    def updateLocationAttributeTable(self):
-        self.updateTable('spoor', 'locationAttributeTable')
+    def updateDevelopmentAttributeTable(self):
+        development = self.dlg.getDevelopment()
+        development_field_links = {'Leegstanden': {'Name': 'site_name',
+                                                          'Size': 'area',
+                                                          'Accessibility': 'max_accessibility'},
+                                   'Plancapaciteit': {'Name': 'site_name',
+                                                      'Size': 'area',
+                                                      'Accessibility': 'max_accessibility'}}
+
+        self.updateTable('Development_locations',
+                         'locationAttributeTable',
+                         development_field_links[development])
 
 
     def showLocationChart(self):
@@ -263,12 +284,12 @@ class KPOExplorer():
     '''Koppelingen'''
     def showOverbelast(self):
         overbelast = self.dlg.getOverbelast()
-        overbelast_layers = {'in- en uitstappers': ['ov_stops', 'station_isochrones'],
-                              'fietsenstallingen': ['ov_stops'],
-                              'perrons': ['station_isochrones'],
-                              'stijgpunten': [],
-                              'loopstromen': ['ov_stops', 'station_isochrones'],
-                              'all': ['ov_stops', 'station_isochrones']}
+        overbelast_layers = {'in- en uitstappers': ['Knooppunten','loop', 'fiets'],
+                              'fietsenstallingen': ['loop', 'fiets'],
+                              'perrons': ['loop', 'fiets'],
+                              'stijgpunten': ['loop', 'fiets'],
+                              'loopstromen': ['loop', 'fiets'],
+                              'all': ['Knooppunten', 'loop', 'fiets']}
 
         if self.dlg.overbelastShowCheck.isChecked():
             self.hideLayersInCanvas(overbelast_layers['all'])
@@ -278,32 +299,33 @@ class KPOExplorer():
 
 
     def showRoutes(self):
-        routes_layers = ['ov_stops', 'station_isochrones']
+        routes_layers = ['Ov_routes']
 
         if self.dlg.routesShowCheck.isChecked():
             self.showLayersInCanvas(routes_layers)
-            self.updateTable('spoor', 'overlapAttributeTable')
+            # self.updateTable('spoor', 'overlapAttributeTable')
         else:
             self.hideLayersInCanvas(routes_layers)
-            self.dlg.hideDataTable('overlapAttributeTable')
+            # self.dlg.hideDataTable('overlapAttributeTable')
 
 
     def showImportant(self):
-        locations = self.dlg.getLocations()
-        locations_layers = {'Belangrijk locaties': ['ov_frequency', 'station_isochrones'],
-                            'Magneten': ['wlo_40_laag'],
-                            'all': ['ov_frequency', 'station_isochrones', 'wlo_40_laag']}
-
-        if self.dlg.importantShowCheck.isChecked():
-            self.hideLayersInCanvas(locations_layers['all'])
-            self.showLayersInCanvas(locations_layers[locations])
-        else:
-            self.hideLayersInCanvas(locations_layers['all'])
+        # locations = self.dlg.getLocations()
+        # locations_layers = {'Belangrijk locaties': ['ov_frequency', 'station_isochrones'],
+        #                     'Magneten': ['wlo_40_laag'],
+        #                     'all': ['ov_frequency', 'station_isochrones', 'wlo_40_laag']}
+        #
+        # if self.dlg.importantShowCheck.isChecked():
+        #     self.hideLayersInCanvas(locations_layers['all'])
+        #     self.showLayersInCanvas(locations_layers[locations])
+        # else:
+        #     self.hideLayersInCanvas(locations_layers['all'])
+        pass
 
 
     def updateImportantAttributeTable(self):
-        self.updateTable('spoor', 'importantAttributeTable')
-
+        # self.updateTable('spoor', 'importantAttributeTable')
+        pass
 
     def showImportantChart(self):
         pass
@@ -312,73 +334,109 @@ class KPOExplorer():
     '''Bereikbaarheid'''
     def showWalk(self):
         if self.dlg.isochroneWalkCheck.isChecked():
-            self.showLayersInCanvas('station_isochrones')
+            self.showLayersInCanvas('Isochrones')
         else:
-            self.hideLayersInCanvas('station_isochrones')
+            self.hideLayersInCanvas('Isochrones')
 
 
     def showCycling(self):
         if self.dlg.isochroneBikeCheck.isChecked():
-            self.showLayersInCanvas('station_isochrones')
+            self.showLayersInCanvas('Isochrones')
         else:
-            self.hideLayersInCanvas('station_isochrones')
+            self.hideLayersInCanvas('Isochrones')
 
 
     def showOV(self):
         if self.dlg.isochroneOvCheck.isChecked():
-            self.showLayersInCanvas('station_isochrones')
+            self.showLayersInCanvas('Isochrones')
         else:
-            self.hideLayersInCanvas('station_isochrones')
+            self.hideLayersInCanvas('Isochrones')
 
 
     def showPTAL(self):
         ptal = self.dlg.getPTAL()
+        ptal_layers = {'Levels': 'Spatial_characteristics copy',
+                       'Index': 'Spatial_characteristics copy'}
         if self.dlg.ptalShowCheck.isChecked():
-            self.showLayersInCanvas(ptal)
+            self.showLayersInCanvas(ptal_layers[ptal])
         else:
-            self.hideLayersInCanvas(ptal)
+            self.hideLayersInCanvas(ptal_layers[ptal])
 
 
     def showLinkFrequency(self):
         links = self.dlg.getLinks()
+        link_layers = {'All OV links': 'bus stop frequency',
+                            'Bus links': 'bus stop frequency',
+                            'Tram links': 'bus stop frequency',
+                            'Metro links': 'bus stop frequency',
+                            'Rail links': 'bus stop frequency',
+                            'Ferry links': 'bus stop frequency',
+                            'all': 'bus stop frequency'}
         if self.dlg.linkFrequencyCheck.isChecked():
-            self.showLayersInCanvas(links)
+            self.hideLayersInCanvas(link_layers['all'])
+            self.showLayersInCanvas(link_layers[links])
         else:
-            self.hideLayersInCanvas(links)
+            self.hideLayersInCanvas(link_layers['all'])
 
 
     def showStopFrequency(self):
         stops = self.dlg.getStops()
-        if self.dlg.ptalShowCheck.isChecked():
-            self.showLayersInCanvas(stops)
+        stop_layers = {'All OV stops': 'bus stop frequency',
+                            'Bus stop': 'bus stop frequency',
+                            'Tram stop': 'bus stop frequency',
+                            'Metro stop': 'bus stop frequency',
+                            'Rail stop': 'bus stop frequency',
+                            'Ferry stop': 'bus stop frequency',
+                            'all': 'bus stop frequency'}
+        if self.dlg.stopFrequencyCheck.isChecked():
+            self.hideLayersInCanvas(stop_layers['all'])
+            self.showLayersInCanvas(stop_layers[stops])
         else:
-            self.hideLayersInCanvas(stops)
+            self.hideLayersInCanvas(stop_layers['all'])
 
 
     def updateStopSummaryTable(self):
         time = self.dlg.getTime()
-        self.updateTable('spoor', 'stopSummaryTable')
+        time_field_links = {'Ochtend spits': {'Stop': '',
+                                              'Bus': '',
+                                              'Tram': '',
+                                              'Metro': '',
+                                              'Rail': ''},
+                            'Middag dal': {'Stop': '',
+                                              'Bus': '',
+                                              'Tram': '',
+                                              'Metro': '',
+                                              'Rail': ''},
+                            'Avond spits': {'Stop': '',
+                                              'Bus': '',
+                                              'Tram': '',
+                                              'Metro': '',
+                                              'Rail': ''}
+                            }
+
+        # self.updateTable('spoor', 'stopSummaryTable')
 
 
     '''General'''
     # MapTip setup
-    def mapTipXYChanged(self, p):
-        if self.canvas.underMouse():  # Only if mouse is over the map
-            # Here you could check if your custom MapTips button is active or sth
-            self.lastMapPosition = QgsPoint(p.x(), p.y())
-            self.tip.clear(self.canvas)
-            self.timerMapTips.start(750)  # time in milliseconds
-
-
-    def showMapTip(self):
-        self.timerMapTips.stop()
-
-        layer = self.iface.activeLayer()
-
-        if self.canvas.underMouse():
-            pointQgs = self.lastMapPosition
-            pointQt = self.canvas.mouseLastXY()
-            self.tip.showMapTip(layer, pointQgs, pointQt, self.canvas)
+    # def mapTipXYChanged(self, p):
+    #     if self.canvas.underMouse():  # Only if mouse is over the map
+    #         if self.iface.activeLayer():
+    #             # Here you could check if your custom MapTips button is active or sth
+    #             self.lastMapPosition = QgsPoint(p.x(), p.y())
+    #             self.tip.clear(self.canvas)
+    #             self.timerMapTips.start(750)  # time in milliseconds
+    #
+    #
+    # def showMapTip(self):
+    #     self.timerMapTips.stop()
+    #
+    #     layer = self.iface.activeLayer()
+    #     if layer:
+    #         if self.canvas.underMouse():
+    #             pointQgs = self.lastMapPosition
+    #             pointQt = self.canvas.mouseLastXY()
+    #             self.tip.showMapTip(layer, pointQgs, pointQt, self.canvas)
 
 
     # Selecting
@@ -445,16 +503,15 @@ class KPOExplorer():
         self.dlg.setDataTableField(gui_name, row, column, entry)
 
 
-    def updateTable(self, data_layer, gui_name):
+    def updateTable(self, data_layer, gui_name, link_dict):
         layer = self.getLayerByName(data_layer)
-        layer_fields = [field.name() for field in layer.fields()]
-        self.dlg.setDataTableSize(gui_name, layer.featureCount())
+        if layer.isValid():
+            layer_fields = [field.name() for field in layer.fields()]
+            self.dlg.setDataTableSize(gui_name, layer.featureCount())
 
-        table_headers = self.dlg.getDataTableHeaders(gui_name)
-
-        for row, fet in enumerate(layer.getFeatures()):
-            for column, name in enumerate(table_headers):
-                if name in layer_fields:
-                    if fet[name]:
-                        self.dlg.setDataTableField(gui_name, row, column, fet[name])
+            table_headers = self.dlg.getDataTableHeaders(gui_name)
+            for row, fet in enumerate(layer.getFeatures()):
+                for column, column_name in enumerate(table_headers):
+                    if link_dict[column_name] in layer_fields:
+                        self.dlg.setDataTableField(gui_name, row, column, fet[link_dict[column_name]])
 

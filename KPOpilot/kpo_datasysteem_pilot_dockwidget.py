@@ -143,7 +143,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def setDataTableField(self, gui_name, row, column, value):
         table = self.findChild(QtGui.QTableWidget, gui_name)
-        entry = QtGui.QTableWidgetItem(value)
+        entry = QtGui.QTableWidgetItem(str(value))
         table.setItem(row, column, entry)
 
 
@@ -194,7 +194,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         value = str(self.accessibilityValueSlider.value())
         self.setLabelValue('accessibilityValueLabel', value)
 
-    def getLocation(self):
+    def getDevelopment(self):
         return self.locationSelectCombo.currentText()
 
 
