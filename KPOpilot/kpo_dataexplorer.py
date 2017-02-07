@@ -55,7 +55,6 @@ class KPOExplorer():
         self.dlg.knooppuntenAttributeCombo.activated.connect(self.updateKnooppuntenSummaryTable)
         self.dlg.knooppuntenAttributeCombo.activated.connect(self.showKnooppunten)
         self.dlg.knooppuntenShowCheck.stateChanged.connect(self.showKnooppunten)
-        self.dlg.knooppuntenChartButton.clicked.connect(self.showKnooppuntenChart)
 
         # Verstedelijking
         self.dlg.intensitySelectCombo.activated.connect(self.setIntensityValueSlider)
@@ -68,16 +67,14 @@ class KPOExplorer():
         self.dlg.locationSelectCombo.activated.connect(self.updateDevelopmentAttributeTable)
         self.dlg.locationSelectCombo.activated.connect(self.showDevelopments)
         self.dlg.locationShowCheck.stateChanged.connect(self.showDevelopments)
-        self.dlg.locationChartButton.clicked.connect(self.showLocationChart)
 
         # Koppelingen
         self.dlg.overbelastAttributeCombo.activated.connect(self.showOverbelast)
         self.dlg.overbelastShowCheck.stateChanged.connect(self.showOverbelast)
-        self.dlg.routesShowCheck.stateChanged.connect(self.showRoutes)
+        #self.dlg.routesShowCheck.stateChanged.connect(self.showRoutes)
         self.dlg.importantSelectCombo.activated.connect(self.updateImportantAttributeTable)
         self.dlg.importantSelectCombo.activated.connect(self.showImportant)
         self.dlg.importantShowCheck.stateChanged.connect(self.showImportant)
-        self.dlg.importantChartButton.clicked.connect(self.showImportantChart)
 
         # Mobiliteit
         self.dlg.isochroneWalkCheck.stateChanged.connect(self.showWalk)
@@ -97,7 +94,7 @@ class KPOExplorer():
 
         # Knooppunten
         self.showIntensity()
-        self.updateScenarioSummaryText()
+        #self.updateScenarioSummaryText()
         self.showKnooppunten()
         self.updateKnooppuntenSummaryTable()
 
@@ -105,7 +102,7 @@ class KPOExplorer():
         self.dlg.updateIntensityValue()
         self.dlg.updateAccessibilityValue()
         self.updateDevelopmentSummaryText()
-        self.updateDevelopmentAttributeTable()
+        #self.updateDevelopmentAttributeTable()
 
         # # Koppelingen
         self.showOverbelast()
@@ -154,8 +151,8 @@ class KPOExplorer():
         if self.dlg.language == 'dutch':
             summary_text = ['%i  totaal huishoudens' % scenario_summary[scenario]['total'],
                             '%i  huishoudens op loopafstand' % scenario_summary[scenario]['walking'],
-                            '%i  huishoudens op loopafstand' % scenario_summary[scenario]['cycling'],
-                            '%i  huishoudens op loopafstand' % scenario_summary[scenario]['outside']]
+                            '%i  huishoudens op fietsafstand' % scenario_summary[scenario]['cycling'],
+                            '%i  huishoudens buiten invluedsgebied' % scenario_summary[scenario]['outside']]
 
         self.setTextField('scenarioSummaryText', summary_text)
 
@@ -209,10 +206,6 @@ class KPOExplorer():
                                                           'Value': 'passengers',
                                                           '% change': 'passengers_change'}}
         self.updateTable('Knooppunten', 'knooppuntenSummaryTable', knooppunten_field_links[knooppunten])
-
-
-    def showKnooppuntenChart(self):
-        pass
 
 
     '''Verstedelijking'''
@@ -277,9 +270,6 @@ class KPOExplorer():
                          development_field_links[development])
 
 
-    def showLocationChart(self):
-        pass
-
 
     '''Koppelingen'''
     def showOverbelast(self):
@@ -301,11 +291,11 @@ class KPOExplorer():
     def showRoutes(self):
         routes_layers = ['Ov_routes']
 
-        if self.dlg.routesShowCheck.isChecked():
-            self.showLayersInCanvas(routes_layers)
+        #if self.dlg.routesShowCheck.isChecked():
+        #    self.showLayersInCanvas(routes_layers)
             # self.updateTable('spoor', 'overlapAttributeTable')
-        else:
-            self.hideLayersInCanvas(routes_layers)
+        #else:
+        #    self.hideLayersInCanvas(routes_layers)
             # self.dlg.hideDataTable('overlapAttributeTable')
 
 
@@ -325,9 +315,6 @@ class KPOExplorer():
 
     def updateImportantAttributeTable(self):
         # self.updateTable('spoor', 'importantAttributeTable')
-        pass
-
-    def showImportantChart(self):
         pass
 
 
