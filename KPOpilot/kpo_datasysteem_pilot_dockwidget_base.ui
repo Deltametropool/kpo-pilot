@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>358</width>
+    <width>406</width>
     <height>600</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>358</width>
+    <width>406</width>
     <height>600</height>
    </size>
   </property>
@@ -118,7 +118,7 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;3. “Hoe kunnen afvangstations worden ontwikkeld met als doel de druk op overbelaste stations te verminderen in het kader van de bereikbaarheid van belangrijke locaties?”&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Disclaimer: this just an example&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Disclaimer: text about data and analysis limitations. this is just a demonstration of the possibilities. should not be used for real life decision making. etc.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="acceptRichText">
            <bool>false</bool>
@@ -157,7 +157,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QGroupBox" name="housingScenarioBox">
           <property name="title">
-           <string>Housing Scenario</string>
+           <string>Woonscenario</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2" columnstretch="2,1">
            <property name="leftMargin">
@@ -176,7 +176,7 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="scenarioSelectCombo">
              <item>
               <property name="text">
-               <string>CBS 2016</string>
+               <string>Huidige situatie</string>
               </property>
              </item>
              <item>
@@ -241,14 +241,14 @@ p, li { white-space: pre-wrap; }
            <item row="1" column="0">
             <widget class="QLabel" name="todPolicyLabel">
              <property name="text">
-              <string>Set TOD policy level:</string>
+              <string>TOD beleidsniveau:</string>
              </property>
             </widget>
            </item>
            <item row="1" column="1">
             <widget class="QCheckBox" name="isochronesShowCheck">
              <property name="text">
-              <string>Isochrones</string>
+              <string>Isochronen</string>
              </property>
             </widget>
            </item>
@@ -265,7 +265,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QGroupBox" name="knooppuntenStatusBox">
           <property name="title">
-           <string>Knooppunten status</string>
+           <string>Knooppunten kenmerken</string>
           </property>
           <layout class="QGridLayout" name="gridLayout" columnstretch="2,1">
            <property name="leftMargin">
@@ -289,22 +289,22 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>fietsenstallingen</string>
+               <string>fietsparkeerplaatsen</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>perrons</string>
+               <string>capaciteit van de perrons</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>stijgpunten</string>
+               <string>capaciteit van stijgpunten</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>loopstromen</string>
+               <string>capaciteit van loopstromen</string>
               </property>
              </item>
             </widget>
@@ -322,7 +322,7 @@ p, li { white-space: pre-wrap; }
               <bool>true</bool>
              </property>
              <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>80</number>
+              <number>100</number>
              </attribute>
              <column>
               <property name="text">
@@ -331,12 +331,12 @@ p, li { white-space: pre-wrap; }
              </column>
              <column>
               <property name="text">
-               <string>Value</string>
+               <string>Number</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>% change</string>
+               <string>% verandering</string>
               </property>
              </column>
             </widget>
@@ -397,14 +397,14 @@ p, li { white-space: pre-wrap; }
            <item row="1" column="1">
             <widget class="QCheckBox" name="intensityShowCheck">
              <property name="text">
-              <string>Intensity</string>
+              <string>Activiteit</string>
              </property>
             </widget>
            </item>
            <item row="2" column="0" colspan="2">
             <widget class="QLabel" name="intensityValueLabel">
              <property name="text">
-              <string>Value</string>
+              <string>(Level)</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -433,7 +433,7 @@ p, li { white-space: pre-wrap; }
            <item row="4" column="0" colspan="2">
             <widget class="QLabel" name="accessibilityValueLabel">
              <property name="text">
-              <string>Value</string>
+              <string>(Level)</string>
              </property>
              <property name="alignment">
               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -469,22 +469,22 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="intensitySelectCombo">
              <item>
               <property name="text">
-               <string>inwoners</string>
+               <string>Inwoners</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>intensiteit</string>
+               <string>Intensiteit (werknemer, studenten)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>built density  (FSI)</string>
+               <string>Fysieke dichtheid (FSI)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>property value (WOZ)</string>
+               <string>WOZ waarde</string>
               </property>
              </item>
             </widget>
@@ -495,7 +495,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QGroupBox" name="locationsBox">
           <property name="title">
-           <string>Verstedlijking en programma</string>
+           <string>Ontwikkellocaties</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_4" rowstretch="1,1,8" columnstretch="2,1" rowminimumheight="0,0,0">
            <property name="leftMargin">
@@ -559,24 +559,24 @@ p, li { white-space: pre-wrap; }
            <item row="2" column="0" colspan="2">
             <widget class="QTableWidget" name="locationAttributeTable">
              <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>80</number>
+              <number>100</number>
              </attribute>
              <attribute name="horizontalHeaderMinimumSectionSize">
               <number>30</number>
              </attribute>
              <column>
               <property name="text">
-               <string>Name</string>
+               <string>Plaatsnaam</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>Size</string>
+               <string>Nieuwe woningen</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>Accessibility</string>
+               <string>Bereikbaarheid</string>
               </property>
              </column>
             </widget>
@@ -687,7 +687,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QGroupBox" name="importantLocationsBox">
           <property name="title">
-           <string>Koppeling locaties</string>
+           <string>Locaties</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_6" columnstretch="2,1">
            <property name="leftMargin">
@@ -716,12 +716,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Belangrijk locaties</string>
+               <string>Belangrijke locaties</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Magneten</string>
+               <string>Voorzieningen</string>
               </property>
              </item>
             </widget>
@@ -736,21 +736,21 @@ p, li { white-space: pre-wrap; }
            <item row="1" column="0" colspan="2">
             <widget class="QTableWidget" name="importantAttributeTable">
              <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>80</number>
+              <number>100</number>
              </attribute>
              <column>
               <property name="text">
-               <string>Location</string>
+               <string>Locatie naam</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>Stations</string>
+               <string>Activiteit</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>Intensity</string>
+               <string>Bereikbaarheid</string>
               </property>
              </column>
             </widget>
@@ -780,7 +780,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QGroupBox" name="isochroneBox">
           <property name="title">
-           <string>Isochrones from stations</string>
+           <string>Isochronen van het treinstation</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_7">
            <property name="leftMargin">
@@ -798,21 +798,21 @@ p, li { white-space: pre-wrap; }
            <item>
             <widget class="QCheckBox" name="isochroneWalkCheck">
              <property name="text">
-              <string>Walking (10 min - 800 m)</string>
+              <string>Lopen (10 min - 800 m)</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="isochroneBikeCheck">
              <property name="text">
-              <string>Cycling (10 min - 3000 m)</string>
+              <string>Fietsen (10 min - 3000 m)</string>
              </property>
             </widget>
            </item>
            <item>
             <widget class="QCheckBox" name="isochroneOvCheck">
              <property name="text">
-              <string>OV (10 min)</string>
+              <string>Bus/Tram/Metro (10 min)</string>
              </property>
             </widget>
            </item>
@@ -822,7 +822,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QGroupBox" name="ptalBox">
           <property name="title">
-           <string>OV Accessibility (PTAL)</string>
+           <string>OV Bereikbaarheid</string>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1">
            <property name="leftMargin">
@@ -841,12 +841,12 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="ptalSelectCombo">
              <item>
               <property name="text">
-               <string>Levels</string>
+               <string>Bereikbaarheidsniveau</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Index</string>
+               <string>Bereikbaarheidsindex</string>
               </property>
              </item>
             </widget>
@@ -854,7 +854,7 @@ p, li { white-space: pre-wrap; }
            <item>
             <widget class="QCheckBox" name="ptalShowCheck">
              <property name="text">
-              <string>Show</string>
+              <string>PTAL</string>
              </property>
             </widget>
            </item>
@@ -864,7 +864,7 @@ p, li { white-space: pre-wrap; }
         <item>
          <widget class="QGroupBox" name="frequencyBox">
           <property name="title">
-           <string>OV Frequency</string>
+           <string>OV Frequentie </string>
           </property>
           <layout class="QGridLayout" name="gridLayout_5" columnstretch="2,1">
            <property name="leftMargin">
@@ -879,24 +879,19 @@ p, li { white-space: pre-wrap; }
            <property name="bottomMargin">
             <number>5</number>
            </property>
-           <item row="4" column="0" colspan="2">
+           <item row="3" column="0" colspan="2">
             <widget class="QTableWidget" name="stopSummaryTable">
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>50</number>
              </attribute>
              <column>
               <property name="text">
-               <string>Stop</string>
+               <string>Halte</string>
               </property>
              </column>
              <column>
               <property name="text">
-               <string>Bus</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Tram</string>
+               <string>Trein</string>
               </property>
              </column>
              <column>
@@ -906,67 +901,26 @@ p, li { white-space: pre-wrap; }
              </column>
              <column>
               <property name="text">
-               <string>Rail</string>
+               <string>Tram</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Bus</string>
               </property>
              </column>
             </widget>
            </item>
            <item row="1" column="0">
-            <widget class="QComboBox" name="linkSelectCombo">
-             <item>
-              <property name="text">
-               <string>All OV links</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Rail links</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Metro links</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Tram links</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Bus links</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Veerboot links</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QCheckBox" name="linkFrequencyCheck">
-             <property name="text">
-              <string>Show</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0">
             <widget class="QComboBox" name="stopSelectCombo">
              <item>
               <property name="text">
-               <string>All OV stops</string>
+               <string>Alle OV haltes</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Bus stops</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Tram stops</string>
+               <string>Trein stations</string>
               </property>
              </item>
              <item>
@@ -976,7 +930,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Rail stations</string>
+               <string>Tram haltes</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Bus haltes</string>
               </property>
              </item>
              <item>
@@ -986,10 +945,10 @@ p, li { white-space: pre-wrap; }
              </item>
             </widget>
            </item>
-           <item row="2" column="1">
+           <item row="1" column="1">
             <widget class="QCheckBox" name="stopFrequencyCheck">
              <property name="text">
-              <string>Show</string>
+              <string>Haltes</string>
              </property>
             </widget>
            </item>
@@ -1002,7 +961,7 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Middag dal</string>
+               <string>Daluren</string>
               </property>
              </item>
              <item>
