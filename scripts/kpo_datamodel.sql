@@ -97,6 +97,7 @@ CREATE TABLE datasysteem.ontwikkellocaties(
 	dichtheid double precision,
 	gemiddelde_bereikbaarheidsindex double precision,
 	maximale_bereikbaarheidsindex double precision,
+	bereikbaare_locatie boolean,
 	CONSTRAINT ontwikkellocaties_pkey PRIMARY KEY (sid)
 );
 
@@ -105,8 +106,8 @@ CREATE TABLE datasysteem.overzicht_ontwikkellocaties(
 	sid serial NOT NULL,
 	plan_naam varchar,
 	geplande_woningen integer,
-	in_onderbenut_bereijkbaar integer,
-	buiten_onderbenut_bereijkbaar integer,
+	in_onderbenut_bereikbaar integer,
+	buiten_onderbenut_bereikbaar integer,
 	CONSTRAINT overzicht_ontwikkellocaties_pkey PRIMARY KEY (sid)
 );
 
@@ -114,11 +115,10 @@ CREATE TABLE datasysteem.overzicht_ontwikkellocaties(
 CREATE TABLE datasysteem.invloedsgebied_overlap(
 	sid serial NOT NULL,
 	geom geometry(MultiPolygon,28992),
-	inwoners integer,
+	inwoner_dichtheid integer,
 	intensiteit integer,
 	station_namen varchar,
 	station_aantal smallint,
-	fietsroutes_ids varchar,
 	ov_routes_ids varchar,
 	CONSTRAINT invloedsgebied_overlap_pkey PRIMARY KEY (sid)
 );
@@ -129,7 +129,6 @@ CREATE TABLE datasysteem.belangrijke_locaties(
 	geom geometry(MultiPolygon,28992),
 	locatie_id varchar,
 	location_naam varchar,
-	fietsroutes_ids varchar,
 	ov_routes_ids varchar,
 	CONSTRAINT belangrijke_locaties_pkey PRIMARY KEY (sid)
 );
@@ -140,7 +139,6 @@ CREATE TABLE datasysteem.regionale_voorzieningen(
 	geom geometry(MultiPoint,28992),
 	locatie_id varchar,
 	location_naam varchar,
-	fietsroutes_ids varchar,
 	ov_routes_ids varchar,
 	CONSTRAINT regionale_voorzieningen_pkey PRIMARY KEY (sid)
 );
@@ -150,8 +148,9 @@ CREATE TABLE datasysteem.fietsroutes(
 	sid serial NOT NULL,
 	geom geometry(Linestring,28992),
 	route_id varchar,
-	route_naam varchar,
+	link_id varchar,
 	route_intensiteit smallint,
+	invloedsgebied_ids varchar,
 	CONSTRAINT fietsroutes_pkey PRIMARY KEY (sid)
 );
 
