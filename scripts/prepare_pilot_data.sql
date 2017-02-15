@@ -1,57 +1,83 @@
 -- KPO data system
 -- Jorge Gil, 2017
 
--- Prepare the sample data set based on the data model
+-- Prepare the pilot data set based on the data model
 -- this gets distributed with the plug-in
 
--- DELETE FROM datasysteem.transit_nodes;
-INSERT INTO datasysteem.transit_nodes (geom, station_name, scenario_name, passengers, passengers_diff, passengers_change,
-				bicycle_parking, bicycle_occupation, bicycle_occupation_percent, bicycle_occupation_diff,
-				platform, platform_diff, stairs, stairs_diff, pedestrian_flows, pedestrian_flows_diff)
-	SELECT geom,station,'current scenario',in_uit_15,0,0,aantal_fie,aantal_geb,bezettings,0,
-		trunc(random()*2+1),trunc(random()*2+1),trunc(random()*2+1),trunc(random()*2+1),trunc(random()*2+1),
-		trunc(random()*2+1)
-	FROM sources.rws_treinstations_2015_pnh_fietstallingen_inuit
+-----
+-- Several background layers
+
+-- pilot study boundary
+-- Includes Province Noord Holland and Metropolitan Region Amsterdam
+-- DROP TABLE datasysteem.boundary CASCADE;
+CREATE TABLE datasysteem.boundary (
+	sid serial NOT NULL PRIMARY KEY,
+	geom geometry(Polygon,28992)
+);
+INSERT INTO datasysteem.boundary (geom) 
+	SELECT ST_Union(prov.geom, mra.geom)
+	FROM (SELECT * 
+		FROM sources.bestuurlijk_provincie_grenzen 
+		WHERE "Provincienaam" = 'Noord-Holland'
+	) prov,
+	(SELECT * FROM sources.metropoolregio_mra) mra
 ;
+CREATE INDEX datasysteem_boundary_idx ON datasysteem.boundary USING GIST (geom);
+-- rail and metro tracks
+
+
+-- water
+
+
+-- municipal borders
+
+
+-- urbanised area boundaries
+
+
+----
+
+
+----
+-- stations from VDM MaakPlaats
+----
+-- DROP TABLE datasysteem.pnh_stations CASCADE;
+CREATE TABLE networks.vdm_stations AS
+	SELECT sid, geom, svk_id, initcap(naam) naam, station alt_naam, code, 
+		in_uit_15, aantal_geb, aantal_fie aantal_fietsplaatsen, bezettings
+	FROM sources.rws_treinstations_2015_pnh_fietstallingen_inuit;
+CREATE INDEX vdm_stations_geom_idx ON datasysteem.pnh_stations USING GIST (geom);
+
 
 -- DELETE FROM datasysteem.housing_demand_scenarios;
-INSERT INTO datasysteem.housing_demand_scenarios(geom, postcode, place_name, scenario_name, nearest_station, total_households, 		within_walking_dist, within_cycling_dist, area, density, new_households, percent_change)
-	SELECT wlo.geom, wlo.pc4, wlo.woonplaats, 'WLO 40 laag', stat.station_name, wlo.huish_1, FALSE, FALSE, wlo.area,
-		wlo.vdm_d_40, wlo.vdm_wo_toe, CASE
+INSERT INTO datasysteem.woonscenarios(
+		geom,
+		code, 
+		plaatsnaam,
+		scenario_naam,
+		huishoudens,
+		op_loopafstand,
+		op_fietsafstand,
+		area,
+		dichtheid,
+		nieuwe_huishoudens,
+		procentuele_verandering
+	)
+	SELECT wlo.geom,
+		wlo.pc4,
+		wlo.woonplaats,
+		'WLO 40 laag',
+		wlo.huish_1,
+		FALSE, FALSE,
+		wlo.area,
+		wlo.vdm_d_40,
+		wlo.vdm_wo_toe,
+		CASE
 			WHEN wlo.huish = 0 THEN NULL
 			WHEN wlo.vdm_wo_toe > wlo.huish THEN 100
 			ELSE wlo.vdm_wo_toe::numeric/wlo.huish::numeric*100.0
 			END
-	FROM sources.vdm_wlo_40_laag_mra wlo,
-		(SELECT DISTINCT ON(a.sid) a.sid, b.station_id station_sid, b.station_naam station_name, 
-			ST_Distance(a.geom, b.geom) dist 
-		FROM sources.vdm_wlo_40_laag_mra a, 
-			(SELECT * FROM street_isochrone_analysis.station_isochrone_polygons_full
-				WHERE travel_mode = 'fiets'
-			) b
-		ORDER BY a.sid, dist ASC
-		) stat
-	WHERE wlo.sid = stat.sid
-;
-UPDATE datasysteem.housing_demand_scenarios sce SET 
-	within_walking_dist = TRUE
-	FROM (SELECT DISTINCT ON(a.sid) a.sid, a.pc4
-		FROM sources.vdm_wlo_40_laag_mra a,
-		(SELECT * FROM street_isochrone_analysis.station_isochrone_polygons_full
-			WHERE travel_mode = 'voetganger') b
-		WHERE ST_Intersects(a.geom,b.geom)
-		) intersects
-	WHERE sce.postcode=intersects.pc4::text
-;
-UPDATE datasysteem.housing_demand_scenarios sce SET 
-	within_cycling_dist = TRUE
-	FROM (SELECT DISTINCT ON(a.sid) a.sid, a.pc4
-		FROM sources.vdm_wlo_40_laag_mra a,
-		(SELECT * FROM street_isochrone_analysis.station_isochrone_polygons_full
-			WHERE travel_mode = 'fiets') b
-		WHERE ST_Intersects(a.geom,b.geom)
-		) intersects
-	WHERE sce.postcode=intersects.pc4::text
+	FROM sources.vdm_wlo_40_laag_mra wlo
 ;
 
 -- DELETE FROM datasysteem.housing_demand_summary;
@@ -88,6 +114,16 @@ UPDATE datasysteem.housing_demand_summary a SET
 		GROUP BY scenario_name
 	) b
 	WHERE a.scenario_name = b.scenario_name
+;
+
+-- DELETE FROM datasysteem.transit_nodes;
+INSERT INTO datasysteem.transit_nodes (geom, station_name, scenario_name, passengers, passengers_diff, passengers_change,
+				bicycle_parking, bicycle_occupation, bicycle_occupation_percent, bicycle_occupation_diff,
+				platform, platform_diff, stairs, stairs_diff, pedestrian_flows, pedestrian_flows_diff)
+	SELECT geom,station,'current scenario',in_uit_15,0,0,aantal_fie,aantal_geb,bezettings,0,
+		trunc(random()*2+1),trunc(random()*2+1),trunc(random()*2+1),trunc(random()*2+1),trunc(random()*2+1),
+		trunc(random()*2+1)
+	FROM sources.rws_treinstations_2015_pnh_fietstallingen_inuit
 ;
 
 -- DELETE FROM datasysteem.spatial_characteristics;

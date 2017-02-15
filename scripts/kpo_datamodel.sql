@@ -11,7 +11,7 @@ ALTER SCHEMA datasysteem OWNER TO postgres;
 CREATE TABLE datasysteem.woonscenarios(
 	sid serial NOT NULL,
 	geom geometry(MultiPolygon,28992),
-	postcode varchar,
+	code varchar,
 	plaatsnaam varchar,
 	scenario_naam varchar,
 	op_loopafstand boolean,
@@ -42,6 +42,8 @@ CREATE TABLE datasysteem.knooppunten(
 	sid serial NOT NULL,
 	geom geometry(MultiPoint,28992),
 	station_naam varchar,
+	halte_id varchar,
+	halte_naam varchar,
 	scenario_naam varchar,
 	tod_beleidsniveau smallint,
 	huishoudens integer,

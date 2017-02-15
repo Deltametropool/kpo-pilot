@@ -1,25 +1,11 @@
 -- KPO data system
 -- author: Jorge Gil, 2017
 
--- prepare networks data used for analysis
--- Includes Province Noord Holland and Metropolitan Region Amsterdam
-
------
--- study area
--- DROP TABLE networks.boundary CASCADE;
-CREATE TABLE networks.boundary (
-	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(Polygon,28992)
-);
-INSERT INTO networks.boundary (geom) 
-	SELECT ST_Union(prov.geom, mra.geom)
-	FROM (SELECT * FROM sources.bestuurlijk_provincie_grenzen WHERE "Provincienaam" = 'Noord-Holland') prov,
-	(SELECT * FROM sources.metropoolregio_mra) mra
-;
-CREATE INDEX study_boundary_idx ON networks.boundary USING GIST (geom);
+-- prepare network data used in analysis and calculations
 
 ----
 -- TOP10NL road network
+----
 -- DROP TABLE networks.t10_wegen CASCADE;
 CREATE TABLE networks.t10_wegen(
 	sid serial NOT NULL PRIMARY KEY,
@@ -61,111 +47,20 @@ INSERT INTO networks.t10_wegen(geom, length, t10_id, type_weg, verkeer, fysiek, 
 		AND verhardingstype != 'onverhard'
 		AND typeweg NOT IN ('(1:startbaan, landingsbaan)','(1:rolbaan, platform)')
 	) weg,
-	(SELECT ST_Buffer(geom,5000) geom FROM networks.boundary LIMIT 1) study
-	WHERE ST_Intersects(weg.wkb_geometry, networks.geom)
+	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.boundary LIMIT 1) pilot
+	WHERE ST_Intersects(weg.wkb_geometry, pilot.geom)
 ;
 -- update mode columns
 -- UPDATE networks.t10_wegen SET auto=NULL, fiets=NULL, voetganger=NULL;
 UPDATE networks.t10_wegen SET auto=True, fiets=False, voetganger=False WHERE verkeer = 'snelverkeer';
 UPDATE networks.t10_wegen SET auto=False, fiets=True WHERE verkeer = 'fietsers, bromfietsers';
 UPDATE networks.t10_wegen SET auto=False, voetganger=True WHERE verkeer = 'voetgangers';
---UPDATE networks.t10_wegen SET auto=True, fiets=False, voetganger=False WHERE type_weg = 'regionale weg';
---UPDATE networks.t10_wegen SET fiets=False WHERE verkeer = 'voetgangers' AND verharding ='onbekend';
-
 -- DROP INDEX t10_wegen_geom_idx CASCADE;
 CREATE INDEX t10_wegen_geom_idx ON networks.t10_wegen USING GIST (geom);
 
-
 ----
--- stations from Province and MaakPlaats
--- DROP TABLE networks.pnh_stations CASCADE;
-CREATE TABLE networks.pnh_stations AS
-	SELECT sid, geom, svk_id, initcap(naam) naam, station alt_naam, code, 
-		in_uit_15, aantal_geb, aantal_fie aantal_fietsplaatsen, bezettings
-	FROM sources.rws_treinstations_2015_pnh_fietstallingen_inuit;
-CREATE INDEX pnh_stations_geom_idx ON networks.pnh_stations USING GIST (geom);
-
-
------
--- NWB road network
--- DROP TABLE networks.nwb_wegen CASCADE;
-CREATE TABLE networks.nwb_wegen(
-	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(MultiLineString,28992),
-	length double precision,
-	weg_id bigint,
-	start_id bigint,
-	end_id bigint,
-	weg_beheer varchar(1),
-	weg_code varchar(3),
-	richting varchar(1),
-	rij_richt varchar(1),
-	straat varchar,
-	woonplats varchar,
-	gem_id varchar,
-	gem_naam varchar,
-	wegtype varchar(2),
-	wegtype_naam varchar,
-	routeletter varchar(1),
-	routenummer integer,
-	auto boolean,
-	fiets boolean,
-	voetganger boolean
-);
-INSERT INTO networks.nwb_wegen (geom, length, weg_id, start_id, end_id, weg_beheer, weg_code, richting, rij_richt, straat,
-		woonplats, gem_id, gem_naam, wegtype, wegtype_naam, routeletter, routenummer)
-	SELECT weg.geom, ST_Length(weg.geom), wvk_id, jte_id_beg, jte_id_end, wegbehsrt, bst_code, admrichtng, rijrichtng,
-		stt_naam, wpsnaamnen, gme_id, gme_naam, wegtype, wgtype_oms, routeltr, routenr
-	FROM (SELECT * FROM sources.nwb_wegvakken 
-		WHERE bst_code IS NULL
-		OR bst_code NOT IN ('BST','PAR','PKB','PKP','VWG')
-		--OR bst_code IN ('VP','VWG','FP','TN','BU','NRB','MRB','DST','YYY','VBW')
-		--OR (bst_code = 'HR' AND (routeltr IS NULL OR routeltr = 'N'))
-	) weg,
-	(SELECT ST_Buffer(geom,5000) geom FROM networks.boundary LIMIT 1) study
-	WHERE ST_Intersects(weg.geom, networks.geom)
-;
--- update mode columns
--- UPDATE networks.nwb_wegen SET auto=NULL, fiets=NULL, voetganger=NULL;
-UPDATE networks.nwb_wegen SET auto=True, fiets=False, voetganger=False WHERE weg_code IN ('VBD','VBI','VBK','VBR','VBS','VBW');
-UPDATE networks.nwb_wegen SET auto=True WHERE weg_code = 'HR';
-UPDATE networks.nwb_wegen SET fiets=False, voetganger=False WHERE weg_code = 'HR' AND routeletter IS NOT NULL;
-UPDATE networks.nwb_wegen SET auto=False, fiets=True WHERE weg_code IN ('FP');
-UPDATE networks.nwb_wegen SET auto=False, voetganger=True WHERE weg_code IN ('VP');
-UPDATE networks.nwb_wegen SET auto=False WHERE weg_code IN ('BU');
-UPDATE networks.nwb_wegen SET auto=True WHERE weg_code IN ('OPR','AFR');
--- DROP INDEX nwb_wegen_geom_idx CASCADE;
-CREATE INDEX nwb_wegen_geom_idx ON networks.nwb_wegen USING GIST (geom);
--- NWB stations
--- DROP TABLE networks.nwb_stations CASCADE;
-CREATE TABLE networks.nwb_stations(
-	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(MultiPoint,28992),
-	station_id integer,
-	station_name varchar
-);
-INSERT INTO networks.nwb_stations (geom, station_id, station_name)
-	SELECT stat.geom, svk_id, initcap(naam)
-	FROM sources.nwb_spoor_treinstations stat,
-	(SELECT geom FROM networks.boundary LIMIT 1) study
-	WHERE ST_Intersects(stat.geom,study.geom)
-;
--- NWB tracks
--- DROP TABLE networks.nwb_spoor CASCADE;
-CREATE TABLE networks.nwb_spoor(
-	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(MultiLineString,28992),
-	spoor_id integer
-);
-INSERT INTO networks.nwb_spoor (geom, spoor_id)
-	SELECT spoor.geom, sbk_id
-	FROM sources.nwb_spoor_spoorvakken spoor,
-	(SELECT geom FROM networks.boundary LIMIT 1) study
-	WHERE ST_Intersects(spoor.geom,study.geom)
-;
-
-
--- GTFS public transport network
+-- 9292 GTFS public transport network
+----
 -- stops
 -- DROP TABLE networks.ov_stops CASCADE;
 CREATE TABLE networks.ov_stops (
@@ -204,12 +99,12 @@ INSERT INTO networks.ov_stops(geom, stop_id, stop_code, stop_name, stop_descr, p
 		CASE WHEN parent_station='' THEN NULL 
 		ELSE parent_station END AS parent_station 
 		FROM gtfs.stops) gtfs,
-	(SELECT ST_Buffer(geom,5000) geom FROM networks.boundary LIMIT 1) study
+	(SELECT geom geom FROM networks.boundary LIMIT 1) study
 	WHERE ST_Intersects(gtfs.geom,study.geom)
 ;
 CREATE INDEX ov_stops_geom_idx ON networks.ov_stops USING GIST (geom);
 
--- times
+-- stop times
 -- DROP TABLE networks.ov_stop_times CASCADE;
 CREATE TABLE networks.ov_stop_times (
 	sid serial NOT NULL PRIMARY KEY,
@@ -263,7 +158,7 @@ INSERT INTO networks.ov_trips (trip_id, trip_headsign, direction_id, agency_name
 			WHEN routes.route_type = 1 THEN 'metro'
 			WHEN routes.route_type = 2 THEN 'trein'
 			WHEN routes.route_type = 3 THEN 'bus'
-			WHEN routes.route_type = 4 THEN 'veerboot'
+			WHEN routes.route_type = 4 THEN 'ferry'
 		END, trips.service_id, 
 		CASE
 			WHEN calendar.dow = 0 THEN 'sunday'
@@ -288,9 +183,12 @@ INSERT INTO networks.ov_trips (trip_id, trip_headsign, direction_id, agency_name
 -- update stops mode
 -- DROP TABLE ov_stop_modes CASCADE;
 CREATE TEMP TABLE ov_stop_modes AS
-	SELECT a.stop_id, min(b.route_type)
-	FROM networks.ov_stop_times a JOIN networks.ov_trips b USING(trip_id)
-	GROUP BY a.stop_id, b.route_type ORDER BY a.stop_id, b.route_type
+	SELECT a.stop_id, min(b.route_type) route_type
+	FROM networks.ov_stop_times a 
+	JOIN networks.ov_trips b 
+	USING(trip_id)
+	GROUP BY a.stop_id, b.route_type 
+	ORDER BY a.stop_id, b.route_type
 ;
 UPDATE networks.ov_stops stp SET tram = True
 	FROM (SELECT * FROM ov_stop_modes WHERE route_type='tram') mod
@@ -325,47 +223,46 @@ UPDATE networks.ov_stops SET
 	stop_descr = 'Amstelveen'
 	WHERE metro = TRUE and stop_name = 'Amstelveen'
 ;
-
--- update VDM train stations code
+-- update train stations with VDM code from Maakplaats (for matching data)
 UPDATE networks.ov_stops AS stops SET
 	stop_code = vdm.code
-	FROM networks.pnh_stations AS vdm 
+	FROM sources.rws_treinstations_2015_pnh AS vdm 
 	WHERE trein = TRUE 
-	AND (lower(stop_name) = lower(vdm.alt_naam)
+	AND (lower(stop_name) = lower(vdm.station)
 	OR lower(stop_name) = lower(vdm.naam)
-	OR replace(lower(stop_name), '-', ' ') = lower(vdm.alt_naam))
+	OR replace(lower(stop_name), '-', ' ') = lower(vdm.station))
 ;
 UPDATE networks.ov_stops AS stops SET
 	stop_code = vdm.code
-	FROM networks.pnh_stations AS vdm 
+	FROM sources.rws_treinstations_2015_pnh AS vdm 
 	WHERE trein = TRUE
 	AND stop_name = 'Hilversum Media Park'
-	AND vdm.naam = 'Hilversum-Noord'
+	AND initcap(vdm.naam) = 'Hilversum-Noord'
 ;
 UPDATE networks.ov_stops AS stops SET
 	stop_code = vdm.code
-	FROM networks.pnh_stations AS vdm 
+	FROM sources.rws_treinstations_2015_pnh AS vdm 
 	WHERE trein = TRUE
 	AND stop_name = 'Zandvoort aan Zee'
-	AND vdm.naam = 'Zandvoort'
+	AND initcap(vdm.naam) = 'Zandvoort'
 ;
 UPDATE networks.ov_stops AS stops SET
 	stop_code = vdm.code
-	FROM networks.pnh_stations AS vdm 
+	FROM sources.rws_treinstations_2015_pnh AS vdm 
 	WHERE trein = TRUE
 	AND stop_name = 'Koog aan de Zaan'
-	AND vdm.naam = 'Koog Bloemwijk'
+	AND initcap(vdm.naam) = 'Koog Bloemwijk'
 ;
 UPDATE networks.ov_stops AS stops SET
 	stop_code = vdm.code
-	FROM networks.pnh_stations AS vdm 
+	FROM sources.rws_treinstations_2015_pnh AS vdm 
 	WHERE trein = TRUE
 	AND stop_name = 'Zaanse Schans'
-	AND vdm.naam = 'Koog-Zaandijk'
+	AND initcap(vdm.naam) = 'Koog-Zaandijk'
 ;
 
--- this is a very useful function to find the index of an element in an array
-CREATE FUNCTION array_search(needle ANYELEMENT, haystack ANYARRAY)
+-- this is a useful function to find the index of an element in an array
+CREATE OR REPLACE FUNCTION array_search(needle ANYELEMENT, haystack ANYARRAY)
 RETURNS INT AS $$
     SELECT i
       FROM generate_subscripts($2, 1) AS i
@@ -425,7 +322,6 @@ UPDATE networks.ov_stop_times AS times SET
 	WHERE times.stop_id = stops.platform_code
 ;
 -- add stop groups to stop_times
-ALTER TABLE networks.ov_stop_times ADD COLUMN group_id character varying;
 UPDATE networks.ov_stop_times AS times SET 
 	group_id = CASE 
 		WHEN stops.parent_station IS NULL THEN times.stop_id
@@ -434,7 +330,6 @@ UPDATE networks.ov_stop_times AS times SET
 	FROM networks.ov_stops AS stops
 	WHERE times.stop_id = stops.stop_id
 ;
-
 
 -- links
 -- important to get the topology in terms of links, as pairs of stops that are connected by a given trip/mode
@@ -555,18 +450,19 @@ CREATE INDEX ov_routes_geom_idx ON networks.ov_routes USING GIST(geom);
 
 --
 -- create stop areas based on name
--- useful for aggregating stops groups and stops of different modes, making the topology of transfers
+-- useful for aggregating stops groups and stops of different modes for transfers
 -- the results are added to a stop_area column in the stops table
 -- DROP TABLE networks.ov_stop_areas CASCADE;
 CREATE TABLE networks.ov_stop_areas (
 	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(Point, 28992),
+	geom geometry(MultiPoint, 28992),
 	area_name character varying,
+	alt_name character varying,
 	area_location character varying
 );
 -- areas of different modes (non rail)
-INSERT INTO networks.ov_stop_areas (geom, area_name, area_location)
-	SELECT ST_Centroid(area.geom), area.stop_name, area.stop_descr
+INSERT INTO networks.ov_stop_areas (geom, area_name, alt_name, area_location)
+	SELECT ST_Multi(ST_Centroid(area.geom)), area.stop_name, area.stop_name, area.stop_descr
 	FROM (
 		SELECT ST_Collect(geom) geom, stop_name, stop_descr, count(*) count
 		FROM networks.ov_stops 
@@ -575,15 +471,18 @@ INSERT INTO networks.ov_stop_areas (geom, area_name, area_location)
 	) area
 	WHERE area.count > 1
 ;
--- areas around rail stations (names don't match, use station as area)
-INSERT INTO networks.ov_stop_areas (geom, area_name, area_location)
-	SELECT geom, stop_name, stop_descr FROM networks.ov_stops 
-	WHERE stop_code IS NOT NULL AND parent_station IS NULL AND trein = True
+-- areas around rail stations (use the name and geometry from the Maakplaats set of stations)
+INSERT INTO networks.ov_stop_areas (geom, area_name, alt_name, area_location)
+	SELECT vdm.geom, stops.stop_name, vdm.station, stops.stop_descr
+	FROM (
+		SELECT * FROM networks.ov_stops
+		WHERE stop_code IS NOT NULL 
+		AND parent_station IS NULL 
+		AND trein = True
+		) stops
+	JOIN sources.rws_treinstations_2015_pnh vdm
+	ON (stops.stop_code = vdm.code) 
 ;
-/*INSERT INTO networks.ov_stop_areas (geom, area_name, area_location)
-	SELECT geom, alt_naam, split_part(naam,' ',1) FROM networks.pnh_stations 
-;*/
-
 -- update stops with corresponding stop area
 -- UPDATE networks.ov_stops SET stop_area=NULL;
 -- stations and platforms
