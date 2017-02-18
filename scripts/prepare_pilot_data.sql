@@ -1,11 +1,12 @@
 -- KPO data system
--- Jorge Gil, 2017
+-- author: Jorge Gil, 2017
+
 
 -- Prepare the pilot data set based on the data model
 -- this gets distributed with the plug-in
 
 -----
--- Several background layers
+-- Background layers
 
 -- pilot study boundary
 -- Includes Province Noord Holland and Metropolitan Region Amsterdam
@@ -17,135 +18,167 @@ CREATE TABLE datasysteem.boundary (
 INSERT INTO datasysteem.boundary (geom) 
 	SELECT ST_Union(prov.geom, mra.geom)
 	FROM (SELECT * 
-		FROM sources.bestuurlijk_provincie_grenzen 
-		WHERE "Provincienaam" = 'Noord-Holland'
+		FROM sources.cbs_bestuurlijke_grenzen_provincie 
+		WHERE provincie_naam = 'Noord-Holland'
 	) prov,
 	(SELECT * FROM sources.metropoolregio_mra) mra
 ;
 CREATE INDEX datasysteem_boundary_idx ON datasysteem.boundary USING GIST (geom);
 -- rail and metro tracks
-
-
+-- DROP TABLE datasysteem.spoorwegen CASCADE;
+CREATE TABLE datasysteem.spoorwegen (
+	sid serial NOT NULL PRIMARY KEY,
+	geom geometry(LineString,28992),
+	fid integer,
+	type_spoorbaan character varying
+);
+INSERT INTO datasysteem.spoorwegen (geom, fid, type_spoorbaan)
+	SELECT spoor.wkb_geometry, spoor.fid, spoor.typespoorbaan
+	FROM (SELECT * FROM sources.t10nl_spoorwegen
+		WHERE "vervoerfunctie" in ('personenvervoer','gemengd gebruik') 
+		AND "status" = 'in gebruik'
+	) spoor,
+	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.boundary LIMIT 1) pilot
+	WHERE ST_Intersects(spoor.wkb_geometry, pilot.geom)
+;
 -- water
-
-
+-- DROP TABLE datasysteem.water CASCADE;
+CREATE TABLE datasysteem.water (
+	sid serial NOT NULL PRIMARY KEY,
+	geom geometry(MultiPolygon,28992)
+);
+INSERT INTO datasysteem.water (geom)
+	SELECT ST_MakeValid(water.geom)
+	FROM sources.nl_water_simpel water,
+	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.boundary LIMIT 1) pilot
+	WHERE ST_Intersects(ST_MakeValid(water.geom),pilot.geom)
+;
 -- municipal borders
-
-
--- urbanised area boundaries
-
+-- DROP TABLE datasysteem.gemeenten CASCADE;
+CREATE TABLE datasysteem.gemeenten (
+	sid serial NOT NULL PRIMARY KEY,
+	geom geometry(MultiPolygon,28992),
+	code character varying,
+	gemeente_naam character varying
+);
+INSERT INTO datasysteem.gemeenten (geom, code, gemeente_naam)
+	SELECT geom, code, gemeentena
+	FROM sources.cbs_bestuurlijke_grenzen_gemeenten
+;
+-- urbanised areas
+-- DROP TABLE datasysteem.bebouwdgebieden CASCADE;
+CREATE TABLE datasysteem.bebouwdgebieden (
+	sid serial NOT NULL PRIMARY KEY,
+	geom geometry(MultiPolygon,28992)
+);
+INSERT INTO datasysteem.bebouwdgebieden (geom)
+	SELECT bbg.geom
+	FROM sources.sv_ag_huisv_bbg_detail bbg,
+	(SELECT geom FROM datasysteem.boundary LIMIT 1) pilot
+	WHERE ST_Intersects(bbg.geom, pilot.geom)
+;
 
 ----
-
-
-----
--- stations from VDM MaakPlaats
-----
--- DROP TABLE datasysteem.pnh_stations CASCADE;
-CREATE TABLE networks.vdm_stations AS
-	SELECT sid, geom, svk_id, initcap(naam) naam, station alt_naam, code, 
-		in_uit_15, aantal_geb, aantal_fie aantal_fietsplaatsen, bezettings
-	FROM sources.rws_treinstations_2015_pnh_fietstallingen_inuit;
-CREATE INDEX vdm_stations_geom_idx ON datasysteem.pnh_stations USING GIST (geom);
-
-
--- DELETE FROM datasysteem.housing_demand_scenarios;
+-- Woonscenarios
+-- DELETE FROM datasysteem.woonscenarios;
 INSERT INTO datasysteem.woonscenarios(
-		geom,
-		code, 
-		plaatsnaam,
-		scenario_naam,
-		huishoudens,
-		op_loopafstand,
-		op_fietsafstand,
-		area,
-		dichtheid,
-		nieuwe_huishoudens,
-		procentuele_verandering
+		geom, code, plaatsnaam, scenario_naam, huishoudens,
+		op_loopafstand, op_fietsafstand, area, 
+		nieuwe_huishoudens, procentuele_verandering
 	)
-	SELECT wlo.geom,
-		wlo.pc4,
-		wlo.woonplaats,
-		'WLO 40 laag',
-		wlo.huish_1,
-		FALSE, FALSE,
-		wlo.area,
-		wlo.vdm_d_40,
-		wlo.vdm_wo_toe,
-		CASE
-			WHEN wlo.huish = 0 THEN NULL
-			WHEN wlo.vdm_wo_toe > wlo.huish THEN 100
-			ELSE wlo.vdm_wo_toe::numeric/wlo.huish::numeric*100.0
-			END
-	FROM sources.vdm_wlo_40_laag_mra wlo
+	SELECT huidig.geom, huidig.zone_id, huidig.woonplaats, 'Huidige situatie',
+		huidig.huish, FALSE, FALSE, ST_Area(huidig.geom), 0, 0
+	FROM sources.w_2010_versie_17_feb_2014 huidig,
+	(SELECT geom FROM datasysteem.boundary LIMIT 1) pilot
+	WHERE ST_Intersects(huidig.geom, pilot.geom)
+;
+INSERT INTO datasysteem.woonscenarios(
+		geom, code, plaatsnaam, scenario_naam, huishoudens,
+		op_loopafstand, op_fietsafstand, area, nieuwe_huishoudens
+	)
+	SELECT wlo.geom, wlo.zone_id, wlo.woonplaats, 'WLO 2040 Laag',
+		wlo.huish, FALSE, FALSE, ST_Area(wlo.geom), (wlo.huish-huidig.huish)
+	FROM (
+		SELECT * FROM datasysteem.woonscenarios WHERE scenario_naam = 'Huidige situatie'
+	) huidig
+	JOIN sources.w_2040_laag_versie_22_januari_2016 wlo
+	USING(zone_id)
+;
+INSERT INTO datasysteem.woonscenarios(
+		geom, code, plaatsnaam, scenario_naam, huishoudens,
+		op_loopafstand, op_fietsafstand, area, nieuwe_huishoudens
+	)
+	SELECT wlo.geom, wlo.zone_id, wlo.woonplaats, 'WLO 2040 Hoog',
+		wlo.huish, FALSE, FALSE, ST_Area(wlo.geom), (wlo.huish-huidig.huish)
+	FROM (
+		SELECT * FROM datasysteem.woonscenarios WHERE scenario_naam = 'Huidige situatie'
+	) huidig
+	JOIN sources.w_2040_hoog_versie_22_januari_2016 wlo
+	USING(zone_id)
+;
+-- set density per hectar
+UPDATE datasysteem.woonscenarios SET dichtheid=huishoudens/area*10000.0;
+UPDATE datasysteem.woonscenarios 
+	SET procentuele_verandering = CASE
+		WHEN huishoudens-nieuwe_huishoudens = 0 THEN nieuwe_huishoudens
+		ELSE nieuwe_huishoudens::float/(huishoudens-nieuwe_huishoudens)::float
+	END
 ;
 
--- DELETE FROM datasysteem.housing_demand_summary;
-INSERT INTO datasysteem.housing_demand_summary(scenario_name,new_households)
-	SELECT scenario_name, sum(new_households)
-	FROM datasysteem.housing_demand_scenarios
-	GROUP BY scenario_name
-;
-UPDATE datasysteem.housing_demand_summary a SET
-	within_walking_dist = sum
-	FROM (SELECT scenario_name, sum(new_households) sum
-		FROM datasysteem.housing_demand_scenarios
-		WHERE within_walking_dist = TRUE
-		GROUP BY scenario_name
-	) b
-	WHERE a.scenario_name = b.scenario_name
-;
-UPDATE datasysteem.housing_demand_summary a SET
-	within_cycling_dist = sum
-	FROM (SELECT scenario_name, sum(new_households) sum
-		FROM datasysteem.housing_demand_scenarios
-		WHERE within_walking_dist = FALSE
-		AND within_cycling_dist = TRUE
-		GROUP BY scenario_name
-	) b
-	WHERE a.scenario_name = b.scenario_name
-;
-UPDATE datasysteem.housing_demand_summary a SET
-	outside_influence = sum
-	FROM (SELECT scenario_name, sum(new_households) sum
-		FROM datasysteem.housing_demand_scenarios
-		WHERE within_walking_dist = FALSE
-		AND within_cycling_dist = FALSE
-		GROUP BY scenario_name
-	) b
-	WHERE a.scenario_name = b.scenario_name
+
+----
+-- Street Isochrones
+-- create polygons for isochrones
+-- DELETE FROM datasysteem.isochronen WHERE halte_modaliteit = 'trein';
+INSERT INTO datasysteem.isochronen(geom, halte_id, halte_naam, halte_modaliteit, 
+	modaliteit, isochroon_afstand)
+	SELECT ST_Multi(ST_MakePolygon(ST_ExteriorRing((ST_Dump(
+		ST_Simplify(ST_Union(ST_Buffer(ST_Simplify(geom,10),100,'quad_segs=2')),20))).geom))), 
+		station_id, min(station_name), min(station_mode), travel_mode, min(travel_distance)
+	FROM isochrone_analysis.station_isochrone_wegen
+	GROUP BY station_id, travel_mode
 ;
 
--- DELETE FROM datasysteem.transit_nodes;
-INSERT INTO datasysteem.transit_nodes (geom, station_name, scenario_name, passengers, passengers_diff, passengers_change,
-				bicycle_parking, bicycle_occupation, bicycle_occupation_percent, bicycle_occupation_diff,
-				platform, platform_diff, stairs, stairs_diff, pedestrian_flows, pedestrian_flows_diff)
-	SELECT geom,station,'current scenario',in_uit_15,0,0,aantal_fie,aantal_geb,bezettings,0,
-		trunc(random()*2+1),trunc(random()*2+1),trunc(random()*2+1),trunc(random()*2+1),trunc(random()*2+1),
-		trunc(random()*2+1)
-	FROM sources.rws_treinstations_2015_pnh_fietstallingen_inuit
-;
 
--- DELETE FROM datasysteem.spatial_characteristics;
-INSERT INTO datasysteem.spatial_characteristics(geom,cell_id,households,residents,workers,--students,
-		property_value,ptal_level,ptal_index)
+----
+-- Spatial characteristics
+-- DELETE FROM datasysteem.ruimtelijke_kenmerken;
+-- add basic CBS characteristics
+INSERT INTO datasysteem.ruimtelijke_kenmerken(geom, cell_id, huishoudens, inwoners,
+		intensiteit, woz_waarde)
 	SELECT cbs.geom, cbs.c28992r100, CASE WHEN cbs.won2012 >= 0 THEN cbs.won2012 ELSE 0 END, 
-		CASE WHEN cbs.inw2014 >= 0 THEN cbs.inw2014 ELSE 0 END, cbs.sum_banen,
-		CASE WHEN cbs.wozwon2012 >= 0 THEN cbs.wozwon2012 ELSE 0 END, ptal.ptal_pnh, ptal.ptai_pnh
-	FROM sources.cbs_vierkant_2014_pnh_lisa cbs
-	JOIN ptal_analysis_2016.ptal_poi_pnh ptal
-	ON(cbs.c28992r100=ptal.poi_id)	
+		CASE WHEN cbs.inw2014 >= 0 THEN cbs.inw2014 ELSE 0 END, lisa.sum_banen,
+		CASE WHEN cbs.wozwon2012 >= 0 THEN cbs.wozwon2012 ELSE 0 END
+	FROM sources.cbs_vierkant100m_2014 cbs
+	JOIN sources.vdm_vierkant_2014_pnh_lisa lisa
+	ON(cbs.c28992r100=lisa.c28992r100)	
 ;
-UPDATE datasysteem.spatial_characteristics SET population=(residents+workers);--+students
-UPDATE datasysteem.spatial_characteristics a SET intensity=b.intensity
-	FROM (SELECT t.cell_id,
-		(t.population - avg(t.population) over()) / stddev(t.population) over() as intensity
-		FROM datasysteem.spatial_characteristics as t
+-- add students estimated from LISA
+UPDATE datasysteem.ruimtelijke_kenmerken AS a 
+	SET intensiteit = a.intensiteit + b.leerlingen
+	FROM (SELECT cbs.c28992r100 AS cell_id, SUM(lisa.vdm_leer) AS leerlingen
+		FROM sources.cbs_vierkant100m_2014 cbs, sources.pnh_lisa_2016_selectie_onderwijs lisa
+		WHERE ST_Contains(cbs.geom, lisa.geom)
+		GROUP BY cbs.c28992r100
 		) b
-	WHERE a.cell_id=b.cell_id
+	WHERE a.cell_id = b.cell_id
 ;
-UPDATE datasysteem.spatial_characteristics SET built_density=0;
-CREATE INDEX spatial_characteristics_gidx ON datasysteem.spatial_characteristics USING GIST (geom);
+-- add built density from PBL data
+UPDATE datasysteem.ruimtelijke_kenmerken AS a
+	SET fysieke_dichtheid = b.fsi
+	FROM (SELECT cbs.c28992r100 AS cell_id, SUM(ST_Area(ST_Intersection(cbs.geom, pbl.geom))*pbl.fsi)/10000.0 AS fsi
+		FROM sources.cbs_vierkant100m_2014 cbs, sources.pbl_bouwvlak_fsi pbl
+		WHERE ST_Intersects(cbs.geom, pbl.geom)
+		GROUP BY cbs.c28992r100
+		) b
+	WHERE a.cell_id = b.cell_id
+;
+
+
+
+
+
+
 
 -- DELETE FROM datasysteem.development_locations;
 INSERT INTO datasysteem.development_locations(geom,locations_set,site_id,municipality,site_name,

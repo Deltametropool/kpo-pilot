@@ -1,7 +1,11 @@
 -- KPO data system
 -- author: Jorge Gil, 2017
 
+
 -- prepare network data used in analysis and calculations
+-- DROP SCHEMA IF EXISTS networks CASCADE;
+CREATE SCHEMA networks;
+ALTER SCHEMA networks OWNER TO postgres;
 
 ----
 -- TOP10NL road network
@@ -47,7 +51,7 @@ INSERT INTO networks.t10_wegen(geom, length, t10_id, type_weg, verkeer, fysiek, 
 		AND verhardingstype != 'onverhard'
 		AND typeweg NOT IN ('(1:startbaan, landingsbaan)','(1:rolbaan, platform)')
 	) weg,
-	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.boundary LIMIT 1) pilot
+	(SELECT geom FROM datasysteem.boundary LIMIT 1) pilot
 	WHERE ST_Intersects(weg.wkb_geometry, pilot.geom)
 ;
 -- update mode columns
