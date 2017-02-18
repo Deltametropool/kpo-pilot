@@ -146,28 +146,30 @@ INSERT INTO datasysteem.isochronen(geom, halte_id, halte_naam, halte_modaliteit,
 -- add basic CBS characteristics
 INSERT INTO datasysteem.ruimtelijke_kenmerken(geom, cell_id, huishoudens, inwoners,
 		intensiteit, woz_waarde)
-	SELECT cbs.geom, cbs.c28992r100, CASE WHEN cbs.won2012 >= 0 THEN cbs.won2012 ELSE 0 END, 
-		CASE WHEN cbs.inw2014 >= 0 THEN cbs.inw2014 ELSE 0 END, lisa.sum_banen,
-		CASE WHEN cbs.wozwon2012 >= 0 THEN cbs.wozwon2012 ELSE 0 END
-	FROM sources.cbs_vierkant100m_2014 cbs
-	JOIN sources.vdm_vierkant_2014_pnh_lisa lisa
-	ON(cbs.c28992r100=lisa.c28992r100)	
+	SELECT vdm.geom, vdm.c28992r100, CASE WHEN vdm.won2012 >= 0 THEN vdm.won2012 ELSE 0 END, 
+		CASE WHEN vdm.inw2014 >= 0 THEN vdm.inw2014 ELSE 0 END, vdm.sum_banen,
+		CASE WHEN vdm.wozwon2012 >= 0 THEN vdm.wozwon2012 ELSE 0 END
+	FROM sources.vdm_vierkant_2014_pnh_lisa vdm
 ;
 -- add students estimated from LISA
 UPDATE datasysteem.ruimtelijke_kenmerken AS a 
 	SET intensiteit = a.intensiteit + b.leerlingen
-	FROM (SELECT cbs.c28992r100 AS cell_id, SUM(lisa.vdm_leer) AS leerlingen
-		FROM sources.cbs_vierkant100m_2014 cbs, sources.pnh_lisa_2016_selectie_onderwijs lisa
+	FROM (SELECT cbs.cell_id, SUM(lisa.vdm_leer) AS leerlingen
+		FROM datasysteem.ruimtelijke_kenmerken cbs, sources.pnh_lisa_2016_selectie_onderwijs lisa
 		WHERE ST_Contains(cbs.geom, lisa.geom)
-		GROUP BY cbs.c28992r100
+		GROUP BY cbs.cell_id
 		) b
 	WHERE a.cell_id = b.cell_id
 ;
+-- add PTAL
+
+
 -- add built density from PBL data
 UPDATE datasysteem.ruimtelijke_kenmerken AS a
 	SET fysieke_dichtheid = b.fsi
-	FROM (SELECT cbs.c28992r100 AS cell_id, SUM(ST_Area(ST_Intersection(cbs.geom, pbl.geom))*pbl.fsi)/10000.0 AS fsi
-		FROM sources.cbs_vierkant100m_2014 cbs, sources.pbl_bouwvlak_fsi pbl
+	FROM (SELECT cbs.c28992r100 AS cell_id, 
+		SUM(ST_Area(ST_Intersection(cbs.geom, ST_MakeValid(pbl.geom)))*pbl.fsi)/10000.0 AS fsi
+		FROM sources.vdm_vierkant_2014_pnh_lisa cbs, sources.pbl_bouwvlak_fsi pbl
 		WHERE ST_Intersects(cbs.geom, pbl.geom)
 		GROUP BY cbs.c28992r100
 		) b
