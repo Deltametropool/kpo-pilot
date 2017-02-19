@@ -146,13 +146,13 @@ class KPOExplorer():
         scenario_summary = {'Current scenario':{'total':45324, 'walking':100, 'cycling':30, 'outside':10},
                             'WLO Hoog 2040': {'total':100, 'walking':90, 'cycling':325, 'outside':10},
                             'WLO Laag 2040': {'total':200, 'walking':100, 'cycling':60, 'outside':10},
-                            'Primus': {'total':3430, 'walking':100, 'cycling':88, 'outside':10}}
+                            'Primos': {'total':3430, 'walking':100, 'cycling':88, 'outside':10}}
 
         if self.dlg.language == 'dutch':
-            summary_text = ['%i  totaal huishoudens' % scenario_summary[scenario]['total'],
+            summary_text = ['%i  huishoudens totaal' % scenario_summary[scenario]['total'],
                             '%i  huishoudens op loopafstand' % scenario_summary[scenario]['walking'],
                             '%i  huishoudens op fietsafstand' % scenario_summary[scenario]['cycling'],
-                            '%i  huishoudens buiten invluedsgebied' % scenario_summary[scenario]['outside']]
+                            '%i  huishoudens buiten het invloedsgebied' % scenario_summary[scenario]['outside']]
 
         self.setTextField('scenarioSummaryText', summary_text)
 
