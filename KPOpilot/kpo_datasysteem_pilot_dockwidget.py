@@ -55,7 +55,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
                                  'Verstedelijking',
                                  'Koppelingen',
                                  'Bereikbaarheid'],
-            'introductionLabel' : 'Project samenvatting',
+            'introductionLabel' : 'Samenvatting',
             'introductionSummaryText' : '',
             'housingDemandBox': 'Huisaanbod',
             'knooppuntenStatusBox': 'Knooppunten status',
