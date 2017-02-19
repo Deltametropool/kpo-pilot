@@ -1,7 +1,11 @@
--- ov PTAL analysis, from 100m grid cells, for all modes
+-- KPO data system
+-- author: Jorge Gil, 2017
 
--- STEP 0: Get the POIs
--- STEP 1: Identify candidate SAPs with buffers
+
+-- PTAL calculation,based on 100m grid cells, for all OV modes
+
+-- STEP 0: Get the POIs and corresponding network nodes
+-- STEP 1: Identify candidate SAPs from isochrone nodes
 -- STEP 2: Identify candidate journeys (routes)
 -- STEP 3: Identify valid routes at each SAP
 -- STEP 4: Calculating Total Access Time and EDF
@@ -12,69 +16,93 @@
 
 
 --
--- STEP 0: Get the POIs
+-- STEP 0: Get the POIs and corresponding network nodes
 --
-CREATE SCHEMA ptal_analysis;
--- DROP TABLE ptal_analysis.ptal_poi CASCADE;
-CREATE TABLE ptal_analysis.ptal_poi (
+-- DROP SCHEMA ov_analysis CASCADE;
+CREATE SCHEMA ov_analysis;
+-- DROP TABLE ov_analysis.ptal_poi CASCADE;
+CREATE TABLE ov_analysis.ptal_poi (
 	sid serial NOT NULL PRIMARY KEY,
-	c28992r100 character varying,
-	geom geometry(MultiPolygon, 28992),
-	vdm_wo_12 integer,
-	vdm_inw_14 integer,
-	count_lisa integer,
-	sum_banen integer,
-	intensiteit integer
+	geom geometry(Point, 28992),
+	cell_id character varying,
+	weg_sid integer,
+	weg_length double precision,
+	weg_point_location double precision,
+	source_id integer,
+	target_id integer
 );
-INSERT INTO ptal_analysis.ptal_poi 
-	(c28992r100, geom, vdm_wo_12, vdm_inw_14, count_lisa , sum_banen, intensiteit) 
-	SELECT c28992r100, geom, vdm_wo_12, vdm_inw_14, count_ , sum_banen, intensit
-	FROM sources.cbs_vierkant_2014_pnh_lisa
+INSERT INTO ov_analysis.ptal_poi (cell_id, geom, weg_sid, weg_length, weg_point_location, source_id, target_id) 
+	SELECT DISTINCT ON (grid.c28992r100) grid.c28992r100, ST_ClosestPoint(weg.geom, grid.geom),
+		weg.sid, weg.length, ST_LineLocatePoint(weg.geom, grid.geom), weg.source, weg.target
+	FROM (SELECT ST_Centroid(geom) geom, c28992r100
+		FROM sources.vdm_vierkant_2014_pnh_lisa
+	) AS grid, isochrone_analysis.wegen weg
+	WHERE ST_DWithin(grid.geom,weg.geom,100)
+	ORDER BY grid.c28992r100, grid.geom <-> weg.geom
 ;
-CREATE INDEX ptal_poi_geom_idx ON ptal_analysis.ptal_poi USING GIST(geom);
-
+CREATE INDEX ptal_poi_cell_idx ON ov_analysis.ptal_poi (cell_id);
+CREATE INDEX ptal_poi_source_idx ON ov_analysis.ptal_poi (source_id);
+CREATE INDEX ptal_poi_target_idx ON ov_analysis.ptal_poi (target_id);
 
 --
--- STEP 1: Identify candidate SAPs with buffers
--- SAPs (service access point) are entrances, groups of stops, or individual stops
+-- STEP 1: Identify candidate SAPs from isochrone nodes
+-- SAPs (Service Access Point) are entrances, groups of stops, or individual stops
 --
--- create valid stops tables
--- DROP TABLE temp_road_stops CASCADE;
-CREATE TEMP TABLE temp_road_stops AS
-	SELECT geom, stop_id 
-	FROM study.ov_stops
-	WHERE parent_station IS NULL 
-	AND (tram=TRUE OR bus=TRUE OR veerboot=TRUE)
-;
-CREATE INDEX temp_road_stops_idx ON temp_road_stops (stop_id);
--- DROP TABLE temp_track_stops CASCADE;
-CREATE TEMP TABLE temp_track_stops AS
-	SELECT geom, stop_id 
-	FROM study.ov_stops
-	WHERE parent_station IS NULL 
-	AND (trein=TRUE OR metro=TRUE)
-;
-CREATE INDEX temp_track_stops_idx ON temp_track_stops (stop_id);
-
 -- create valid saps table
--- DROP TABLE ptal_analysis.valid_saps CASCADE;
-CREATE TABLE ptal_analysis.valid_saps (
+-- DROP TABLE ov_analysis.valid_saps CASCADE;
+CREATE TABLE ov_analysis.valid_saps (
 	sid serial NOT NULL PRIMARY KEY,
 	poi_id character varying,
 	sap_id character varying,
 	transport_mode character varying,
 	distance_to_sap double precision
 );
-INSERT INTO ptal_analysis.valid_saps (poi_id, sap_id, transport_mode, distance_to_sap)
-	SELECT poi.c28992r100, stops.stop_id, 'bus,tram', ST_Distance(poi.geom,stops.geom)
-	FROM temp_road_stops stops, ptal_analysis.ptal_poi poi
-	WHERE ST_DWithin(poi.geom, stops.geom, 640)
+-- prepare some indices
+CREATE INDEX origin_stops_stop_idx ON isochrone_analysis.origin_stops (stop_id);
+CREATE INDEX origin_stops_source_idx ON isochrone_analysis.origin_stops (source_id);
+CREATE INDEX origin_stops_target_idx ON isochrone_analysis.origin_stops (target_id);
+CREATE INDEX isochrone_nodes_origin_idx ON isochrone_analysis.isochrone_nodes (origin_id);
+CREATE INDEX isochrone_nodes_node_idx ON isochrone_analysis.isochrone_nodes (node_id);
+-- identify pois within 3000 m fiets of train station nodes
+CREATE TEMP TABLE fiets_isochrone_nodes AS
+	SELECT poi.cell_id, stop.stop_id, stop.stop_mode, 
+	CASE
+	WHEN stop.source_id = node.origin_id AND node.node_id = poi.source_id
+	THEN (node.node_distance + (stop.weg_length*stop.weg_point_location) + (poi.weg_length*poi.weg_point_location))
+	WHEN stop.source_id = node.origin_id AND node.node_id = poi.target_id
+	THEN (node.node_distance + (stop.weg_length*stop.weg_point_location) + (poi.weg_length*(1-poi.weg_point_location)))
+	WHEN stop.target_id = node.origin_id AND node.node_id = poi.source_id
+	THEN (node.node_distance + (stop.weg_length*(1-stop.weg_point_location)) + (poi.weg_length*poi.weg_point_location))
+	WHEN stop.target_id = node.origin_id AND node.node_id = poi.target_id
+	THEN (node.node_distance + (stop.weg_length*(1-stop.weg_point_location)) + (poi.weg_length*(1-poi.weg_point_location)))
+	END AS distance
+	FROM (SELECT * FROM isochrone_analysis.origin_stops WHERE stop_mode = 'trein') AS stop,
+	( SELECT * FROM isochrone_analysis.isochrone_nodes WHERE travel_mode = 'fiets') AS node,
+	ov_analysis.ptal_poi AS poi
+	WHERE (stop.source_id = node.origin_id AND node.node_id = poi.source_id 
+		AND (node.node_distance + (stop.weg_length*stop.weg_point_location) + 
+		(poi.weg_length*poi.weg_point_location)) <= 3000
+	) OR (stop.source_id = node.origin_id AND node.node_id = poi.target_id
+		AND (node.node_distance + (stop.weg_length*stop.weg_point_location) + 
+		(poi.weg_length*(1-poi.weg_point_location))) <= 3000
+	) OR (stop.target_id = node.origin_id AND node.node_id = poi.source_id
+		AND (node.node_distance + (stop.weg_length*(1-stop.weg_point_location)) + 
+		(poi.weg_length*poi.weg_point_location)) <= 3000
+	) OR (stop.target_id = node.origin_id AND node.node_id = poi.target_id
+		AND (node.node_distance + (stop.weg_length*(1-stop.weg_point_location)) + 
+		(poi.weg_length*(1-poi.weg_point_location))) <= 3000
+	)
 ;
-INSERT INTO ptal_analysis.valid_saps (poi_id, sap_id, transport_mode, distance_to_sap)
-	SELECT poi.c28992r100, stops.stop_id, 'trein,metro', ST_Distance(poi.geom,stops.geom)
-	FROM temp_track_stops stops, ptal_analysis.ptal_poi poi
-	WHERE ST_DWithin(poi.geom, stops.geom, 960)
+-- get minimum distance
+INSERT INTO ov_analysis.valid_saps (poi_id, sap_id, transport_mode, distance_to_sap)
+	SELECT cell_id, stop_id, stop_mode, min(distance)
+	FROM fiets_isochrone_nodes
+	GROUP BY cell_id, stop_id, stop_mode
 ;
+
+
+
+
 -- add indices for faster querying
 CREATE INDEX valid_saps_idx ON ptal_analysis.valid_saps (sap_id);
 
