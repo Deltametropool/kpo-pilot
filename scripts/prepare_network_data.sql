@@ -120,7 +120,8 @@ CREATE TABLE networks.ov_stop_times (
 	pickup_type integer,
 	drop_off_type integer,
 	arrival_in_secs integer,
-	departure_in_secs integer
+	departure_in_secs integer,
+	group_id character varying
 );
 INSERT INTO networks.ov_stop_times ( trip_id, arrival_time, departure_time, stop_id, stop_sequence, pickup_type, drop_off_type,
 	arrival_in_secs, departure_in_secs)
@@ -371,14 +372,13 @@ INSERT INTO networks.ov_all_links(geom, trip_id, trip_mode, route_number, trip_s
 			AND (drop_off_type IS NULL OR drop_off_type < 2)) times
 		JOIN (SELECT trip_id, route_short_name, route_type FROM networks.ov_trips) trips
 		USING (trip_id)
-		JOIN (SELECT stop_id, geom FROM networks.ov_stops) stops
+		JOIN (SELECT stop_id, geom FROM networks.ov_stops WHERE location_type = 0) stops
 		USING (stop_id)
 		WINDOW w AS (PARTITION BY times.trip_id ORDER BY times.stop_sequence)
 	  ) as stop_times
 	WHERE geom2 IS NOT NULL
 ;
 CREATE INDEX ov_all_links_geom_idx ON networks.ov_all_links USING GIST(geom);
-
 --
 -- links, using stop groups where available
 -- DROP TABLE networks.ov_links CASCADE;
@@ -406,8 +406,8 @@ INSERT INTO networks.ov_links(geom, trip_id, trip_mode, route_number, trip_seque
 			times.trip_id, trips.route_type trip_mode, trips.route_short_name route_number,
 			row_number() OVER w AS trip_sequence, 
 			stops.geom, lead(stops.geom) OVER w AS geom2,
-			times.stop_id AS start_stop_id,
-			lead(times.stop_id) OVER w AS end_stop_id, 
+			times.group_id AS start_stop_id,
+			lead(times.group_id) OVER w AS end_stop_id, 
 			times.departure_in_secs AS stop1_time,
 			lead(times.arrival_in_secs) OVER w AS stop2_time
 		FROM (SELECT * FROM networks.ov_stop_times 
@@ -415,7 +415,7 @@ INSERT INTO networks.ov_links(geom, trip_id, trip_mode, route_number, trip_seque
 			AND (drop_off_type IS NULL OR drop_off_type < 2)) times
 		JOIN (SELECT trip_id, route_short_name, route_type FROM networks.ov_trips) trips
 		USING (trip_id)
-		JOIN (SELECT stop_id, geom FROM networks.ov_stops) stops
+		JOIN (SELECT stop_id, geom FROM networks.ov_stops WHERE location_type = 1) stops
 		ON (stops.stop_id = times.group_id)
 		WINDOW w AS (PARTITION BY times.trip_id ORDER BY times.stop_sequence)
 	  ) as stop_times
