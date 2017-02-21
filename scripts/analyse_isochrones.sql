@@ -479,51 +479,45 @@ INSERT INTO isochrone_analysis.station_isochrone_wegen(geom, weg_sid, station_id
 
 -----
 -- OV ISOCHRONE ANALYSIS, from rail stations, using bus, tram or metro
--- metro - 800m walking
--- bus and tram - 400m walking
--- ov_network_analysis.links_frequency has the network topology per mode, with average cost
--- study.ov_links has the network topology per mode for every trip, with shared nodes for transfer
--- study.ov_all_links has the network topology per mode for every trip, without transfer
+-- bus, tram, metro + 400m walking
 
--- origin stops
--- DROP TABLE ov_network_analysis.origin_stops CASCADE;
-CREATE TABLE ov_network_analysis.origin_stops (
+-- ov_analysis.ov_links_frequency has the network topology per mode, with average duration
+
+-- origin stops are part of station areas
+-- DROP TABLE isochrone_analysis.ov_origins CASCADE;
+CREATE TABLE isochrone_analysis.ov_origins (
 	sid serial NOT NULL PRIMARY KEY,
 	geom geometry(Point, 28992),
 	station_sid integer,
-	station_id character varying,
 	station_naam character varying,
 	stop_id character varying,
 	stop_naam character varying,
 	stop_mode character varying
 );
--- closest bus stops
-INSERT INTO ov_network_analysis.origin_stops (geom, station_sid, station_id, station_naam, stop_id,
-	stop_naam, stop_mode)
-	SELECT stop.geom, station.sid, station.code, station.naam, stop.stop_id, stop.stop_name, 'bus'
-	FROM study.stations_maakplaats AS station,
-	(SELECT * FROM study.ov_stops WHERE parent_station IS NULL AND bus = TRUE) AS stop
-	WHERE ST_DWithin(station.geom,stop.geom,200)
-;
--- closest tram stops
-INSERT INTO ov_network_analysis.origin_stops (geom, station_sid, station_id, station_naam, stop_id,
-	stop_naam, stop_mode)
-	SELECT stop.geom, station.sid, station.code, station.naam, stop.stop_id, stop.stop_name, 'tram'
-	FROM study.stations_maakplaats AS station,
-	(SELECT * FROM study.ov_stops WHERE parent_station IS NULL AND tram = TRUE) AS stop
-	WHERE ST_DWithin(station.geom,stop.geom,200)
-;
--- closest metro stops
-INSERT INTO ov_network_analysis.origin_stops (geom, station_sid, station_id, station_naam, stop_id,
-	stop_naam, stop_mode)
-	SELECT stop.geom, station.sid, station.code, station.naam, stop.stop_id, stop.stop_name, 'metro'
-	FROM study.stations_maakplaats AS station,
-	(SELECT * FROM study.ov_stops WHERE parent_station IS NULL AND metro = TRUE) AS stop
-	WHERE ST_DWithin(station.geom,stop.geom,200)
+INSERT INTO isochrone_analysis.ov_origins (geom, station_sid, station_naam, stop_id,
+		stop_naam, stop_mode)
+	SELECT stop.geom, station.sid, station.alt_name, stop.stop_id, stop.stop_name,
+		CASE 
+			WHEN stop.metro = TRUE THEN 'metro'
+			WHEN stop.tram = TRUE THEN 'tram'
+			WHEN stop.bus = TRUE THEN 'bus'
+		END AS stop_mode
+	FROM (
+		SELECT * FROM networks.ov_stop_areas WHERE sid IN
+			(SELECT stop_area FROM networks.ov_stops 
+			WHERE trein IS TRUE AND parent_station IS NOT NULL)
+	) AS station
+	JOIN (
+		SELECT * FROM networks.ov_stops 
+		WHERE parent_station IS NULL AND stop_area IS NOT NULL 
+		AND trein IS NULL AND veerboot IS NULL
+	) AS stop
+	ON (station.sid = stop.stop_area)
+	ORDER BY alt_name
 ;
 
--- isochrone nodes
--- DROP TABLE ov_network_analysis.isochrone_nodes CASCADE;
+-- OV isochrone nodes
+-- DROP TABLE isochrone_analysis.ov_isochrone_nodes CASCADE;
 CREATE TABLE ov_network_analysis.isochrone_nodes(
 	sid bigserial NOT NULL PRIMARY KEY,
 	station_sid integer,

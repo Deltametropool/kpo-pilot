@@ -337,57 +337,15 @@ UPDATE networks.ov_stop_times AS times SET
 ;
 
 -- links
--- important to get the topology in terms of links, as pairs of stops that are connected by a given trip/mode
--- DROP TABLE networks.ov_all_links CASCADE;
-CREATE TABLE networks.ov_all_links(
-	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(Linestring, 28992),
-	trip_id character varying,
-	trip_mode character varying,
-	route_number character varying,
-	trip_sequence integer,
-	start_stop_id character varying,
-	end_stop_id character varying,
-	start_stop_time integer,
-	end_stop_time integer,
-	duration_in_secs integer
-);
-INSERT INTO networks.ov_all_links(geom, trip_id, trip_mode, route_number, trip_sequence, 
-		start_stop_id, end_stop_id, 
-		start_stop_time, end_stop_time, duration_in_secs)
-	SELECT ST_MAKELINE(geom,geom2), trip_id, trip_mode, route_number, trip_sequence, 
-		start_stop_id, end_stop_id, 
-		stop1_time, stop2_time, stop2_time-stop1_time
-	FROM (
-		SELECT 
-			times.trip_id, trips.route_type trip_mode, trips.route_short_name route_number,
-			row_number() OVER w AS trip_sequence, 
-			stops.geom, lead(stops.geom) OVER w AS geom2,
-			times.stop_id AS start_stop_id,
-			lead(times.stop_id) OVER w AS end_stop_id, 
-			times.departure_in_secs AS stop1_time,
-			lead(times.arrival_in_secs) OVER w AS stop2_time
-		FROM (SELECT * FROM networks.ov_stop_times 
-			WHERE (pickup_type IS NULL OR pickup_type < 2) 
-			AND (drop_off_type IS NULL OR drop_off_type < 2)) times
-		JOIN (SELECT trip_id, route_short_name, route_type FROM networks.ov_trips) trips
-		USING (trip_id)
-		JOIN (SELECT stop_id, geom FROM networks.ov_stops WHERE location_type = 0) stops
-		USING (stop_id)
-		WINDOW w AS (PARTITION BY times.trip_id ORDER BY times.stop_sequence)
-	  ) as stop_times
-	WHERE geom2 IS NOT NULL
-;
-CREATE INDEX ov_all_links_geom_idx ON networks.ov_all_links USING GIST(geom);
---
--- links, using stop groups where available
+-- important to get the topology in terms of links, as pairs of stops that are connected by a given trip
 -- DROP TABLE networks.ov_links CASCADE;
 CREATE TABLE networks.ov_links(
 	sid serial NOT NULL PRIMARY KEY,
 	geom geometry(Linestring, 28992),
 	trip_id character varying,
 	trip_mode character varying,
-	route_number character varying,
+	route_id character varying,
+	route_name character varying,
 	trip_sequence integer,
 	start_stop_id character varying,
 	end_stop_id character varying,
@@ -395,15 +353,19 @@ CREATE TABLE networks.ov_links(
 	end_stop_time integer,
 	duration_in_secs integer
 );
-INSERT INTO networks.ov_links(geom, trip_id, trip_mode, route_number, trip_sequence, 
+INSERT INTO networks.ov_links(geom, trip_id, trip_mode, route_id, route_name, trip_sequence, 
 		start_stop_id, end_stop_id, 
 		start_stop_time, end_stop_time, duration_in_secs)
-	SELECT ST_MAKELINE(geom,geom2), trip_id, trip_mode, route_number, trip_sequence, 
+	SELECT ST_MAKELINE(geom,geom2), trip_id, trip_mode, route_id, route_name, trip_sequence, 
 		start_stop_id, end_stop_id, 
 		stop1_time, stop2_time, stop2_time-stop1_time
 	FROM (
 		SELECT 
-			times.trip_id, trips.route_type trip_mode, trips.route_short_name route_number,
+			times.trip_id, trips.route_type trip_mode, trips.route_id route_id,
+			CASE
+				WHEN trips.route_long_name = '' THEN trips.route_short_name
+				ELSE trips.route_long_name
+			END AS route_name,
 			row_number() OVER w AS trip_sequence, 
 			stops.geom, lead(stops.geom) OVER w AS geom2,
 			times.group_id AS start_stop_id,
@@ -413,7 +375,7 @@ INSERT INTO networks.ov_links(geom, trip_id, trip_mode, route_number, trip_seque
 		FROM (SELECT * FROM networks.ov_stop_times 
 			WHERE (pickup_type IS NULL OR pickup_type < 2) 
 			AND (drop_off_type IS NULL OR drop_off_type < 2)) times
-		JOIN (SELECT trip_id, route_short_name, route_type FROM networks.ov_trips) trips
+		JOIN (SELECT trip_id, route_id, route_short_name, route_long_name, route_type FROM networks.ov_trips) trips
 		USING (trip_id)
 		JOIN (SELECT stop_id, geom FROM networks.ov_stops WHERE location_type = 1) stops
 		ON (stops.stop_id = times.group_id)
@@ -422,35 +384,6 @@ INSERT INTO networks.ov_links(geom, trip_id, trip_mode, route_number, trip_seque
 	WHERE geom2 IS NOT NULL
 ;
 CREATE INDEX ov_links_geom_idx ON networks.ov_links USING GIST(geom);
--- these are complete trips' geometries
--- DROP TABLE networks.ov_routes CASCADE;
-CREATE TABLE networks.ov_routes(
-	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(Linestring, 28992),
-	route_id character varying,
-	route_name character varying,
-	route_mode character varying,
-	route_duration varchar
-);
-INSERT INTO networks.ov_routes(geom, route_id, route_name, route_mode, route_duration)
-	SELECT geom, routes.route_id, min(routes.route_short_name), min(trips.trip_mode),
-		(to_char(floor(avg(trips.trip_duration)/3600),'fm00')||':'||
-		to_char(floor(avg(trips.trip_duration)/60 % 60),'fm00')||':'||
-		to_char(floor(avg(trips.trip_duration) % 60),'fm00'))
-	FROM (
-		SELECT ST_MakeLine(links.geom) geom, links.trip_id, min(links.trip_mode) AS trip_mode, 
-			sum(links.duration_in_secs) AS trip_duration
-		FROM (SELECT geom, trip_id, trip_mode, trip_sequence, duration_in_secs
-			FROM networks.ov_links
-			ORDER BY trip_id, trip_sequence
-		) links
-		GROUP BY links.trip_id
-	) AS trips
-	JOIN networks.ov_trips as routes
-	USING(trip_id)
-	GROUP BY geom, routes.route_id, trip_mode
-;
-CREATE INDEX ov_routes_geom_idx ON networks.ov_routes USING GIST(geom);
 
 --
 -- create stop areas based on name
@@ -506,35 +439,45 @@ UPDATE networks.ov_stops AS stop SET stop_area=areas.sid
 -- Station is appended
 UPDATE networks.ov_stops AS stop SET stop_area=areas.sid
 	FROM networks.ov_stop_areas AS areas
-	WHERE stop.trein IS NULL AND stop.stop_area IS NULL
+	WHERE stop.trein IS NULL --AND stop.stop_area IS NULL
 	AND stop.stop_name = 'Station '||areas.area_name
 ;
 UPDATE networks.ov_stops AS stop SET stop_area=areas.sid
 	FROM networks.ov_stop_areas AS areas
-	WHERE stop.trein IS NULL AND stop.stop_area IS NULL
+	WHERE stop.trein IS NULL --AND stop.stop_area IS NULL
 	AND stop.stop_name||' '||stop.stop_descr = 'Station '||areas.area_name
 ;
 -- station name has city at the start, plus common name
 UPDATE networks.ov_stops AS stop SET stop_area=areas.sid
 	FROM networks.ov_stop_areas AS areas
-	WHERE stop.trein IS NULL AND stop.stop_area IS NULL
+	WHERE stop.trein IS NULL --AND stop.stop_area IS NULL
 	AND position('Station ' in stop.stop_name) > 0
 	AND stop_descr||' '||substring(stop.stop_name from 9) = areas.area_name
+;
+UPDATE networks.ov_stops AS stop SET stop_area=areas.sid
+	FROM networks.ov_stop_areas AS areas
+	WHERE stop.trein IS NULL --AND stop.stop_area IS NULL
+	AND stop_descr||' '||stop.stop_name = areas.area_name
+;
+UPDATE networks.ov_stops AS stop SET stop_area=areas.sid
+	FROM networks.ov_stop_areas AS areas
+	WHERE stop.trein IS NULL --AND stop.stop_area IS NULL
+	AND stop_descr||' '||stop.stop_name = areas.area_name||'station'
 ;
 -- other exceptions
 UPDATE networks.ov_stops AS stop SET stop_area=areas.sid
 	FROM networks.ov_stop_areas AS areas
-	WHERE stop.trein IS NULL AND stop.stop_area IS NULL
+	WHERE stop.trein IS NULL --AND stop.stop_area IS NULL
 	AND split_part(stop.stop_descr,' ',1)||' '||stop.stop_name = areas.area_name||' Station'
 ;
 UPDATE networks.ov_stops AS stop SET stop_area=areas.sid
 	FROM networks.ov_stop_areas AS areas
-	WHERE stop.trein IS NULL AND stop.stop_area IS NULL
+	WHERE stop.trein IS NULL --AND stop.stop_area IS NULL
 	AND stop.stop_name = 'Station '||replace(areas.area_name, '-', ' ') 
 ;
 UPDATE networks.ov_stops AS stop SET stop_area=areas.sid
 	FROM networks.ov_stop_areas AS areas
-	WHERE stop.trein IS NULL AND stop.stop_area IS NULL
+	WHERE stop.trein IS NULL --AND stop.stop_area IS NULL
 	AND (position('CS' in stop.stop_name) > 0 
 		AND stop.stop_descr = 'Amsterdam' 
 		AND areas.area_name = 'Amsterdam Centraal')
@@ -542,7 +485,7 @@ UPDATE networks.ov_stops AS stop SET stop_area=areas.sid
 -- unique cases
 UPDATE networks.ov_stops AS stop SET stop_area=areas.sid
 	FROM networks.ov_stop_areas AS areas
-	WHERE stop.trein IS NULL AND stop.stop_area IS NULL
+	WHERE stop.trein IS NULL --AND stop.stop_area IS NULL
 	AND (stop.stop_name='Airport'AND areas.area_name = 'Schiphol')
 	OR (stop.stop_name='Station Zuid'
 		AND stop.stop_descr = 'Santpoort Zuid'

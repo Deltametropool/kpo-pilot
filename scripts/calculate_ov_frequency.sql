@@ -424,108 +424,88 @@ UPDATE datasysteem.ov_haltes freq SET
 	WHERE freq.trein = TRUE AND freq.halte_zone = trips.area_id
 ;
 
-
-
-
--- number of services on avond spits along each link
+----
+/* ov frequency calculation, for every LINK of every route (and train type)
+frequency per hour on:  ochtendspits (06:30 to 09:00), daluren (10:00 to 15:00) and avondspits (16:00 to 18:30)
+*/
 -- links frequency
--- DROP TABLE ov_network_analysis.links_frequency CASCADE;
-CREATE TABLE ov_network_analysis.links_frequency(
+-- DROP TABLE ov_analysis.ov_links_frequency CASCADE;
+CREATE TABLE ov_analysis.ov_links_frequency(
 	sid serial NOT NULL PRIMARY KEY,
 	geom geometry(Linestring, 28992),
 	trip_mode character varying,
+	route_id character varying,
+	route_name character varying,
 	start_stop_id character varying,
 	end_stop_id character varying,
 	mean_duration_in_secs integer,
-	totaal_week integer,
-	totaal_weekend integer,
-	freq_spits_morgen double precision,
-	freq_dal_middag double precision,
-	freq_spits_avond double precision
+	freq_ochtendspits double precision,
+	freq_daluren double precision,
+	freq_avondspits double precision
 );
-INSERT INTO ov_network_analysis.links_frequency (geom, trip_mode, start_stop_id, end_stop_id, mean_duration_in_secs)
-	SELECT geom, trip_mode, start_stop_id, end_stop_id, avg(duration_in_secs)
-	FROM study.ov_links
-	GROUP BY geom, trip_mode, start_stop_id, end_stop_id
+INSERT INTO ov_analysis.ov_links_frequency (geom, trip_mode, route_id, route_name, 
+		start_stop_id, end_stop_id, mean_duration_in_secs)
+	SELECT geom, trip_mode, route_id, route_name, start_stop_id, end_stop_id, avg(duration_in_secs)
+	FROM networks.ov_links
+	GROUP BY geom, trip_mode, route_id, route_name, start_stop_id, end_stop_id
 ;
--- week
-UPDATE ov_network_analysis.links_frequency freq SET
-	totaal_week = trips.total
-	FROM (SELECT a.trip_mode, a.start_stop_id, a.end_stop_id, count(*) total 
-		FROM (SELECT trip_mode, start_stop_id, end_stop_id FROM study.ov_links
-			WHERE trip_id IN (SELECT trip_id FROM study.ov_trips WHERE day_of_week not in ('saturday','sunday'))
-			GROUP BY trip_mode, start_stop_id, end_stop_id, start_stop_time
-		) a
-		GROUP BY trip_mode, start_stop_id, end_stop_id
-	) trips
-	WHERE freq.trip_mode = trips.trip_mode
-	AND freq.start_stop_id = trips.start_stop_id
-	AND freq.end_stop_id = trips.end_stop_id
-;
-UPDATE ov_network_analysis.links_frequency SET totaal_week = 0 WHERE totaal_week IS NULL;
--- weekend
-UPDATE ov_network_analysis.links_frequency freq SET
-	totaal_weekend = trips.total
-	FROM (SELECT a.trip_mode, a.start_stop_id, a.end_stop_id, count(*) total 
-		FROM (SELECT trip_mode, start_stop_id, end_stop_id FROM study.ov_links
-			WHERE trip_id IN (SELECT trip_id FROM study.ov_trips WHERE day_of_week ='saturday')
-			GROUP BY trip_mode, start_stop_id, end_stop_id, start_stop_time
-		) a
-		GROUP BY trip_mode, start_stop_id, end_stop_id
-	) trips
-	WHERE freq.trip_mode = trips.trip_mode
-	AND freq.start_stop_id = trips.start_stop_id
-	AND freq.end_stop_id = trips.end_stop_id
-;
-UPDATE ov_network_analysis.links_frequency SET totaal_weekend = 0 WHERE totaal_weekend IS NULL;
--- freq_spits_morgen
-UPDATE ov_network_analysis.links_frequency freq SET
-	freq_spits_morgen = trips.total
-	FROM (SELECT a.trip_mode, a.start_stop_id, a.end_stop_id, round(count(*)::numeric/2.5::numeric,2) total 
-		FROM (SELECT trip_mode, start_stop_id, end_stop_id FROM study.ov_links
+-- frequency ochtendspits
+UPDATE ov_analysis.ov_links_frequency freq SET
+	freq_ochtendspits = trips.freq
+	FROM (SELECT a.trip_mode, a.route_id, a.route_name, a.start_stop_id, a.end_stop_id, round(count(*)::numeric/2.5,2) freq 
+		FROM (SELECT trip_mode, route_id, route_name, start_stop_id, end_stop_id FROM networks.ov_links
 			WHERE (start_stop_time >= EXTRACT(EPOCH FROM INTERVAL '06:30:00') 
 			AND start_stop_time <= EXTRACT(EPOCH FROM INTERVAL '09:00:00'))
-			AND trip_id IN (SELECT trip_id FROM study.ov_trips WHERE day_of_week not in ('saturday','sunday'))
-			GROUP BY trip_mode, start_stop_id, end_stop_id, start_stop_time
+			AND trip_id IN (SELECT trip_id FROM networks.ov_trips WHERE day_of_week not in ('saturday','sunday'))
+			GROUP BY trip_mode, route_id, route_name, start_stop_id, end_stop_id, start_stop_time
 		) a
-		GROUP BY trip_mode, start_stop_id, end_stop_id
+		GROUP BY trip_mode, route_id, route_name, start_stop_id, end_stop_id
 	) trips
 	WHERE freq.trip_mode = trips.trip_mode
+	AND freq.route_id = trips.route_id
+	AND freq.route_name = trips.route_name
 	AND freq.start_stop_id = trips.start_stop_id
 	AND freq.end_stop_id = trips.end_stop_id
 ;
-UPDATE ov_network_analysis.links_frequency SET freq_spits_morgen = 0 WHERE freq_spits_morgen IS NULL;
--- freq_dal_middag
-UPDATE ov_network_analysis.links_frequency freq SET
-	freq_dal_middag = trips.total
-	FROM (SELECT a.trip_mode, a.start_stop_id, a.end_stop_id, round(count(*)::numeric/2.5::numeric,2) total 
-		FROM (SELECT trip_mode, start_stop_id, end_stop_id FROM study.ov_links
-			WHERE (start_stop_time >= EXTRACT(EPOCH FROM INTERVAL '11:00:00') 
-			AND start_stop_time <= EXTRACT(EPOCH FROM INTERVAL '14:00:00'))
-			AND trip_id IN (SELECT trip_id FROM study.ov_trips WHERE day_of_week not in ('saturday','sunday'))
-			GROUP BY trip_mode, start_stop_id, end_stop_id, start_stop_time
+UPDATE ov_analysis.ov_links_frequency SET freq_ochtendspits = 0 WHERE freq_ochtendspits IS NULL;
+-- frequency daluren
+UPDATE ov_analysis.ov_links_frequency freq SET
+	freq_daluren = trips.freq
+	FROM (SELECT a.trip_mode, a.route_id, a.route_name, a.start_stop_id, a.end_stop_id, round(count(*)::numeric/5.0,2) freq 
+		FROM (SELECT trip_mode, route_id, route_name, start_stop_id, end_stop_id FROM networks.ov_links
+			WHERE (start_stop_time >= EXTRACT(EPOCH FROM INTERVAL '10:00:00') 
+			AND start_stop_time <= EXTRACT(EPOCH FROM INTERVAL '15:00:00'))
+			AND trip_id IN (SELECT trip_id FROM networks.ov_trips WHERE day_of_week not in ('saturday','sunday'))
+			GROUP BY trip_mode, route_id, route_name, start_stop_id, end_stop_id, start_stop_time
 		) a
-		GROUP BY trip_mode, start_stop_id, end_stop_id
+		GROUP BY trip_mode, route_id, route_name, start_stop_id, end_stop_id
 	) trips
 	WHERE freq.trip_mode = trips.trip_mode
+	AND freq.route_id = trips.route_id
+	AND freq.route_name = trips.route_name
 	AND freq.start_stop_id = trips.start_stop_id
 	AND freq.end_stop_id = trips.end_stop_id
 ;
-UPDATE ov_network_analysis.links_frequency SET freq_dal_middag = 0 WHERE freq_dal_middag IS NULL;
--- freq_spits_avond
-UPDATE ov_network_analysis.links_frequency freq SET
-	freq_spits_avond = trips.total
-	FROM (SELECT a.trip_mode, a.start_stop_id, a.end_stop_id, round(count(*)::numeric/2.5::numeric,2) total 
-		FROM (SELECT trip_mode, start_stop_id, end_stop_id FROM study.ov_links
+UPDATE ov_analysis.ov_links_frequency SET freq_daluren = 0 WHERE freq_daluren IS NULL;
+-- freq_avondspits
+UPDATE ov_analysis.ov_links_frequency freq SET
+	freq_avondspits = trips.freq
+	FROM (SELECT a.trip_mode, a.route_id, a.route_name, a.start_stop_id, a.end_stop_id, round(count(*)::numeric/2.5,2) freq 
+		FROM (SELECT trip_mode, route_id, route_name, start_stop_id, end_stop_id FROM networks.ov_links
 			WHERE (start_stop_time >= EXTRACT(EPOCH FROM INTERVAL '16:00:00') 
 			AND start_stop_time <= EXTRACT(EPOCH FROM INTERVAL '18:30:00'))
-			AND trip_id IN (SELECT trip_id FROM study.ov_trips WHERE day_of_week not in ('saturday','sunday'))
-			GROUP BY trip_mode, start_stop_id, end_stop_id, start_stop_time
+			AND trip_id IN (SELECT trip_id FROM networks.ov_trips WHERE day_of_week not in ('saturday','sunday'))
+			GROUP BY trip_mode, route_id, route_name, start_stop_id, end_stop_id, start_stop_time
 		) a
-		GROUP BY trip_mode, start_stop_id, end_stop_id
+		GROUP BY trip_mode, route_id, route_name, start_stop_id, end_stop_id
 	) trips
 	WHERE freq.trip_mode = trips.trip_mode
+	AND freq.route_id = trips.route_id
+	AND freq.route_name = trips.route_name
 	AND freq.start_stop_id = trips.start_stop_id
 	AND freq.end_stop_id = trips.end_stop_id
 ;
-UPDATE ov_network_analysis.links_frequency SET freq_spits_avond = 0 WHERE freq_spits_avond IS NULL;
+UPDATE ov_analysis.ov_links_frequency SET freq_avondspits = 0 WHERE freq_avondspits IS NULL;
+-- remove links that are not used
+DELETE FROM ov_analysis.ov_links_frequency WHERE freq_ochtendspits = 0 AND freq_daluren = 0 AND freq_avondspits = 0;
+

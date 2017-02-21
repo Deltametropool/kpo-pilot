@@ -158,8 +158,10 @@ CREATE TABLE datasysteem.ov_routes(
 	geom geometry(Linestring,28992),
 	route_id varchar,
 	route_naam varchar,
-	route_modaliteit varchar,
-	route_frequentie double precision,
+	modaliteit varchar,
+	ochtendspits double precision,
+	daluren double precision,
+	avondspits double precision,
 	CONSTRAINT ov_routes_pkey PRIMARY KEY (sid)
 );
 
