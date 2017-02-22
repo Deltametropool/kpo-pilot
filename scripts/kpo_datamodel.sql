@@ -11,12 +11,12 @@ ALTER SCHEMA datasysteem OWNER TO postgres;
 CREATE TABLE datasysteem.woonscenarios(
 	sid serial NOT NULL,
 	geom geometry(MultiPolygon,28992),
-	code varchar,
-	plaatsnaam varchar,
-	scenario_naam varchar,
+	code character varying,
+	plaatsnaam character varying,
+	scenario_naam character varying,
 	op_loopafstand boolean,
 	op_fietsafstand boolean,
-	dichtstbijzijnde_station varchar,
+	dichtstbijzijnde_station character varying,
 	huishoudens integer,
 	area double precision,
 	dichtheid double precision,
@@ -28,7 +28,7 @@ CREATE TABLE datasysteem.woonscenarios(
 -- DROP TABLE IF EXISTS datasysteem.overzicht_woonscenarios CASCADE;
 CREATE TABLE datasysteem.overzicht_woonscenarios(
 	sid serial NOT NULL,
-	scenario_naam varchar,
+	scenario_naam character varying,
 	tod_beleidsniveau smallint,
 	verwachte_huishoudens integer,
 	op_loopafstand integer,
@@ -41,10 +41,10 @@ CREATE TABLE datasysteem.overzicht_woonscenarios(
 CREATE TABLE datasysteem.knooppunten(
 	sid serial NOT NULL,
 	geom geometry(MultiPoint,28992),
-	station_naam varchar,
-	halte_id varchar,
-	halte_naam varchar,
-	scenario_naam varchar,
+	station_naam character varying,
+	halte_id character varying,
+	halte_naam character varying,
+	scenario_naam character varying,
 	tod_beleidsniveau smallint,
 	huishoudens integer,
 	procentuele_verandering double precision,
@@ -59,8 +59,8 @@ CREATE TABLE datasysteem.knooppunten(
 	stijgpunten_verschil double precision,
 	loopstromen_capaciteit integer,
 	loopstromen_verschil double precision,
-	fietsroutes varchar,
-	ov_routes varchar,
+	fietsroutes character varying,
+	ov_routes character varying,
 	CONSTRAINT knooppunten_pkey PRIMARY KEY (sid)
 );
 
@@ -68,13 +68,13 @@ CREATE TABLE datasysteem.knooppunten(
 CREATE TABLE datasysteem.ruimtelijke_kenmerken(
 	sid serial NOT NULL,
 	geom geometry(MultiPolygon,28992),
-	cell_id varchar,
+	cell_id character varying,
 	huishoudens integer,
 	inwoners integer,
 	intensiteit integer,
 	fysieke_dichtheid double precision,
 	woz_waarde double precision,
-	ov_bereikbaarheidsniveau varchar,
+	ov_bereikbaarheidsniveau character varying,
 	ov_bereikbaarheidsindex double precision,
 	CONSTRAINT ruimtelijke_kenmerken_pkey PRIMARY KEY (sid)
 );
@@ -83,11 +83,11 @@ CREATE TABLE datasysteem.ruimtelijke_kenmerken(
 CREATE TABLE datasysteem.ontwikkellocaties(
 	sid serial NOT NULL,
 	geom geometry(MultiPolygon,28992),
-	plan_naam varchar,
-	plan_id varchar,
-	gemeente varchar,
-	plaatsnaam varchar,
-	adres varchar,
+	plan_naam character varying,
+	plan_id character varying,
+	gemeente character varying,
+	plaatsnaam character varying,
+	adres character varying,
 	bestaande_woningen integer,
 	geplande_woningen integer,
 	net_nieuwe_woningen integer,
@@ -102,7 +102,7 @@ CREATE TABLE datasysteem.ontwikkellocaties(
 -- DROP TABLE IF EXISTS datasysteem.overzicht_ontwikkellocaties CASCADE;
 CREATE TABLE datasysteem.overzicht_ontwikkellocaties(
 	sid serial NOT NULL,
-	plan_naam varchar,
+	plan_naam character varying,
 	geplande_woningen integer,
 	in_onderbenut_bereikbaar integer,
 	buiten_onderbenut_bereikbaar integer,
@@ -115,9 +115,9 @@ CREATE TABLE datasysteem.invloedsgebied_overlap(
 	geom geometry(MultiPolygon,28992),
 	inwoner_dichtheid integer,
 	intensiteit integer,
-	station_namen varchar,
+	station_namen character varying,
 	station_aantal smallint,
-	ov_routes_ids varchar,
+	ov_routes_ids character varying,
 	CONSTRAINT invloedsgebied_overlap_pkey PRIMARY KEY (sid)
 );
 
@@ -125,9 +125,10 @@ CREATE TABLE datasysteem.invloedsgebied_overlap(
 CREATE TABLE datasysteem.belangrijke_locaties(
 	sid serial NOT NULL,
 	geom geometry(MultiPolygon,28992),
-	locatie_id varchar,
-	location_naam varchar,
-	ov_routes_ids varchar,
+	locatie_id character varying,
+	locatie_naam character varying,
+	op_loopafstand boolean,
+	ov_routes_ids character varying,
 	CONSTRAINT belangrijke_locaties_pkey PRIMARY KEY (sid)
 );
 
@@ -135,9 +136,11 @@ CREATE TABLE datasysteem.belangrijke_locaties(
 CREATE TABLE datasysteem.regionale_voorzieningen(
 	sid serial NOT NULL,
 	geom geometry(MultiPoint,28992),
-	locatie_id varchar,
-	location_naam varchar,
-	ov_routes_ids varchar,
+	locatie_id character varying,
+	type_locatie character varying,
+	locatie_naam character varying,
+	op_loopafstand boolean,
+	ov_routes_ids character varying,
 	CONSTRAINT regionale_voorzieningen_pkey PRIMARY KEY (sid)
 );
 
@@ -145,10 +148,10 @@ CREATE TABLE datasysteem.regionale_voorzieningen(
 CREATE TABLE datasysteem.fietsroutes(
 	sid serial NOT NULL,
 	geom geometry(Linestring,28992),
-	route_id varchar,
-	link_id varchar,
+	route_id character varying,
+	link_id character varying,
 	route_intensiteit smallint,
-	invloedsgebied_ids varchar,
+	invloedsgebied_ids character varying,
 	CONSTRAINT fietsroutes_pkey PRIMARY KEY (sid)
 );
 
@@ -156,9 +159,9 @@ CREATE TABLE datasysteem.fietsroutes(
 CREATE TABLE datasysteem.ov_routes(
 	sid serial NOT NULL,
 	geom geometry(Linestring,28992),
-	route_id varchar,
-	route_naam varchar,
-	modaliteit varchar,
+	route_id character varying,
+	route_naam character varying,
+	modaliteit character varying,
 	ochtendspits double precision,
 	daluren double precision,
 	avondspits double precision,
@@ -169,10 +172,10 @@ CREATE TABLE datasysteem.ov_routes(
 CREATE TABLE datasysteem.isochronen(
 	sid serial NOT NULL,
 	geom geometry(MultiPolygon,28992),
-	halte_id varchar,
-	halte_naam varchar,
-	halte_modaliteit varchar,
-	modaliteit varchar,
+	halte_id character varying,
+	halte_naam character varying,
+	halte_modaliteit character varying,
+	modaliteit character varying,
 	isochroon_afstand smallint,
 	CONSTRAINT isochronen_pkey PRIMARY KEY (sid)
 );
@@ -181,10 +184,10 @@ CREATE TABLE datasysteem.isochronen(
 CREATE TABLE datasysteem.ov_haltes(
 	sid serial NOT NULL,
 	geom geometry(Point,28992),
-	halte_id varchar,
+	halte_id character varying,
 	halte_zone integer,
-	halte_naam varchar,
-	halte_gemeente varchar,
+	halte_naam character varying,
+	halte_gemeente character varying,
 	tram boolean,
 	metro boolean,
 	trein boolean,

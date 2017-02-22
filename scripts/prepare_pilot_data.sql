@@ -161,9 +161,18 @@ UPDATE datasysteem.ruimtelijke_kenmerken AS a
 		) b
 	WHERE a.cell_id = b.cell_id
 ;
--- add PTAL
-
-
+-- add PTAL values
+UPDATE datasysteem.ruimtelijke_kenmerken AS a 
+	SET ov_bereikbaarheidsindex = ptai,
+	ov_bereikbaarheidsniveau = ptal
+	FROM ov_analysis.ptal_poi b
+	WHERE a.cell_id = b.cell_id
+;
+UPDATE datasysteem.ruimtelijke_kenmerken
+	SET ov_bereikbaarheidsindex = 0,
+	ov_bereikbaarheidsniveau = 0
+	WHERE ov_bereikbaarheidsindex IS NULL
+;
 -- add built density from PBL data
 UPDATE datasysteem.ruimtelijke_kenmerken AS a
 	SET fysieke_dichtheid = b.fsi
@@ -177,251 +186,216 @@ UPDATE datasysteem.ruimtelijke_kenmerken AS a
 ;
 
 
-
-
-
-
-
--- DELETE FROM datasysteem.development_locations;
-INSERT INTO datasysteem.development_locations(geom,locations_set,site_id,municipality,site_name,
-		address,built_dwellings,planned_dwellings,net_dwellings,area,density,nearest_station,
-		within_walking_dist,within_cycling_dist,within_ov_dist)
-	SELECT ST_Force2D(plan.geom), 'plancapaciteit', plan.planid, plan.gemnaam, plan.naamplan, plan.straat, 
-		plan.te_slopen, (plan.wtypapp+plan.wtypggb), (plan.wtypapp+plan.wtypggb-plan.te_slopen), 
-		ST_Area(plan.geom), ((plan.wtypapp+plan.wtypggb)::double precision/ST_Area(plan.geom))*10000, stat.station_name,
-		FALSE, FALSE, FALSE
-	FROM sources.vdm_plancapaciteit_2016_update plan,
-		(SELECT DISTINCT ON(a.sid) a.sid, b.station_id station_sid, b.station_naam station_name, 
-			ST_Distance(a.geom, b.geom) dist 
-		FROM sources.vdm_plancapaciteit_2016_update a, 
-			(SELECT * FROM street_isochrone_analysis.station_isochrone_polygons_full
-				WHERE travel_mode = 'fiets'
-			) b
-		ORDER BY a.sid, dist ASC
-		) stat
-	WHERE plan.sid = stat.sid
+----
+-- Ontwikkellocaties kenmerken
+-- Insert RAP data
+-- DELETE FROM datasysteem.ontwikkellocaties WHERE plan_naam = 'RAP 2020';
+INSERT INTO datasysteem.ontwikkellocaties (geom, plan_naam, plan_id, gemeente, plaatsnaam, adres,
+		bestaande_woningen, geplande_woningen, net_nieuwe_woningen, vlakte)
+	SELECT geom, 'RAP 2020', objectid, gemeen_rap, regio, '', 0, rap_totaal, rap_totaal, ST_Area(geom)
+	FROM sources.pnh_rap_en_plancapaciteit
 ;
-INSERT INTO datasysteem.development_locations(geom,locations_set,site_id,municipality,site_name,
-		address,built_dwellings,planned_dwellings,net_dwellings,area,density,nearest_station)
-	SELECT plan.geom, 'leegstanden', plan.rinnummer, plan.gemeente, plan.plannaam, plan.ookbekend,
-		0,0,0,ST_Area(plan.geom),(plan.planm2::double precision/ST_Area(plan.geom)), stat.station_name
-	FROM sources.pnh_werklocaties_kantoren_leegstanden plan,
-		(SELECT DISTINCT ON(a.sid) a.sid, b.station_id station_sid, b.station_naam station_name, 
-			ST_Distance(a.geom, b.geom) dist 
-		FROM sources.pnh_werklocaties_kantoren_leegstanden a, 
-			(SELECT * FROM street_isochrone_analysis.station_isochrone_polygons_full
-				WHERE travel_mode = 'fiets'
-			) b
-		ORDER BY a.sid, dist ASC
-		) stat
-	WHERE plan.sid = stat.sid
+-- DELETE FROM datasysteem.ontwikkellocaties WHERE plan_naam = 'RAP minder Plancapaciteit';
+INSERT INTO datasysteem.ontwikkellocaties (geom, plan_naam, plan_id, gemeente, plaatsnaam, adres,
+		bestaande_woningen, geplande_woningen, net_nieuwe_woningen, vlakte)
+	SELECT geom, 'RAP minder Plancapaciteit', objectid, gemeen_rap, regio, '', 
+		plan_sloop, rap_totaal, rap_totaal-plan_sloop, ST_Area(geom)
+	FROM sources.pnh_rap_en_plancapaciteit
 ;
-CREATE INDEX development_locations_gidx ON datasysteem.development_locations USING GIST (geom);
---
-UPDATE datasysteem.development_locations dev SET
-	mean_accessibility = acc.mean,
-	max_accessibility = acc.max
-	FROM (SELECT loc.sid, max(spat.ptal_index) AS max, avg(spat.ptal_index) AS mean
-		FROM datasysteem.development_locations loc,
-		(SELECT ST_Centroid(geom) AS geom, ptal_index 
-			FROM datasysteem.spatial_characteristics
-			WHERE ptal_index > 0
+-- Insert Plancapaciteit data
+-- DELETE FROM datasysteem.ontwikkellocaties WHERE plan_naam = 'Plancapaciteit';
+INSERT INTO datasysteem.ontwikkellocaties(geom, plan_naam, plan_id, gemeente, plaatsnaam, adres,
+		bestaande_woningen, geplande_woningen, net_nieuwe_woningen, vlakte)
+	SELECT ST_Force2D(geom), 'Plancapaciteit', planid, gemnaam, naamplan, straat, 
+		te_slopen, (wtypapp + wtypggb), (wtypapp + wtypggb - te_slopen), ST_Area(geom)
+	FROM sources.vdm_plancapaciteit_2016_update
+;
+-- Insert Leegstanden data
+-- DELETE FROM datasysteem.ontwikkellocaties WHERE plan_naam = 'Leegstanden';
+INSERT INTO datasysteem.ontwikkellocaties(geom, plan_naam, plan_id, gemeente, plaatsnaam, adres,
+		bestaande_woningen, geplande_woningen, net_nieuwe_woningen, vlakte)
+	SELECT geom, 'Leegstanden', rinnummer, gemeente, plannaam, ookbekend,
+		0, leegstand::numeric/100.0, leegstand::numeric/100.0, ST_Area(geom)
+	FROM sources.pnh_werklocaties_kantoren_leegstanden
+;
+-- Calculate dichtheid (per hectare = 10000m2)
+UPDATE datasysteem.ontwikkellocaties SET dichtheid = geplande_woningen/vlakte*10000;
+-- Calculate gemiddelde_bereikbaarheidsindex, maximale_bereikbaarheidsindex
+UPDATE datasysteem.ontwikkellocaties dev SET
+	gemiddelde_bereikbaarheidsindex = acc.mean,
+	maximale_bereikbaarheidsindex = acc.max
+	FROM (SELECT loc.sid, max(spat.ov_bereikbaarheidsindex) AS max, avg(spat.ov_bereikbaarheidsindex) AS mean
+		FROM datasysteem.ontwikkellocaties loc,
+		(SELECT ST_Centroid(geom) AS geom, ov_bereikbaarheidsindex 
+			FROM datasysteem.ruimtelijke_kenmerken
+			WHERE ov_bereikbaarheidsindex > 0
 		) spat
 		WHERE ST_Intersects(loc.geom,spat.geom)
 		GROUP BY loc.sid
 	)acc
 	WHERE dev.sid = acc.sid
 ;
-UPDATE datasysteem.development_locations dev SET 
-	within_walking_dist = TRUE
-	FROM (SELECT DISTINCT ON(a.sid) a.sid
-		FROM datasysteem.development_locations a,
-		(SELECT * FROM street_isochrone_analysis.station_isochrone_polygons_full
-			WHERE travel_mode = 'voetganger') b
-		WHERE ST_Intersects(a.geom,b.geom)
-		) intersects
-	WHERE dev.sid=intersects.sid
-;
-UPDATE datasysteem.development_locations dev SET 
-	within_cycling_dist = TRUE
-	FROM (SELECT DISTINCT ON(a.sid) a.sid
-		FROM datasysteem.development_locations a,
-		(SELECT * FROM street_isochrone_analysis.station_isochrone_polygons_full
-			WHERE travel_mode = 'fiets') b
-		WHERE ST_Intersects(a.geom,b.geom)
-		) intersects
-	WHERE dev.sid=intersects.sid
-;
-UPDATE datasysteem.development_locations dev SET 
-	within_ov_dist = TRUE
-	FROM (SELECT DISTINCT ON(a.sid) a.sid
-		FROM datasysteem.development_locations a,
-		(SELECT * FROM street_isochrone_analysis.station_isochrone_polygons_full
-			WHERE travel_mode = 'fiets') b
-		WHERE ST_Intersects(a.geom,b.geom)
-		) intersects
-	WHERE dev.sid=intersects.sid
-;
+CREATE INDEX ontwikkellocaties_gidx ON datasysteem.ontwikkellocaties USING GIST (geom);
 
--- DELETE FROM datasysteem.development_locations_summary;
-INSERT INTO datasysteem.development_locations_summary(locations_set,new_households)
-	SELECT locations_set, sum(net_dwellings)
-	FROM datasysteem.development_locations
-	GROUP BY locations_set
-;
-UPDATE datasysteem.development_locations_summary a SET
-	within_walking_dist = sum
-	FROM (SELECT locations_set, sum(net_dwellings) sum
-		FROM datasysteem.development_locations
-		WHERE within_walking_dist = TRUE
-		GROUP BY locations_set
-	) b
-	WHERE a.locations_set = b.locations_set
-;
-UPDATE datasysteem.development_locations_summary a SET
-	within_cycling_dist = sum
-	FROM (SELECT locations_set, sum(net_dwellings) sum
-		FROM datasysteem.development_locations
-		WHERE within_walking_dist = FALSE
-		AND within_cycling_dist = TRUE
-		GROUP BY locations_set
-	) b
-	WHERE a.locations_set = b.locations_set
-;
-UPDATE datasysteem.development_locations_summary a SET
-	within_ov_dist = sum
-	FROM (SELECT locations_set, sum(net_dwellings) sum
-		FROM datasysteem.development_locations
-		WHERE within_walking_dist = FALSE
-		AND within_cycling_dist = FALSE
-		AND within_ov_dist = TRUE
-		GROUP BY locations_set
-	) b
-	WHERE a.locations_set = b.locations_set
-;
-UPDATE datasysteem.development_locations_summary a SET
-	outside_influence = sum
-	FROM (SELECT locations_set, sum(net_dwellings) sum
-		FROM datasysteem.development_locations
-		WHERE within_walking_dist = FALSE
-		AND within_cycling_dist = FALSE
-		AND within_ov_dist = FALSE
-		GROUP BY locations_set
-	) b
-	WHERE a.locations_set = b.locations_set
-;
 
+----
+-- OV routes
 -- DELETE FROM datasysteem.ov_routes;
-INSERT INTO datasysteem.ov_routes(geom,route_id,route_name,route_mode,trein_type,mean_duration)
-	SELECT rt.geom, rt.route_id, rt.route_name, rt.route_mode, trip.route_long_name, rt.route_duration
-	FROM networks.ov_routes AS rt
-	LEFT JOIN (SELECT route_id, min(route_long_name) AS route_long_name
-		FROM networks.ov_trips
-		WHERE day_of_week = ANY(ARRAY['monday','tuesday','wednesday','thursday','friday'])
-		GROUP BY route_id
-	)AS trip
-	USING(route_id)
-;
-UPDATE datasysteem.ov_routes route SET ochtendspits = trip.route_frequency
+INSERT INTO datasysteem.ov_routes(geom, route_id, route_naam, modaliteit)
+	SELECT trips.geom, routes.route_id, min(trips.route_name), min(trips.trip_mode)
 	FROM (
-		SELECT trip.route_id, round(count(*)::numeric/2.5,2) AS route_frequency
-		FROM networks.ov_trips trip
-		WHERE day_of_week = ANY(ARRAY['monday','tuesday','wednesday','thursday','friday'])
-		AND trip_id IN (SELECT trip_id 
-			FROM networks.ov_stop_times
-			WHERE (pickup_type = 0 OR pickup_type IS NULL)
-			AND (departure_in_secs >= FLOOR(EXTRACT(EPOCH FROM '06:30:00'::time)) 
-			AND departure_in_secs <= FLOOR(EXTRACT(EPOCH FROM '09:00:00'::time)))
-			)
-		GROUP BY route_id
-	)AS trip
-	WHERE route.route_id = trip.route_id
+		SELECT ST_MakeLine(links.geom) geom, links.trip_id, min(links.trip_mode) AS trip_mode, 
+			min(links.route_name) AS route_name, sum(links.duration_in_secs) AS trip_duration
+		FROM (SELECT geom, trip_id, trip_mode, route_name, trip_sequence, duration_in_secs
+			FROM networks.ov_links
+			WHERE trip_mode !='trein'
+			ORDER BY trip_id, trip_sequence
+		) links
+		GROUP BY links.trip_id
+	) AS trips
+	JOIN networks.ov_trips as routes
+	USING(trip_id)
+	GROUP BY trips.geom, trips.trip_mode, routes.route_id, trips.route_name
 ;
-UPDATE datasysteem.ov_routes route SET middagdal = trip.route_frequency
+-- update frequency
+UPDATE datasysteem.ov_routes AS route SET
+	ochtendspits = links.ochtendspits,
+	daluren = links.daluren,
+	avondspits = links.avondspits
 	FROM (
-		SELECT trip.route_id, round(count(*)::numeric/2.5,2) AS route_frequency
-		FROM networks.ov_trips trip
-		WHERE day_of_week = ANY(ARRAY['monday','tuesday','wednesday','thursday','friday'])
-		AND trip_id IN (SELECT trip_id 
-			FROM networks.ov_stop_times
-			WHERE (pickup_type = 0 OR pickup_type IS NULL)
-			AND (departure_in_secs >= FLOOR(EXTRACT(EPOCH FROM '11:30:00'::time)) 
-			AND departure_in_secs <= FLOOR(EXTRACT(EPOCH FROM '14:00:00'::time)))
-			)
+		SELECT route_id, avg(freq_ochtendspits) ochtendspits, 
+			avg(freq_daluren) daluren, avg(freq_avondspits) avondspits
+		FROM ov_analysis.ov_links_frequency
+		WHERE trip_mode != 'trein'
 		GROUP BY route_id
-	)AS trip
-	WHERE route.route_id = trip.route_id
+	) links
+	WHERE route.route_id = links.route_id
 ;
-UPDATE datasysteem.ov_routes route SET avondspits = trip.route_frequency
-	FROM (
-		SELECT trip.route_id, round(count(*)::numeric/2.5,2) AS route_frequency
-		FROM networks.ov_trips trip
-		WHERE day_of_week = ANY(ARRAY['monday','tuesday','wednesday','thursday','friday'])
-		AND trip_id IN (SELECT trip_id 
-			FROM networks.ov_stop_times
-			WHERE (pickup_type = 0 OR pickup_type IS NULL)
-			AND (departure_in_secs >= FLOOR(EXTRACT(EPOCH FROM '16:00:00'::time)) 
-			AND departure_in_secs <= FLOOR(EXTRACT(EPOCH FROM '18:30:00'::time)))
-			)
-		GROUP BY route_id
-	)AS trip
-	WHERE route.route_id = trip.route_id
-;
-DELETE FROM datasysteem.ov_routes WHERE ochtendspits IS NULL AND middagdal IS NULL AND avondspits IS NULL;
+CREATE INDEX ov_routes_geom_idx ON datasysteem.ov_routes USING GIST(geom);	
 
--- DELETE FROM datasysteem.isochrones;
-INSERT INTO datasysteem.isochrones(geom,stop_id,stop_name,travel_mode,distance)
-	SELECT ST_Multi(geom), station_id, station_naam, travel_mode, travel_distance
-	FROM street_isochrone_analysis.station_isochrone_polygons_full
-;
 
--- DELETE FROM datasysteem.ov_stops;
-INSERT INTO datasysteem.ov_stops(geom,stop_id,stop_area,stop_name,stop_location,tram,metro,trein,
-		bus,veerboot,bus_ochtendspits,bus_middagdal,bus_avondspits,tram_ochtendspits,
-		tram_middagdal,tram_avondspits,metro_ochtendspits,metro_middagdal,metro_avondspits,
-		veer_ochtendspits,veer_middagdal,veer_avondspits,trein_ochtendspits,trein_middagdal,
-		trein_avondspits,hsl_ochtendspits,hsl_middagdal,hsl_avondspits,ic_ochtendspits,
-		ic_middagdal,ic_avondspits,spr_ochtendspits,spr_middagdal,spr_avondspits)
-	SELECT geom,stop_id,stop_area,stop_name,stop_descr,tram,metro,trein,
-		bus,veerboot,bus_ochtendspits,bus_middagdal,bus_avondspits,tram_ochtendspits,
-		tram_middagdal,tram_avondspits,metro_ochtendspits,metro_middagdal,metro_avondspits,
-		veer_ochtendspits,veer_middagdal,veer_avondspits,trein_ochtendspits,trein_middagdal,
-		trein_avondspits,hsl_ochtendspits,hsl_middagdal,hsl_avondspits,ic_ochtendspits,
-		ic_middagdal,ic_avondspits,spr_ochtendspits,spr_middagdal,spr_avondspits
-	FROM ov_network_analysis.ov_frequency
-;
-
--- DELETE FROM datasysteem.ov_links;
-INSERT INTO datasysteem.ov_links(geom,origin_stop_id,destination_stop_id,link_mode,trein_type,
-		ochtendspits,middagdal,avondspits,mean_duration)
-	SELECT geom, start_stop_id, end_stop_id, trip_mode, '', 
-		freq_spits_morgen, freq_dal_middag, freq_spits_avond, mean_duration_in_secs
-	FROM ov_network_analysis_2016.links_frequency
-;
-
--- DELETE FROM datasysteem.important_locations;
-INSERT INTO datasysteem.important_locations(geom,location_type,location_id,location_name,ov_routes)
-	SELECT
-	FROM
-;
-
--- DELETE FROM datasysteem.station_influence_overlap;
-INSERT INTO datasysteem.station_influence_overlap(geom,residents,workers,students,total_stations,station_names)
-	SELECT ST_Multi(ST_Union(spaces.geom)),sum(spaces.residents),sum(spaces.workers),sum(spaces.students),
-		spaces.total,spaces.station_names
+-----
+-- Invloedsgebied overlap
+-- DELETE FROM datasysteem.invloedsgebied_overlap;
+INSERT INTO datasysteem.invloedsgebied_overlap(geom, inwoner_dichtheid, intensiteit, station_namen, station_aantal)
+	SELECT ST_Multi(ST_Union(spaces.geom)), sum(spaces.inwoners)::numeric/count(*)::numeric, 
+		sum(spaces.intensiteit)::numeric/count(*)::numeric,
+		spaces.station_names, spaces.total
 	FROM (
 		SELECT min(a.geom) AS geom, a.cell_id, count(*) AS total, 
-			string_agg(b.stop_name,',' ORDER BY b.stop_name) AS station_names,
-			min(residents) AS residents, min(workers) AS workers, min(students) AS students
-		FROM (SELECT * FROM datasysteem.spatial_characteristics) a,
-		(SELECT * FROM datasysteem.isochrones WHERE travel_mode = 'fiets') b
+			string_agg(b.halte_naam,',' ORDER BY b.halte_naam) AS station_names,
+			min(inwoners) AS inwoners, min(intensiteit) AS intensiteit
+		FROM (SELECT * FROM datasysteem.ruimtelijke_kenmerken) a,
+		(SELECT * FROM datasysteem.isochronen WHERE modaliteit = 'fiets') b
 		WHERE ST_Intersects(ST_Centroid(a.geom),b.geom)
 		GROUP BY a.cell_id
 	) spaces
 	WHERE spaces.total > 1
-	GROUP BY spaces.total,spaces.station_names
+	GROUP BY spaces.total, spaces.station_names
+;
+-- update ov routes with stops in the overlap regions
+-- UPDATE datasysteem.invloedsgebied_overlap SET ov_routes_ids = NULL;
+UPDATE datasysteem.invloedsgebied_overlap AS overlap SET 
+	ov_routes_ids = routes.ids
+	FROM (SELECT c.sid, string_agg(c.route_id,',' ORDER BY c.route_id) ids
+		FROM (SELECT a.sid, b.route_id
+			FROM (
+				SELECT route_id, ST_Multi((ST_DumpPoints(geom)).geom) geom
+				FROM datasysteem.ov_routes
+			) AS b, 
+			datasysteem.invloedsgebied_overlap a
+			WHERE ST_Intersects(a.geom,b.geom)
+			GROUP BY a.sid, b.route_id
+		) c
+		GROUP BY c.sid
+	) routes
+	WHERE overlap.sid = routes.sid
 ;
 
+
+----
+-- DELETE FROM datasysteem.belangrijke_locaties;
+INSERT INTO datasysteem.belangrijke_locaties(geom, locatie_id, locatie_naam)
+	SELECT locatie.geom, locatie.objectid, locatie.naam
+	FROM sources."economische_kerngebieden_DEF" locatie,
+	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.boundary LIMIT 1) pilot
+	WHERE ST_Intersects(locatie.geom, pilot.geom)
+;
+-- update op_loopafstand
+UPDATE datasysteem.belangrijke_locaties AS locatie SET 
+	op_loopafstand = TRUE
+	FROM (
+		SELECT a.sid
+		FROM datasysteem.belangrijke_locaties a,
+		(SELECT * FROM datasysteem.isochronen
+		WHERE halte_modaliteit = 'trein' AND modaliteit = 'walk') b
+		WHERE ST_Intersects(a.geom, b.geom) 
+	) isochrone
+	WHERE locatie.sid = isochrone.sid
+;
+UPDATE datasysteem.belangrijke_locaties SET op_loopafstand = FALSE WHERE op_loopafstand IS NULL;
+-- update ov routes crossing the belangrijke locaties
+-- UPDATE datasysteem.belangrijke_locaties SET ov_routes_ids = NULL;
+UPDATE datasysteem.belangrijke_locaties AS locatie SET 
+	ov_routes_ids = routes.ids
+	FROM (SELECT c.sid, string_agg(c.route_id,',' ORDER BY c.route_id) ids
+		FROM (SELECT a.sid, b.route_id
+			FROM (
+				SELECT route_id, ST_Multi((ST_DumpPoints(geom)).geom) geom
+				FROM datasysteem.ov_routes
+			) AS b, datasysteem.belangrijke_locaties a
+			WHERE ST_DWithin(a.geom,b.geom,200)
+			GROUP BY a.sid, b.route_id
+		) c
+		GROUP BY c.sid
+	) routes
+	WHERE locatie.sid = routes.sid
+;
+
+
+----
+-- Calculate location of important services
+-- DELETE FROM datasysteem.regionale_voorzieningen;
+INSERT INTO datasysteem.regionale_voorzieningen(geom, locatie_id, type_locatie, locatie_naam)
+	SELECT locatie.geom, locatie.lisanr, locatie.vdm_type_v, locatie.naam
+	FROM sources.pnh_lisa_2016_selectie_voorzieningen locatie,
+	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.boundary LIMIT 1) pilot
+	WHERE ST_Intersects(locatie.geom, pilot.geom)
+;
+-- update op_loopafstand
+UPDATE datasysteem.regionale_voorzieningen AS locatie SET 
+	op_loopafstand = TRUE
+	FROM (
+		SELECT a.sid
+		FROM datasysteem.regionale_voorzieningen a,
+		(SELECT * FROM datasysteem.isochronen
+		WHERE halte_modaliteit = 'trein' AND modaliteit = 'walk') b
+		WHERE ST_Intersects(a.geom, b.geom) 
+	) isochrone
+	WHERE locatie.sid = isochrone.sid
+;
+UPDATE datasysteem.regionale_voorzieningen SET op_loopafstand = FALSE WHERE op_loopafstand IS NULL;
+-- update ov routes crossing the regionale voorzieningen
+-- UPDATE datasysteem.regionale_voorzieningen SET ov_routes_ids = NULL;
+UPDATE datasysteem.regionale_voorzieningen AS locatie SET 
+	ov_routes_ids = routes.ids
+	FROM (SELECT c.sid, string_agg(c.route_id,',' ORDER BY c.route_id) ids
+		FROM (SELECT a.sid, b.route_id
+			FROM (
+				SELECT route_id, ST_Multi((ST_DumpPoints(geom)).geom) geom
+				FROM datasysteem.ov_routes
+			) AS b, datasysteem.regionale_voorzieningen a
+			WHERE ST_DWithin(a.geom,b.geom,400)
+			GROUP BY a.sid, b.route_id
+		) c
+		GROUP BY c.sid
+	) routes
+	WHERE locatie.sid = routes.sid
+;
+
+
+----
+-- Build relevant cycle routes 
 -- DELETE FROM datasysteem.cycle_routes;
 INSERT INTO datasysteem.cycle_routes(geom,route_id,route_name,link_frequency)
 	SELECT
@@ -429,11 +403,3 @@ INSERT INTO datasysteem.cycle_routes(geom,route_id,route_name,link_frequency)
 ;
 --select count(*) from (select distinct(routeid) routeid from sources.fietstelweek_routes2016) as foo
 
--- Some background layers
-CREATE TABLE datasysteem.spoor_wegen AS SELECT a.* FROM sources.nwb_spoor_spoorvakken a, networks.boundary b
-	WHERE ST_Intersects(a.geom,b.geom);
-ALTER TABLE datasysteem.spoor_wegen ADD CONSTRAINT spoor_wegen_pkey PRIMARY KEY (sid);
--- DROP TABLE datasysteem.gemeente CASCADE;
-CREATE TABLE datasysteem.gemeente AS SELECT a.* FROM sources.cbs_gem_2016 a, networks.boundary b
-	WHERE ST_Intersects(a.geom,b.geom) AND a.water='NEE';
-ALTER TABLE datasysteem.gemeente ADD CONSTRAINT gemeente_pkey PRIMARY KEY (sid);
