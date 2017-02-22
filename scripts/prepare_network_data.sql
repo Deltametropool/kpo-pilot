@@ -337,7 +337,7 @@ UPDATE networks.ov_stop_times AS times SET
 ;
 
 -- links
--- important to get the topology in terms of links, as pairs of stops that are connected by a given trip
+-- to get the topology of ov network, as pairs of stops that are connected by a given trip
 -- DROP TABLE networks.ov_links CASCADE;
 CREATE TABLE networks.ov_links(
 	sid serial NOT NULL PRIMARY KEY,
@@ -377,7 +377,7 @@ INSERT INTO networks.ov_links(geom, trip_id, trip_mode, route_id, route_name, tr
 			AND (drop_off_type IS NULL OR drop_off_type < 2)) times
 		JOIN (SELECT trip_id, route_id, route_short_name, route_long_name, route_type FROM networks.ov_trips) trips
 		USING (trip_id)
-		JOIN (SELECT stop_id, geom FROM networks.ov_stops WHERE location_type = 1) stops
+		JOIN (SELECT stop_id, geom FROM networks.ov_stops WHERE location_type = 1 OR parent_station IS NULL) stops
 		ON (stops.stop_id = times.group_id)
 		WINDOW w AS (PARTITION BY times.trip_id ORDER BY times.stop_sequence)
 	  ) as stop_times
