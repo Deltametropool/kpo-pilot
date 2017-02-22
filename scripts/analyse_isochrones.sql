@@ -639,10 +639,10 @@ CREATE TEMP TABLE walk_isochrone_nodes AS
 	) AS stops,
 	(
 		SELECT * FROM isochrone_analysis.isochrone_nodes 
-		WHERE travel_mode = 'walk' AND node_distance <= 400
+		WHERE travel_mode = 'walk' AND node_distance <= 300
 	) AS nodes
 	WHERE nodes.origin_id = stops.source_id 
-	AND (nodes.node_distance + (stops.weg_length*stops.weg_point_location)) <= 400
+	AND (nodes.node_distance + (stops.weg_length*stops.weg_point_location)) <= 300
 ;
 -- from target of stop
 INSERT INTO walk_isochrone_nodes 
@@ -657,10 +657,10 @@ INSERT INTO walk_isochrone_nodes
 	) AS stops,
 	(
 		SELECT * FROM isochrone_analysis.isochrone_nodes 
-		WHERE travel_mode = 'walk' AND node_distance <= 400
+		WHERE travel_mode = 'walk' AND node_distance <= 300
 	) AS nodes
 	WHERE nodes.origin_id = stops.target_id 
-	AND (nodes.node_distance + (stops.weg_length*(1-stops.weg_point_location))) <= 400
+	AND (nodes.node_distance + (stops.weg_length*(1-stops.weg_point_location))) <= 300
 ;
 -- group the above by station and stop keeping only the minimum node_distance
 INSERT INTO isochrone_analysis.stop_isochrone_nodes (station_name, stop_id, stop_mode, node_id, node_distance)
@@ -692,111 +692,66 @@ CREATE TABLE isochrone_analysis.stop_isochrone_wegen (
 	geom geometry(Linestring, 28992),
 	weg_sid integer,
 	station_name varchar,
-	stop_id varchar,
 	stop_mode varchar,
-	travel_distance integer,
+	travel_distance varchar,
 	new_node double precision
 );
-INSERT INTO isochrone_analysis.stop_isochrone_wegen (geom, weg_sid, station_id, 
-	station_name, station_mode, travel_mode, travel_distance)
-	SELECT weg.geom, weg.sid, stat.stop_id, stat.stop_name, 'trein', 'fiets', 400
+INSERT INTO isochrone_analysis.stop_isochrone_wegen (geom, weg_sid, station_name, stop_mode, travel_distance)
+	SELECT DISTINCT weg.geom, weg.sid, stop.station_name, stop.stop_mode, '10 minutes'
 	FROM (
-		SELECT * FROM networks.ov_stops
-		WHERE parent_station IS NULL
-		AND trein = TRUE
-	) stat, isochrone_analysis.wegen weg 
-	WHERE EXISTS (SELECT 1 FROM isochrone_analysis.station_isochrone_nodes f 
-		WHERE travel_mode = 'walk'
-		AND node_distance <= 400 AND f.station_id = stat.stop_id
+		SELECT DISTINCT station_name, stop_id, stop_mode
+		FROM isochrone_analysis.stop_isochrone_nodes
+	) AS stop, isochrone_analysis.wegen weg 
+	WHERE EXISTS (SELECT 1 FROM isochrone_analysis.stop_isochrone_nodes f 
+		WHERE f.station_name = stop.station_name AND f.stop_id = stop.stop_id
 		AND f.node_id = weg.source)
-	AND EXISTS (SELECT 1 FROM isochrone_analysis.station_isochrone_nodes f 	
-		WHERE travel_mode = 'walk'
-		AND node_distance <= 400 AND f.station_id = stat.stop_id
+	AND EXISTS (SELECT 1 FROM isochrone_analysis.stop_isochrone_nodes f 	
+		WHERE f.station_name = stop.station_name AND f.stop_id = stop.stop_id
 		AND f.node_id = weg.target)
 ;
-
-
--- isochrone links
--- DROP TABLE ov_network_analysis.station_isochrone_links CASCADE;
-CREATE TABLE ov_network_analysis.station_isochrone_links (
-	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(Linestring, 28992),
-	link_sid integer,
-	station_sid integer,
-	station_id varchar,
-	station_naam varchar,
-	travel_mode varchar,
-	travel_distance integer
-);
--- DELETE FROM ov_network_analysis.station_isochrone_links;
-INSERT INTO ov_network_analysis.station_isochrone_links (geom, link_sid, station_sid, station_id, 
-	station_naam, travel_mode, travel_distance)
-	SELECT weg.geom, weg.sid, stat.sid, stat.id, stat.naam, 'bus', 600
-	FROM study.stations_maakplaats AS stat, network_bus weg 
-	WHERE EXISTS (SELECT 1 FROM ov_network_analysis.isochrone_nodes f 
-		WHERE travel_mode = 'bus' AND node_distance <= 600 AND f.station_sid = stat.sid
-		AND f.node_id::text = weg.start_stop_id)
-	OR EXISTS (SELECT 1 FROM ov_network_analysis.isochrone_nodes f 	
-		WHERE travel_mode = 'bus' AND node_distance <= 600 AND f.station_sid = stat.sid
-		AND f.node_id::text = weg.end_stop_id)
+CREATE INDEX stop_isochrone_wegen_geom_idx ON isochrone_analysis.stop_isochrone_wegen USING GIST (geom);
+-- identify segments intersecting isochrone limits
+-- DROP TABLE half_segments CASCADE;
+CREATE TEMP TABLE half_segments AS 
+	SELECT DISTINCT weg.geom, weg.sid AS weg_sid, stop.station_name, stop.stop_mode, '10 minutes',
+		weg.length, weg.source, weg.target
+	FROM (
+		SELECT DISTINCT station_name, stop_mode
+		FROM isochrone_analysis.stop_isochrone_nodes
+	) stop, isochrone_analysis.wegen weg 
+	WHERE (EXISTS (SELECT 1 FROM isochrone_analysis.stop_isochrone_nodes f 
+		WHERE f.station_name = stop.station_name AND f.stop_mode = stop.stop_mode
+		AND f.node_id = weg.source)
+	OR EXISTS (SELECT 1 FROM isochrone_analysis.stop_isochrone_nodes f 	
+		WHERE f.station_name = stop.station_name AND f.stop_mode = stop.stop_mode
+		AND f.node_id = weg.target))
+	AND NOT EXISTS (
+		SELECT 1 FROM isochrone_analysis.stop_isochrone_wegen a
+		WHERE a.weg_sid = weg.sid 
+		AND a.station_name = stop.station_name
+		AND a.stop_mode = stop.stop_mode
+	)
 ;
-INSERT INTO ov_network_analysis.station_isochrone_links (geom, link_sid, station_sid, station_id, 
-	station_naam, travel_mode, travel_distance)
-	SELECT weg.geom, weg.sid, stat.sid, stat.id, stat.naam, 'tram', 600
-	FROM study.stations_maakplaats AS stat, network_tram weg 
-	WHERE EXISTS (SELECT 1 FROM ov_network_analysis.isochrone_nodes f 
-		WHERE travel_mode = 'tram' AND node_distance <= 600 AND f.station_sid = stat.sid
-		AND f.node_id::text = weg.start_stop_id)
-	OR EXISTS (SELECT 1 FROM ov_network_analysis.isochrone_nodes f 	
-		WHERE travel_mode = 'tram' AND node_distance <= 600 AND f.station_sid = stat.sid
-		AND f.node_id::text = weg.end_stop_id)
+-- calculate partial segments with linear referencing 
+-- walk from source
+INSERT INTO isochrone_analysis.stop_isochrone_wegen (geom, weg_sid, station_name, stop_mode, travel_distance, new_node)
+	SELECT CASE WHEN ((300-stop.node_distance)/weg.length) <= 1 
+		THEN ST_LineSubstring(weg.geom,0,((300-stop.node_distance)/weg.length))
+		ELSE weg.geom END,
+		weg.weg_sid, stop.station_name, stop.stop_mode, '10 minutes', ((300-stop.node_distance)/weg.length) 
+	FROM half_segments weg, isochrone_analysis.stop_isochrone_nodes stop
+	WHERE weg.station_name = stop.station_name 
+	AND weg.stop_mode = stop.stop_mode
+	AND weg.source = stop.node_id
 ;
-INSERT INTO ov_network_analysis.station_isochrone_links (geom, link_sid, station_sid, station_id, 
-	station_naam, travel_mode, travel_distance)
-	SELECT weg.geom, weg.sid, stat.sid, stat.id, stat.naam, 'metro', 600
-	FROM study.stations_maakplaats AS stat, network_metro weg 
-	WHERE EXISTS (SELECT 1 FROM ov_network_analysis.isochrone_nodes f 
-		WHERE travel_mode = 'metro' AND node_distance <= 600 AND f.station_sid = stat.sid
-		AND f.node_id::text = weg.start_stop_id)
-	OR EXISTS (SELECT 1 FROM ov_network_analysis.isochrone_nodes f 	
-		WHERE travel_mode = 'metro' AND node_distance <= 600 AND f.station_sid = stat.sid
-		AND f.node_id::text = weg.end_stop_id)
+-- walk from target
+INSERT INTO isochrone_analysis.stop_isochrone_wegen (geom, weg_sid, station_name, stop_mode, travel_distance, new_node)
+	SELECT CASE WHEN ((300-stop.node_distance)/weg.length) <= 1 
+		THEN ST_LineSubstring(weg.geom,1-((300-stop.node_distance)/weg.length),1)
+		ELSE weg.geom END,
+		weg.weg_sid, stop.station_name, stop.stop_mode, '10 minutes', ((300-stop.node_distance)/weg.length)-1
+	FROM half_segments weg, isochrone_analysis.stop_isochrone_nodes stop
+	WHERE weg.station_name = stop.station_name 
+	AND weg.stop_mode = stop.stop_mode
+	AND weg.target = stop.node_id
 ;
-
-
--- create buffers for isochrones
--- DROP TABLE ov_network_analysis.station_isochrone_buffers CASCADE;
-CREATE TABLE ov_network_analysis.station_isochrone_buffers (
-	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(MultiPolygon,28992),
-	station_id character varying,
-	station_naam character varying,
-	travel_mode character varying, 
-	travel_distance integer
-);
-INSERT INTO ov_network_analysis.station_isochrone_buffers (geom, station_id, station_naam, travel_mode, travel_distance)
-	SELECT ST_Multi(ST_Union(ST_Buffer(ST_Simplify(geom,5),100,2))), station_id, min(station_naam), 
-		travel_mode, travel_distance
-	FROM ov_network_analysis.station_isochrone_links
-	GROUP BY station_id, travel_mode, travel_distance
-;
-
-
--- create polygons for isochrones
--- DROP TABLE ov_network_analysis.station_isochrone_polygons CASCADE;
-CREATE TABLE ov_network_analysis.station_isochrone_polygons (
-	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(Polygon,28992),
-	station_id character varying,
-	station_naam character varying,
-	travel_mode character varying, 
-	travel_distance integer
-);
-INSERT INTO ov_network_analysis.station_isochrone_polygons (geom, station_id, station_naam, travel_mode, travel_distance)
-	SELECT ST_MakePolygon(ST_ExteriorRing((ST_Dump(ST_Union(ST_Buffer(ST_Simplify(geom,5),100,2)))).geom)), 
-		station_id, min(station_naam), travel_mode, travel_distance
-	FROM ov_network_analysis.station_isochrone_links
-	GROUP BY station_id, travel_mode, travel_distance
-;
-
-
