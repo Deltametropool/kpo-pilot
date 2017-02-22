@@ -62,6 +62,38 @@ UPDATE networks.t10_wegen SET auto=False, voetganger=True WHERE verkeer = 'voetg
 -- DROP INDEX t10_wegen_geom_idx CASCADE;
 CREATE INDEX t10_wegen_geom_idx ON networks.t10_wegen USING GIST (geom);
 
+
+----
+-- Fietstelweek 2016 network
+----
+-- DROP TABLE networks.fiets_links CASCADE;
+CREATE TABLE networks.fiets_links(
+	sid serial NOT NULL PRIMARY KEY,
+	geom geometry(MultiLineString,28992),
+	length double precision,
+	linknummer bigint,
+	intensiteit integer,
+	speed double precision
+);
+INSERT INTO networks.fiets_links(geom, length, linknummer, intensiteit, speed)
+	SELECT fiets.geom, ST_Length(fiets.geom), fiets.linknummer, 
+		(fiets.intensitei+fiets.intensi_01) AS intensiteit, fiets.speed
+	FROM sources.fietstelweek_netwerk_2016 AS fiets,
+	(SELECT geom FROM datasysteem.boundary LIMIT 1) AS pilot,
+	WHERE ST_Intersects(fiets.geom, pilot.geom)
+;
+CREATE INDEX fiets_links_geom_idx ON networks.fiets_links USING GIST(geom);
+CREATE INDEX fiets_links_nummer_idx ON networks.fiets_links (linknummer);
+-- DROP TABLE networks.fiets_routes CASCADE;
+CREATE TABLE networks.fiets_routes AS
+	SELECT a.* FROM sources.fietstelweek_routes_2016 a
+	WHERE EXISTS (SELECT 1 FROM networks.fiets_links b
+		WHERE b.linknummer = a.linknummer)
+;
+CREATE INDEX fiets_routes_nummer_idx ON networks.fiets_routes (linknummer);
+CREATE INDEX fiets_routes_id_idx ON networks.fiets_routes (routeid);
+
+
 ----
 -- 9292 GTFS public transport network
 ----
