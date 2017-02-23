@@ -69,17 +69,17 @@ CREATE INDEX t10_wegen_geom_idx ON networks.t10_wegen USING GIST (geom);
 -- DROP TABLE networks.fiets_links CASCADE;
 CREATE TABLE networks.fiets_links(
 	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(MultiLineString,28992),
+	geom geometry(LineString,28992),
 	length double precision,
 	linknummer bigint,
 	intensiteit integer,
 	speed double precision
 );
 INSERT INTO networks.fiets_links(geom, length, linknummer, intensiteit, speed)
-	SELECT fiets.geom, ST_Length(fiets.geom), fiets.linknummer, 
+	SELECT (ST_Dump(fiets.geom)).geom, ST_Length(fiets.geom), fiets.linknummer, 
 		(fiets.intensitei+fiets.intensi_01) AS intensiteit, fiets.speed
 	FROM sources.fietstelweek_netwerk_2016 AS fiets,
-	(SELECT geom FROM datasysteem.boundary LIMIT 1) AS pilot,
+	(SELECT geom FROM datasysteem.boundary LIMIT 1) AS pilot
 	WHERE ST_Intersects(fiets.geom, pilot.geom)
 ;
 CREATE INDEX fiets_links_geom_idx ON networks.fiets_links USING GIST(geom);
@@ -92,6 +92,18 @@ CREATE TABLE networks.fiets_routes AS
 ;
 CREATE INDEX fiets_routes_nummer_idx ON networks.fiets_routes (linknummer);
 CREATE INDEX fiets_routes_id_idx ON networks.fiets_routes (routeid);
+-- identify start and end link of routes
+-- DROP TABLE networks.fiets_routes_ends CASCADE;
+CREATE TABLE networks.fiets_routes_ends AS
+	SELECT t.routeid, max(firstlink) as start_link, max(lastlink) as end_link
+	FROM (
+		SELECT routeid, 
+			first_value(linknummer) OVER (PARTITION BY routeid ORDER BY id) as firstlink,
+			last_value(linknummer) OVER (PARTITION BY routeid ORDER BY id) as lastlink
+		FROM networks.fiets_routes
+	) t
+	GROUP BY t.routeid
+;
 
 
 ----

@@ -412,12 +412,69 @@ UPDATE datasysteem.regionale_voorzieningen AS locatie SET
 ;
 
 
-----
--- Build relevant cycle routes 
--- DELETE FROM datasysteem.cycle_routes;
-INSERT INTO datasysteem.cycle_routes(geom,route_id,route_name,link_frequency)
-	SELECT
-	FROM 
-;
---select count(*) from (select distinct(routeid) routeid from sources.fietstelweek_routes2016) as foo
 
+DROP TABLE IF EXISTS datasysteem.fietsroutes CASCADE;
+CREATE TABLE datasysteem.fietsroutes(
+	sid serial NOT NULL,
+	geom geometry(Linestring,28992),
+	route_id character varying,
+	route_intensiteit integer,
+	station_naam character varying,
+	invloedsgebied_ids character varying,
+	CONSTRAINT fietsroutes_pkey PRIMARY KEY (sid)
+);
+
+----
+-- Build relevant cycle routes
+-- identify links around stations (200m buffer)
+-- DROP TABLE origin_destination_links CASCADE;
+CREATE TEMP TABLE origin_destination_links AS 
+	SELECT DISTINCT link.linknummer, stops.halte_naam station_naam
+	FROM networks.fiets_links AS link,
+	(SELECT * FROM datasysteem.ov_haltes WHERE trein = TRUE) AS stops
+	WHERE ST_DWithin(link.geom,stops.geom,100)
+;
+-- build route geometry of routes that start/end at stations
+-- DROP TABLE selected_fiets_routes CASCADE;
+CREATE TEMP TABLE selected_fiets_routes AS
+	SELECT routes.routeid, links.station_naam
+	FROM networks.fiets_routes_ends routes,
+	origin_destination_links links
+	WHERE routes.start_link = links.linknummer
+;
+INSERT INTO selected_fiets_routes
+	SELECT routes.routeid, links.station_naam
+	FROM networks.fiets_routes_ends routes,
+	origin_destination_links links
+	WHERE routes.end_link = links.linknummer
+;
+-- DELETE FROM datasysteem.fietsroutes;
+INSERT INTO datasysteem.fietsroutes(geom, route_id, route_intensiteit, station_naam)
+	SELECT ST_MakeLine(pieces.geom), pieces.routeid, avg(pieces.intensiteit), min(pieces.station_naam)
+	FROM (
+		SELECT links.geom, routes.routeid, routes.id, links.linknummer,routes.station_naam, links.intensiteit
+		FROM (SELECT a.routeid, a.id, a.linknummer, b.station_naam
+			FROM networks.fiets_routes a,
+			selected_fiets_routes b
+			WHERE a.routeid = b.routeid
+		) AS routes
+		JOIN networks.fiets_links AS links
+		USING(linknummer)
+		ORDER BY routes.routeid, routes.id
+	) pieces
+	GROUP BY pieces.routeid
+;
+-- UPDATE datasysteem.fietsroutes SET invloedsgebied_ids = NULL;
+UPDATE datasysteem.fietsroutes f SET invloedsgebied_ids = r.ids
+	FROM (
+		SELECT routes.route_id, string_agg(overlap.sid::text,',' ORDER BY overlap.sid) ids 
+		FROM datasysteem.fietsroutes AS routes, 
+		datasysteem.invloedsgebied_overlap AS overlap
+		WHERE routes.station_naam = ANY(string_to_array(overlap.station_namen,','))
+		AND (ST_Intersects(ST_PointN(routes.geom,1),overlap.geom)
+		OR ST_Intersects(ST_PointN(routes.geom,-1),overlap.geom))
+		GROUP BY routes.route_id
+	) r
+	WHERE f.route_id = r.route_id
+;
+DELETE FROM datasysteem.fietsroutes WHERE ST_Length(geom) > 6000;

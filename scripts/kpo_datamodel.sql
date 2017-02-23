@@ -150,7 +150,7 @@ CREATE TABLE datasysteem.fietsroutes(
 	geom geometry(Linestring,28992),
 	route_id character varying,
 	link_id character varying,
-	route_intensiteit smallint,
+	route_intensiteit integer,
 	invloedsgebied_ids character varying,
 	CONSTRAINT fietsroutes_pkey PRIMARY KEY (sid)
 );
