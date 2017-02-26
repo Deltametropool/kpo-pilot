@@ -87,3 +87,5 @@ ENV/
 
 # Rope project settings
 .ropeproject
+
+KPOpilot/data/kpo_datasysteem.sqlite
