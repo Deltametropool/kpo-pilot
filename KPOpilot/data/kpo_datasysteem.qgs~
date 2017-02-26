@@ -8,13 +8,13 @@
       <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Trein_stations_copy20170226132300697" name="Stations voorgrond">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Spoorwegen_trein_copy20170226132402722" name="Spoorvakken trein voorgrond">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Spoorwegen_trein_copy20170226132402722" name="Spoorwegen trein voorgrond">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Spoorwegen_metro_copy20170226132402669" name="Spoorvakken metro voorgrond">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Spoorwegen_metro_copy20170226132402669" name="Spoorwegen metro voorgrond">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Spoorwegen_tram_copy20170226132402695" name="Spoorvakken tram voorgrond">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Spoorwegen_tram_copy20170226132402695" name="Spoorwegen tram voorgrond">
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
@@ -107,13 +107,13 @@
       <layer-tree-layer expanded="1" checked="Qt::Checked" id="boundary20170225205921198" name="Provincie grens">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Checked" id="spoorwegen20170225205926355" name="Spoorvakken trein">
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="spoorwegen20170225205926355" name="Spoorwegen trein">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Checked" id="Spoorwegen_copy20170226100826576" name="Spoorvakken metro">
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="Spoorwegen_copy20170226100826576" name="Spoorwegen metro">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Checked" id="Spoorwegen_copy20170226100811389" name="Spoorvakken tram">
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="Spoorwegen_copy20170226100811389" name="Spoorwegen tram">
         <customproperties/>
       </layer-tree-layer>
       <layer-tree-layer expanded="1" checked="Qt::Checked" id="water20170225205926401" name="Water">
@@ -233,17 +233,17 @@
           <legendlayerfile isInOverview="0" layerid="Trein_stations_copy20170226132300697" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Spoorvakken trein voorgrond" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Spoorwegen trein voorgrond" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Spoorwegen_trein_copy20170226132402722" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Spoorvakken metro voorgrond" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Spoorwegen metro voorgrond" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Spoorwegen_metro_copy20170226132402669" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Spoorvakken tram voorgrond" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Spoorwegen tram voorgrond" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Spoorwegen_tram_copy20170226132402695" visible="0"/>
         </filegroup>
@@ -383,17 +383,17 @@
           <legendlayerfile isInOverview="0" layerid="boundary20170225205921198" visible="1"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Spoorvakken trein" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Spoorwegen trein" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="spoorwegen20170225205926355" visible="1"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Spoorvakken metro" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Spoorwegen metro" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Spoorwegen_copy20170226100826576" visible="1"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Spoorvakken tram" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Spoorwegen tram" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Spoorwegen_copy20170226100811389" visible="1"/>
         </filegroup>
@@ -3472,7 +3472,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Spoorvakken tram</layername>
+      <layername>Spoorwegen tram</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
@@ -3747,7 +3747,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Spoorvakken metro</layername>
+      <layername>Spoorwegen metro</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
@@ -4022,7 +4022,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Spoorvakken metro voorgrond</layername>
+      <layername>Spoorwegen metro voorgrond</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
@@ -4297,7 +4297,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Spoorvakken tram voorgrond</layername>
+      <layername>Spoorwegen tram voorgrond</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
@@ -4572,7 +4572,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Spoorvakken trein voorgrond</layername>
+      <layername>Spoorwegen trein voorgrond</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
@@ -8982,7 +8982,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Spoorvakken trein</layername>
+      <layername>Spoorwegen trein</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>

@@ -82,8 +82,6 @@ class KPOExplorer():
         self.dlg.isochroneWalkCheck.stateChanged.connect(self.showOV)
         self.dlg.ptalSelectCombo.activated.connect(self.showPTAL)
         self.dlg.ptalShowCheck.stateChanged.connect(self.showPTAL)
-        self.dlg.linkSelectCombo.activated.connect(self.showLinkFrequency)
-        self.dlg.linkFrequencyCheck.stateChanged.connect(self.showLinkFrequency)
         self.dlg.stopSelectCombo.activated.connect(self.showStopFrequency)
         self.dlg.stopFrequencyCheck.stateChanged.connect(self.showStopFrequency)
         self.dlg.frequencyTimeCombo.activated.connect(self.updateStopSummaryTable)
@@ -96,33 +94,32 @@ class KPOExplorer():
         self.showIntensity()
         #self.updateScenarioSummaryText()
         self.showKnooppunten()
-        self.updateKnooppuntenSummaryTable()
+        #self.updateKnooppuntenSummaryTable()
 
         # Verstedelijking
         self.dlg.updateIntensityValue()
         self.dlg.updateAccessibilityValue()
-        self.updateDevelopmentSummaryText()
+        #self.updateDevelopmentSummaryText()
         #self.updateDevelopmentAttributeTable()
 
         # # Koppelingen
         self.showOverbelast()
         self.showRoutes()
         self.showImportant()
-        self.updateImportantAttributeTable()
+        #self.updateImportantAttributeTable()
 
         # # Mobiliteit
         self.showWalk()
         self.showCycling()
         self.showOV()
-        self.showPTAL()
-        self.showLinkFrequency()
-        self.showStopFrequency()
-        self.updateStopSummaryTable()
+        #self.showPTAL()
+        #self.showStopFrequency()
+        #self.updateStopSummaryTable()
 
 
 
     def readDataModel(self):
-        project_path = self.plugin_dir + '/data/kpo_datasysteem_sample.qgs'
+        project_path = self.plugin_dir + '/data/kpo_datasysteem.qgs'
         self.iface.addProject(project_path)
 
 
@@ -348,22 +345,6 @@ class KPOExplorer():
             self.showLayersInCanvas(ptal_layers[ptal])
         else:
             self.hideLayersInCanvas(ptal_layers[ptal])
-
-
-    def showLinkFrequency(self):
-        links = self.dlg.getLinks()
-        link_layers = {'All OV links': 'bus stop frequency',
-                            'Bus links': 'bus stop frequency',
-                            'Tram links': 'bus stop frequency',
-                            'Metro links': 'bus stop frequency',
-                            'Rail links': 'bus stop frequency',
-                            'Ferry links': 'bus stop frequency',
-                            'all': 'bus stop frequency'}
-        if self.dlg.linkFrequencyCheck.isChecked():
-            self.hideLayersInCanvas(link_layers['all'])
-            self.showLayersInCanvas(link_layers[links])
-        else:
-            self.hideLayersInCanvas(link_layers['all'])
 
 
     def showStopFrequency(self):
