@@ -41,6 +41,38 @@ CREATE TABLE datasysteem.overzicht_woonscenarios(
 CREATE TABLE datasysteem.knooppunten(
 	sid serial NOT NULL,
 	geom geometry(MultiPoint,28992),
+	station_vdm_code character varying,
+	station_naam character varying,
+	halte_id character varying,
+	halte_naam character varying,
+	huishoudens integer,
+	totaal_passanten integer,
+	in_uit_trein integer,
+	overstappers integer,
+	in_uit_btm integer,
+	bezoekers integer,
+	btm_voortransport double precision,
+	btm_natransport double precision,
+	lopen_voortransport double precision,
+	lopen_natransport double precision,
+	fiets_voortransport double precision,
+	fiets_natransport double precision,
+	pr_voortransport double precision,
+	pr_natransport double precision,
+	fiets_plaatsen integer,
+	fiets_bezetting double precision,
+	ov_fietsen integer,
+	pr_plaatsen integer,
+	pr_bezetting double precision,
+	ov_routes character varying,
+	CONSTRAINT knooppunten_pkey PRIMARY KEY (sid)
+);
+
+-- DROP TABLE IF EXISTS datasysteem.knooppuntenscenarios CASCADE;
+CREATE TABLE datasysteem.knooppuntenscenarios(
+	sid serial NOT NULL,
+	geom geometry(MultiPoint,28992),
+	station_vdm_code character varying,
 	station_naam character varying,
 	halte_id character varying,
 	halte_naam character varying,
@@ -48,20 +80,14 @@ CREATE TABLE datasysteem.knooppunten(
 	tod_beleidsniveau smallint,
 	huishoudens integer,
 	procentuele_verandering double precision,
-	in_uitstappers integer,
-	in_uitstappers_verschil integer,
-	fietsparkeerplaatsen integer,
-	fietsen integer,
-	fietsenstalling_capaciteit double precision,
-	perron_capaciteit integer,
-	perron_verschil double precision,
-	stijgpunten_capaciteit integer,
-	stijgpunten_verschil double precision,
-	loopstromen_capaciteit integer,
-	loopstromen_verschil double precision,
-	fietsroutes character varying,
-	ov_routes character varying,
-	CONSTRAINT knooppunten_pkey PRIMARY KEY (sid)
+	totaal_passanten integer,
+	in_uit_trein integer,
+	overstappers integer,
+	in_uit_btm integer,
+	bezoekers integer,
+	fiets_bezetting integer,
+	pr_bezetting integer,
+	CONSTRAINT knooppuntenscenarios_pkey PRIMARY KEY (sid)
 );
 
 -- DROP TABLE IF EXISTS datasysteem.ruimtelijke_kenmerken CASCADE;

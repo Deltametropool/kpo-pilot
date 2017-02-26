@@ -126,6 +126,84 @@ UPDATE datasysteem.woonscenarios
 ;
 
 
+-----
+-- Kenmerken van knooppunten
+-- DELETE FROM datasysteem.knooppunten;
+INSERT INTO datasysteem.knooppunten (geom, station_vdm_code, station_naam, halte_id, halte_naam, huishoudens)
+	SELECT areas.geom, stops.stop_code, areas.alt_name, stops.stop_id, stops.stop_name, 
+		SUM(woon.huishoudens)
+	FROM networks.ov_stop_areas AS areas
+	JOIN (
+		SELECT stop_id, stop_code, stop_name, stop_area FROM networks.ov_stops
+		WHERE trein = True AND location_type = 1
+	) AS stops
+	ON(areas.sid = stops.stop_area)
+	JOIN (
+		SELECT scenario_naam, dichtstbijzijnde_station, huishoudens, nieuwe_huishoudens
+		FROM datasysteem.woonscenarios
+		WHERE scenario_naam = 'Huidige situatie' AND op_loopafstand = TRUE OR op_fietsafstand = TRUE
+	) AS woon
+	ON (stops.stop_name = woon.dichtstbijzijnde_station)
+	GROUP BY areas.geom, stops.stop_code, areas.alt_name, stops.stop_id, stops.stop_name
+;
+-- update VDM NS data
+UPDATE datasysteem.knooppunten knoop
+	SET totaal_passanten = stations.in_uit_15,
+	in_uit_trein = stations.in_uit_15,
+	fiets_plaatsen = stations.aantal_fie,
+	fiets_bezetting = CASE
+		WHEN stations.aantal_fie > 0 
+		THEN round((stations.aantal_geb::numeric/stations.aantal_fie::numeric)*100,0)
+		ELSE 0
+		END
+	FROM sources.rws_treinstations_2015_pnh stations
+	WHERE knoop.station_naam = stations.station
+;
+-- update prorail data. does not cover all stations
+UPDATE datasysteem.knooppunten knoop
+	SET totaal_passanten = prorail."Totaal_Passanten", 
+	in_uit_trein = prorail."IN_UIT_trein", 
+	overstappers = prorail."Overstappers_trein", 
+	in_uit_btm = prorail."IN_UIT_BTM",
+	bezoekers = prorail."Bezoekers_Interwijk",
+	btm_voortransport = prorail."BTM_voortransport", 
+	btm_natransport = prorail."BTM_natransport", 
+	lopen_voortransport = prorail."Lopen_voortransport", 
+	lopen_natransport = prorail."Lopen_natransport",
+	fiets_voortransport = prorail.fiets_voortransport, 
+	fiets_natransport = prorail.fiets_natransport, 
+	pr_voortransport = prorail."PR_voortransport", 
+	pr_natransport = prorail."PR_natransport",
+	ov_fietsen = prorail."OV_fiets", 
+	pr_plaatsen = coalesce(prorail."PR_aantal",0) + coalesce(prorail."PR_bet_aantal",0), 
+	pr_bezetting = CASE 
+		WHEN coalesce(prorail."PR_aantal",0) + coalesce(prorail."PR_bet_aantal",0) = 0 THEN 0
+		ELSE round((((coalesce(prorail."PR_bezet",0)/100.0)*coalesce(prorail."PR_aantal",0))::numeric + 
+		((coalesce(prorail."PR_bet_bezet",0)/100.0)*coalesce(prorail."PR_bet_aantal",0))::numeric)/
+		(coalesce(prorail."PR_aantal",0) + coalesce(prorail."PR_bet_aantal",0))*100.0,0)
+	END
+	FROM sources.prorail_data AS prorail
+	WHERE knoop.station_vdm_code = prorail."VDM_code"::text
+;
+-- update ov routes crossing the knooppunten
+-- UPDATE datasysteem.knooppunten SET ov_routes = NULL;
+UPDATE datasysteem.knooppunten AS knop SET 
+	ov_routes = routes.ids
+	FROM (SELECT c.sid, string_agg(c.route_id,',' ORDER BY c.route_id) ids
+		FROM (SELECT a.sid, b.route_id
+			FROM (
+				SELECT route_id, ST_Multi((ST_DumpPoints(geom)).geom) geom
+				FROM datasysteem.ov_routes
+			) AS b, datasysteem.knooppunten a
+			WHERE ST_DWithin(a.geom,b.geom,200)
+			GROUP BY a.sid, b.route_id
+		) c
+		GROUP BY c.sid
+	) routes
+	WHERE knop.sid = routes.sid
+;
+
+
 ----
 -- Street Isochrones
 -- create polygons for isochrones
@@ -174,17 +252,46 @@ UPDATE datasysteem.ruimtelijke_kenmerken
 	WHERE ov_bereikbaarheidsindex IS NULL
 ;
 -- add built density from PBL data
+-- this query is extremely slow due to the geometric complexity and problems with the PBL data
+-- DROP TABLE pbl_bouwblok_fsi_updated_validgeom CASCADE;
+CREATE TEMP TABLE pbl_bouwblok_fsi_updated_validgeom AS
+	SELECT objectid, (ST_Dump(ST_MakeValid(geom))).geom geom, fsi 
+	FROM sources.pbl_bouwblok_fsi_updated
+;
+CREATE INDEX pbl_bouwblok_validgeom_idx ON pbl_bouwblok_fsi_updated_validgeom USING GIST(geom);
+-- DROP TABLE temp_fysieke_dichtheid CASCADE;
+CREATE TEMP TABLE temp_fysieke_dichtheid AS
+	SELECT cbs.c28992r100 AS cell_id, pbl.objectid, pbl.fsi AS fsi
+	FROM sources.vdm_vierkant_2014_pnh_lisa AS cbs, 
+	pbl_bouwblok_fsi_updated_validgeom AS pbl
+	WHERE ST_Contains(pbl.geom, cbs.geom)
+;
+-- DROP TABLE vdm_vierkant_2014_pnh_lisa_pbl CASCADE;
+CREATE TEMP TABLE vdm_vierkant_2014_pnh_lisa_pbl AS
+	SELECT geom, c28992r100 FROM sources.vdm_vierkant_2014_pnh_lisa a
+	WHERE NOT EXISTS (SELECT 1 FROM temp_fysieke_dichtheid b WHERE a.c28992r100 = b.cell_id)
+;
+CREATE INDEX vdm_vierkant_lisa_pbl_idx ON vdm_vierkant_2014_pnh_lisa_pbl USING GIST(geom);
+-- DELETE FROM temp_fysieke_dichtheid;
+INSERT INTO temp_fysieke_dichtheid
+	SELECT cbs.c28992r100 AS cell_id, pbl.objectid, 
+		CASE 
+			WHEN ST_Contains(cbs.geom, pbl.geom)
+			THEN ST_Area(pbl.geom)*pbl.fsi/10000.0
+			ELSE ST_Area(ST_Intersection(pbl.geom,cbs.geom))*pbl.fsi/10000.0 
+		END AS fsi
+	FROM vdm_vierkant_2014_pnh_lisa_pbl AS cbs, 
+	pbl_bouwblok_fsi_updated_validgeom AS pbl
+	WHERE ST_Intersects(pbl.geom, cbs.geom)
+;
+--
 UPDATE datasysteem.ruimtelijke_kenmerken AS a
 	SET fysieke_dichtheid = b.fsi
-	FROM (SELECT cbs.c28992r100 AS cell_id, 
-		SUM(ST_Area(ST_Intersection(cbs.geom, ST_MakeValid(pbl.geom)))*pbl.fsi)/10000.0 AS fsi
-		FROM sources.vdm_vierkant_2014_pnh_lisa cbs, sources.pbl_bouwvlak_fsi pbl
-		WHERE ST_Intersects(cbs.geom, pbl.geom)
-		GROUP BY cbs.c28992r100
-		) b
+	FROM (SELECT cell_id, SUM(fsi) fsi FROM temp_fysieke_dichtheid GROUP BY cell_id) AS b
 	WHERE a.cell_id = b.cell_id
 ;
-
+--
+CREATE INDEX ruimtelijke_kenmerken_geom_idx ON datasysteem.ruimtelijke_kenmerken USING GIST (geom);
 
 ----
 -- Ontwikkellocaties kenmerken
@@ -332,6 +439,7 @@ UPDATE datasysteem.invloedsgebied_overlap AS overlap SET
 
 
 ----
+-- Belangrijke locaties
 -- DELETE FROM datasysteem.belangrijke_locaties;
 INSERT INTO datasysteem.belangrijke_locaties(geom, locatie_id, locatie_naam)
 	SELECT locatie.geom, locatie.objectid, locatie.naam
@@ -411,18 +519,6 @@ UPDATE datasysteem.regionale_voorzieningen AS locatie SET
 	WHERE locatie.sid = routes.sid
 ;
 
-
-
-DROP TABLE IF EXISTS datasysteem.fietsroutes CASCADE;
-CREATE TABLE datasysteem.fietsroutes(
-	sid serial NOT NULL,
-	geom geometry(Linestring,28992),
-	route_id character varying,
-	route_intensiteit integer,
-	station_naam character varying,
-	invloedsgebied_ids character varying,
-	CONSTRAINT fietsroutes_pkey PRIMARY KEY (sid)
-);
 
 ----
 -- Build relevant cycle routes
