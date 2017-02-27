@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.14.7-Essen" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.14.7-Essen" minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
     <edittype widgetv2type="TextEdit" name="sid">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
@@ -79,10 +79,10 @@
   </edittypes>
   <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
     <rules key="{a8a94b77-2789-4633-b535-71d150bd6a79}">
-      <rule filter=" &quot;pr_bezetting&quot; >100" key="{edcb160c-1dd1-48be-961a-364fd07b2b18}" symbol="0" label="P+R bezetting > 100 %"/>
-      <rule filter=" &quot;pr_bezetting&quot; > 80 AND  &quot;pr_bezetting&quot; &lt;= 100" key="{edcb160c-1dd1-48be-961a-364fd07b2b18}" symbol="1" label="P+R bezetting 80 - 100 %"/>
-      <rule filter=" &quot;pr_bezetting&quot; > 50 AND  &quot;pr_bezetting&quot; &lt;= 80" key="{c5d22ce2-eee5-426d-80c9-e8330228eedd}" symbol="2" label="P+R bezetting 50 - 80 %"/>
-      <rule filter=" &quot;pr_bezetting&quot; &lt;= 50" key="{08d1a81f-ddd3-480e-8623-3987df7abbf7}" symbol="3" label="P+R bezetting &lt; 50 %"/>
+      <rule filter=" &quot;fiets_bezetting&quot; >100" key="{edcb160c-1dd1-48be-961a-364fd07b2b18}" symbol="0" label="fiets bezetting > 100 %"/>
+      <rule filter=" &quot;fiets_bezetting&quot; > 80 AND  &quot;fiets_bezetting&quot; &lt;= 100" key="{edcb160c-1dd1-48be-961a-364fd07b2b18}" symbol="1" label="fiets bezetting 80 - 100 %"/>
+      <rule filter=" &quot;fiets_bezetting&quot; > 50 AND  &quot;fiets_bezetting&quot; &lt;= 80" key="{c5d22ce2-eee5-426d-80c9-e8330228eedd}" symbol="2" label="fiets bezetting 50 - 80 %"/>
+      <rule filter=" &quot;fiets_bezetting&quot; &lt;= 50" key="{08d1a81f-ddd3-480e-8623-3987df7abbf7}" symbol="3" label="fiets bezetting &lt; 50 %"/>
     </rules>
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="marker" name="0">
@@ -102,7 +102,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;pr_plaatsen&quot;, 0, 601, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -127,7 +127,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;pr_plaatsen&quot;, 0, 601, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -152,7 +152,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;pr_plaatsen&quot;, 0, 601, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -177,7 +177,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;pr_plaatsen&quot;, 0, 601, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -338,11 +338,15 @@ Trein overstappers: [% "overstappers" %]&lt;br>
 BTM in- uitstappers: [% "in_uit_btm" %]&lt;br>
 Bezoekers: [% "bezoekers" %]&lt;br>
 &lt;br>
-Fiets plaatsen: [% "fiets_plaatsen" %]&lt;br>
-Fiets bezetting: [% "fiets_bezetting" %] %&lt;br>
-OV fietsen: [% "ov_fietsen" %]&lt;br>
-P+R plaatsen: [% "pr_plaatsen" %]&lt;br>
-P+R bezetting: [% "pr_bezetting" %] %&lt;br></displayfield>
+Voortransport:&lt;br>
+BTM: [% "btm_voortransport" %] %&lt;br>
+Fiets: [% "fiets_voortransport" %] %&lt;br>
+P+R: [% "pr_voortransport" %] %&lt;br>
+&lt;br>
+Natransport:&lt;br>
+BTM: [% "btm_natransport" %] %&lt;br>
+Fiets: [% "fiets_natransport" %] %&lt;br>
+P+R: [% "pr_natransport" %] %&lt;br></displayfield>
   <label>0</label>
   <labelattributes>
     <label fieldname="" text="Label"/>
