@@ -88,7 +88,7 @@ class KPOExplorer():
 
 
     def onShow(self):
-        self.readDataModel()
+        #self.readDataModel()
 
         # Knooppunten
         self.showIntensity()
