@@ -91,27 +91,27 @@ class KPOExplorer():
         #self.readDataModel()
 
         # Knooppunten
-        self.showIntensity()
+        #self.showIntensity()
         #self.updateScenarioSummaryText()
-        self.showKnooppunten()
+        #self.showKnooppunten()
         #self.updateKnooppuntenSummaryTable()
 
         # Verstedelijking
-        self.dlg.updateIntensityValue()
-        self.dlg.updateAccessibilityValue()
+        #self.dlg.updateIntensityValue()
+        #self.dlg.updateAccessibilityValue()
         #self.updateDevelopmentSummaryText()
         #self.updateDevelopmentAttributeTable()
 
         # # Koppelingen
-        self.showOverbelast()
-        self.showRoutes()
-        self.showImportant()
+        #self.showOverbelast()
+        #self.showRoutes()
+        #self.showImportant()
         #self.updateImportantAttributeTable()
 
         # # Mobiliteit
-        self.showWalk()
-        self.showCycling()
-        self.showOV()
+        #self.showWalk()
+        #self.showCycling()
+        #self.showOV()
         #self.showPTAL()
         #self.showStopFrequency()
         #self.updateStopSummaryTable()
@@ -315,7 +315,7 @@ class KPOExplorer():
         pass
 
 
-    '''Bereikbaarheid'''
+    '''Mobiliteit'''
     def showWalk(self):
         if self.dlg.isochroneWalkCheck.isChecked():
             self.showLayersInCanvas('Isochrones')
