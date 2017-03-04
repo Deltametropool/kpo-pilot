@@ -339,6 +339,9 @@ p, li { white-space: pre-wrap; }
            </item>
            <item row="1" column="0" colspan="2">
             <widget class="QTableWidget" name="knooppuntenSummaryTable">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
              <property name="alternatingRowColors">
               <bool>true</bool>
              </property>
@@ -605,6 +608,9 @@ p, li { white-space: pre-wrap; }
            </item>
            <item row="2" column="0" colspan="2">
             <widget class="QTableWidget" name="planAttributeTable">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
              <property name="alternatingRowColors">
               <bool>true</bool>
              </property>
@@ -738,6 +744,9 @@ p, li { white-space: pre-wrap; }
            </item>
            <item row="1" column="0" colspan="2">
             <widget class="QTableWidget" name="overbelastAttributeTable">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
              <property name="alternatingRowColors">
               <bool>true</bool>
              </property>
@@ -819,6 +828,9 @@ p, li { white-space: pre-wrap; }
            </item>
            <item row="1" column="0" colspan="2">
             <widget class="QTableWidget" name="locationAttributeTable">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
              <property name="alternatingRowColors">
               <bool>true</bool>
              </property>
@@ -977,6 +989,9 @@ p, li { white-space: pre-wrap; }
            </property>
            <item row="3" column="0" colspan="2">
             <widget class="QTableWidget" name="stopSummaryTable">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
              <property name="alternatingRowColors">
               <bool>true</bool>
              </property>

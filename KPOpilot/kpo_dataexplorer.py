@@ -363,8 +363,8 @@ class KPOExplorer:
         feature_values = self.getFeatureValues('Invloedsgebied overlap', ['sid', 'station_namen'])
         overlap_ids = []
         for feat in feature_values.itervalues():
-            station_namen = feat[1].split(',')
-            if station_name in station_namen:
+            station_names = feat[1].split(',')
+            if station_name in station_names:
                 overlap_ids.append(str(feat[0]))
         expression = 'sid IN (%s)' % ','.join(overlap_ids)
         self.setFilterExpression('Invloedsgebied overlap', expression)
@@ -416,19 +416,19 @@ class KPOExplorer:
         # prepare table
         if location_type == 'Overlap herkomst':
             fields = ['sid', 'inwoner_dichtheid', 'station_aantal']
-            headers = ['Locatie id', 'Inwoners', 'Aantal stations']
+            headers = ['Id', 'Inwoners', 'Aantal stations']
             location_layer = 'Invloedsgebied overlap'
         elif location_type == 'Overlap bestemming':
             fields = ['sid', 'intensiteit', 'station_aantal']
-            headers = ['Locatie id', 'Intensiteit', 'Aantal stations']
+            headers = ['Id', 'Intensiteit', 'Aantal stations']
             location_layer = 'Invloedsgebied overlap'
         elif location_type == 'Belangrijke locaties':
-            fields = ['locatie_id', 'locatie_naam']
-            headers = ['Locatie id', 'Naam']
+            fields = ['sid', 'locatie_naam']
+            headers = ['Id', 'Naam']
             location_layer = 'Belangrijke locaties'
         elif location_type == 'Regionale voorzieningen':
-            fields = ['locatie_id', 'type_locatie', 'locatie_naam']
-            headers = ['Locatie id', 'Type locatie', 'Naam']
+            fields = ['sid', 'type_locatie', 'locatie_naam']
+            headers = ['Id', 'Type locatie', 'Naam']
             location_layer = 'Regionale voorzieningen'
         # get values
         feature_values = self.getFeatureValues(location_layer, fields)
@@ -436,6 +436,8 @@ class KPOExplorer:
         for feat in feature_values.itervalues():
             values.append(feat)
         self.dlg.updateLocationsTable(headers, values)
+        if self.dlg.isLocationVisible():
+            self.showLocation(True)
 
     def zoomToLocation(self, location_id):
         location_type = self.dlg.getLocationType()
@@ -444,21 +446,20 @@ class KPOExplorer:
             route_ids = ''
             if location_type == 'Overlap bestemming':
                 layer_name = 'Invloedsgebied overlap'
-                feature_values = self.getFeatureValues(layer_name, ['sid', 'ov_routes_ids'])
-                self.setFeatureSelection(layer_name, 'sid', location_id)
             else:
                 layer_name = location_type
-                feature_values = self.getFeatureValues(layer_name, ['locatie_id', 'ov_routes_ids'])
-                self.setFeatureSelection(layer_name, 'locatie_id', location_id)
+            self.setFeatureSelection(layer_name, 'sid', location_id)
             # get route ids
+            feature_values = self.getFeatureValues(layer_name, ['sid', 'ov_routes_ids'])
             for feat in feature_values.itervalues():
                 if feat[0] == location_id:
                     route_ids = feat[1]
-                    break
+                    #break
             if route_ids:
                 # filter BTM lines
                 # ids_as_list = ','.join("'" + item + "'" for item in route_ids.split(','))
                 expression = '"route_id" IN (%s)' % route_ids
+                print expression
                 self.setFilterExpression('Buslijnen', expression)
                 self.setFilterExpression('Tramlijnen', expression)
                 self.setFilterExpression('Metrolijnen', expression)
@@ -472,20 +473,21 @@ class KPOExplorer:
                 self.setLayerVisible('Metrolijnen', True)
                 self.setLayerExpanded('Metrolijnen', True)
                 # zoom to relevant layer
-                self.setExtentToLayer('Buslijnen')
+                # self.setExtentToLayer('Buslijnen')
             else:
                 self.setExtentToSelection(layer_name)
         else:
             # select location
             self.setFeatureSelection('Invloedsgebied overlap', 'sid', location_id)
             # filter bike routes
+            print expression
             expression = '"invloedsgebied_id" == %s' % location_id
             self.setFilterExpression('Fietsroutes', expression)
             # show bike routes layer
             self.setLayerVisible('Fietsroutes', True)
             self.setLayerExpanded('Fietsroutes', True)
             # zoom to relevant layer
-            self.setExtentToLayer('Fietsroutes')
+            # self.setExtentToLayer('Fietsroutes')
 
     ###
     # Mobiliteit

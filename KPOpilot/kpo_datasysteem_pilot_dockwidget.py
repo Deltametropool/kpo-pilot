@@ -128,7 +128,6 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.knooppuntenAttributeCombo.currentIndexChanged.connect(self.__setKnooppuntKenmerk__)
         self.knooppuntenShowCheck.stateChanged.connect(self.__showKnooppunt__)
         self.knooppuntenSummaryTable.itemClicked.connect(self.__setKnooppunt__)
-        # self.knooppuntenSummaryTable.itemSelectionChanged.connect(self.__setKnooppunt__)
         # Verstedelijking
         self.intensitySelectCombo.currentIndexChanged.connect(self.__setIntensity__)
         self.intensityShowCheck.stateChanged.connect(self.__showIntensity__)
@@ -138,15 +137,12 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.planSelectCombo.currentIndexChanged.connect(self.__setPlan__)
         self.planShowCheck.stateChanged.connect(self.__showPlan__)
         self.planAttributeTable.itemClicked.connect(self.__setPlanLocation__)
-        # self.planAttributeTable.itemSelectionChanged.connect(self.__setPlanLocation__)
         # Verbindingen
         self.overbelastAttributeCombo.currentIndexChanged.connect(self.__setStationKenmerk__)
         self.overbelastShowCheck.stateChanged.connect(self.__showStations__)
-        # self.overbelastAttributeTable.itemSelectionChanged.connect(self.__setStation__)
         self.overbelastAttributeTable.itemClicked.connect(self.__setStation__)
         self.locationSelectCombo.currentIndexChanged.connect(self.__setLocationType__)
         self.locationShowCheck.stateChanged.connect(self.__showLocations__)
-        # self.locationAttributeTable.itemSelectionChanged.connect(self.__setLocation__)
         self.locationAttributeTable.itemClicked.connect(self.__setLocation__)
         # Mobiliteit
         self.isochroneWalkCheck.stateChanged.connect(self.__showWalk__)
@@ -158,7 +154,6 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.stopSelectCombo.currentIndexChanged.connect(self.__setStopType__)
         self.stopFrequencyCheck.stateChanged.connect(self.__showStops__)
         self.stopSummaryTable.itemClicked.connect(self.__setStops__)
-        # self.stopSummaryTable.itemSelectionChanged.connect(self.__setStops__)
 
         # some globals
         self.current_tab = 0
