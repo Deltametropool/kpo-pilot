@@ -50,14 +50,14 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     accessibilityLevelChanged = pyqtSignal(int)
     planChanged = pyqtSignal(str)
     planShow = pyqtSignal(bool)
-    planSelected = pyqtSignal(int)
+    planSelected = pyqtSignal(str)
     # koppelingen
-    stationAttibuteChanged = pyqtSignal(str)
+    stationAttributeChanged = pyqtSignal(str)
     stationShow = pyqtSignal(bool)
     stationSelected = pyqtSignal(str)
-    locationChanged = pyqtSignal(str)
+    locationTypeChanged = pyqtSignal(str)
     locationShow = pyqtSignal(bool)
-    locationSelected = pyqtSignal(int)
+    locationSelected = pyqtSignal(str)
     # mobiliteit
     isochroneWalkShow = pyqtSignal(bool)
     isochroneBikeShow = pyqtSignal(bool)
@@ -67,7 +67,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     frequencyChanged = pyqtSignal(str)
     stopsChanged = pyqtSignal(str)
     stopsShow = pyqtSignal(bool)
-    stopsSelected = pyqtSignal(int)
+    stopsSelected = pyqtSignal(str)
 
     def __init__(self, parent=None):
         """Constructor."""
@@ -87,23 +87,38 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.scenarioSelectCombo.setCurrentIndex(0)
         self.scenarioShowCheck.setChecked(True)
         self.isochronesShowCheck.setChecked(False)
-        self.activateTODLevel(False)
+        self.__activateTODLevel__(False)
         self.todPolicySlider.setValue(0)
         self.knooppuntenAttributeCombo.setCurrentIndex(0)
         self.knooppuntenShowCheck.setChecked(True)
-        #
+
+        # Koppelingen
+        self.overbelastSelectCombo.setCurrentIndex(0)
+        self.overbelastShowCheck.setChecked(True)
+        self.locationSelectCombo.setCurrentIndex(0)
+        self.locationShowCheck.setChecked(False)
+
+        # Mobiliteit
+        self.isochroneWalkCheck.setChecked(True)
+        self.isochroneBikeCheck.setChecked(False)
+        self.isochroneOvCheck.setChecked(True)
+        self.ptalSelectCombo.setCurrentIndex(0)
+        self.ptalShowCheck.setChecked(False)
+        self.frequencyTimeCombo.setCurrentIndex(0)
+        self.stopSelectCombo.setCurrentIndex(0)
+        self.stopFrequencyCheck.setChecked(False)
 
         # set-up UI interaction signals
-        self.vragenTabWidget.currentChanged.connect(self.changeQuestionTab)
+        self.vragenTabWidget.currentChanged.connect(self.__changeQuestionTab__)
 
         #  Knooppunten
-        self.scenarioSelectCombo.currentIndexChanged.connect(self.setScenario)
-        self.scenarioShowCheck.stateChanged.connect(self.showScenario)
-        self.isochronesShowCheck.stateChanged.connect(self.showIsochrones)
-        self.todPolicySlider.valueChanged.connect(self.updateTODLevel)
-        self.knooppuntenAttributeCombo.currentIndexChanged.connect(self.setKnooppuntKenmerk)
-        self.knooppuntenShowCheck.stateChanged.connect(self.showKnooppunt)
-        self.knooppuntenSummaryTable.itemSelectionChanged.connect(self.setKnooppunt)
+        self.scenarioSelectCombo.currentIndexChanged.connect(self.__setScenario__)
+        self.scenarioShowCheck.stateChanged.connect(self.__showScenario__)
+        self.isochronesShowCheck.stateChanged.connect(self.__showIsochrones__)
+        self.todPolicySlider.valueChanged.connect(self.__updateTODLevel__)
+        self.knooppuntenAttributeCombo.currentIndexChanged.connect(self.__setKnooppuntKenmerk__)
+        self.knooppuntenShowCheck.stateChanged.connect(self.__showKnooppunt__)
+        self.knooppuntenSummaryTable.itemSelectionChanged.connect(self.__setKnooppunt__)
         # Verstedelijking
         # self.intensitySelectCombo.activated.connect(self.setIntensityValueSlider)
         # self.intensitySelectCombo.activated.connect(self.setAccessibilityValueSlider)
@@ -116,21 +131,22 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # self.locationSelectCombo.activated.connect(self.showDevelopments)
         # self.locationShowCheck.stateChanged.connect(self.showDevelopments)
         # Koppelingen
-        # self.overbelastAttributeCombo.activated.connect(self.showOverbelast)
-        # self.overbelastShowCheck.stateChanged.connect(self.showOverbelast)
-        # self.importantSelectCombo.activated.connect(self.updateImportantAttributeTable)
-        # self.importantSelectCombo.activated.connect(self.showImportant)
-        # self.importantShowCheck.stateChanged.connect(self.showImportant)
+        self.overbelastSelectCombo.currentIndexChanged.connect(self.__setStationKenmerk__)
+        self.overbelastShowCheck.stateChanged.connect(self.__showStations__)
+        self.overbelastAttributeTable.itemSelectionChanged.connect(self.__setStation__)
+        self.locationSelectCombo.currentIndexChanged.connect(self.__setLocationType__)
+        self.locationShowCheck.stateChanged.connect(self.__showLocations__)
+        self.locationAttributeTable.itemSelectionChanged.connect(self.__setLocation__)
         # Mobiliteit
-        self.isochroneWalkCheck.stateChanged.connect(self.showWalk)
-        self.isochroneBikeCheck.stateChanged.connect(self.showBike)
-        self.isochroneOvCheck.stateChanged.connect(self.showOV)
-        self.ptalSelectCombo.activated.connect(self.setPTAL)
-        self.ptalShowCheck.stateChanged.connect(self.showPTAL)
-        self.frequencyTimeCombo.currentIndexChanged.connect(self.setTimePeriod)
-        self.stopSelectCombo.currentIndexChanged.connect(self.setStopType)
-        self.stopFrequencyCheck.stateChanged.connect(self.showStops)
-        self.stopSummaryTable.itemSelectionChanged.connect(self.setStops)
+        self.isochroneWalkCheck.stateChanged.connect(self.__showWalk__)
+        self.isochroneBikeCheck.stateChanged.connect(self.__showBike__)
+        self.isochroneOvCheck.stateChanged.connect(self.__showOV__)
+        self.ptalSelectCombo.activated.connect(self.__setPTAL__)
+        self.ptalShowCheck.stateChanged.connect(self.__showPTAL__)
+        self.frequencyTimeCombo.currentIndexChanged.connect(self.__setTimePeriod__)
+        self.stopSelectCombo.currentIndexChanged.connect(self.__setStopType__)
+        self.stopFrequencyCheck.stateChanged.connect(self.__showStops__)
+        self.stopSummaryTable.itemSelectionChanged.connect(self.__setStops__)
 
         # some globals
         self.current_tab = 0
@@ -141,7 +157,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.closingPlugin.emit()
         event.accept()
 
-    def changeQuestionTab(self, tab_id):
+    def __changeQuestionTab__(self, tab_id):
         # make changes if not visiting the introduction
         # and if not returning to the same tab as before
         if tab_id > 0 and tab_id != self.current_tab:
@@ -154,13 +170,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     #####
     # Knooppunten
-    def setScenario(self):
+    def __setScenario__(self):
         scenario_name = self.scenarioSelectCombo.currentText()
         self.scenarioChanged.emit(scenario_name)
         if scenario_name == 'Huidige situatie':
-            self.activateTODLevel(False)
+            self.__activateTODLevel__(False)
         else:
-            self.activateTODLevel(True)
+            self.__activateTODLevel__(True)
 
     def getScenario(self):
         return self.scenarioSelectCombo.currentText()
@@ -168,20 +184,20 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def isScenarioVisible(self):
         return self.scenarioShowCheck.isChecked()
 
-    def showScenario(self, state):
+    def __showScenario__(self, state):
         self.scenarioShow.emit(state)
 
     def isIsochronesVisible(self):
         return self.isochronesShowCheck.isChecked()
 
-    def showIsochrones(self, state):
+    def __showIsochrones__(self, state):
         self.isochronesShow.emit(state)
 
-    def activateTODLevel(self, onoff):
+    def __activateTODLevel__(self, onoff):
         self.todPolicyLabel.setEnabled(onoff)
         self.todPolicySlider.setEnabled(onoff)
         self.todPolicyValueLabel.setEnabled(onoff)
-        if onoff == False:
+        if not onoff:
             self.todPolicySlider.setValue(0)
 
     def getTODLevel(self):
@@ -194,7 +210,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
             tod_level = 0
         return tod_level
 
-    def updateTODLevel(self, value):
+    def __updateTODLevel__(self, value):
         tod_level = 0
         if value == 1:
             tod_level = 50
@@ -210,9 +226,9 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
             text_list.append('%d op loopafstand van knooppunten' % data_values[1])
             text_list.append('%d op fietsafstand van knooppunten' % data_values[2])
             text_list.append('%d buiten invloedsgebied van knooppunten' % data_values[3])
-            self.setTextField('scenarioSummaryText', text_list)
+            self.__setTextField__('scenarioSummaryText', text_list)
 
-    def setKnooppuntKenmerk(self, id):
+    def __setKnooppuntKenmerk__(self):
         attribute = self.knooppuntenAttributeCombo.currentText()
         self.knooppuntChanged.emit(attribute)
 
@@ -222,13 +238,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def isKnooppuntVisible(self):
         return self.knooppuntenShowCheck.isChecked()
 
-    def showKnooppunt(self, state):
+    def __showKnooppunt__(self, state):
         self.knooppuntShow.emit(state)
 
     def updateKnooppuntenTable(self, headers, data_values):
-        self.populateDataTable('knooppuntenSummaryTable', headers, data_values)
+        self.__populateDataTable__('knooppuntenSummaryTable', headers, data_values)
 
-    def setKnooppunt(self):
+    def __setKnooppunt__(self):
         current_row = self.knooppuntenSummaryTable.currentRow()
         current_item = self.knooppuntenSummaryTable.item(current_row, 0)
         station_name = current_item.text()
@@ -261,58 +277,113 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     #####
     # Koppelingen
-    def getOverbelast(self):
+    def __showStations__(self, state):
+        self.stationShow.emit(state)
+
+    def isStationVisible(self):
+        return self.overbelastShowCheck.isChecked()
+
+    def __setStationKenmerk__(self):
+        attribute = self.overbelastAttributeCombo.currentText()
+        self.stationAttributeChanged.emit(attribute)
+
+    def getSationAttribute(self):
         return self.overbelastAttributeCombo.currentText()
 
+    def updateStationsTable(self, headers, data_values):
+        self.__populateDataTable__('overbelastAttributeTable', headers, data_values)
 
-    def getLocations(self):
-        return self.importantSelectCombo.currentText()
+    def __setStation__(self):
+        current_row = self.overbelastAttributeTable.currentRow()
+        current_item = self.overbelastAttributeTable.item(current_row, 0)
+        station_name = current_item.text()
+        self.stationSelected.emit(station_name)
+
+    def isStationSelected(self):
+        return self.overbelastAttributeTable.isItemSelected()
+
+    def __showLocations__(self, state):
+        self.locationShow.emit(state)
+
+    def isLocationVisible(self):
+        return self.locationShowCheck.isChecked()
+
+    def __setLocationType__(self):
+        attribute = self.locationSelectCombo.currentText()
+        self.locationTypeChanged.emit(attribute)
+
+    def getLocationType(self):
+        return self.locationSelectCombo.currentText()
+
+    def updateLocationsTable(self, headers, data_values):
+        self.__populateDataTable__('overbelastAttributeTable', headers, data_values)
+
+    def __setLocation__(self):
+        current_row = self.locationAttributeTable.currentRow()
+        current_item = self.locationAttributeTable.item(current_row, 0)
+        location_name = current_item.text()
+        self.locationSelected.emit(location_name)
+
+    def isLocationSelected(self):
+        return self.locationAttributeTable.isItemSelected()
 
     #####
     # Mobiliteit
-    def showWalk(self, state):
+    def __showWalk__(self, state):
         self.isochroneWalkShow.emit(state)
 
-    def showBike(self, state):
+    def isWalkVisible(self):
+        return self.isochroneWalkCheck.isChecked()
+
+    def __showBike__(self, state):
         self.isochroneBikeShow.emit(state)
 
-    def showOV(self, state):
+    def isBikeVisible(self):
+        return self.isochroneBikeCheck.isChecked()
+
+    def __showOV__(self, state):
         self.isochroneOVShow.emit(state)
 
-    def showPTAL(self, state):
+    def isOvVisible(self):
+        return self.isochroneOvCheck.isChecked()
+
+    def __showPTAL__(self, state):
         self.ptalShow.emit(state)
 
     def isPTALVisible(self):
         return self.ptalShowCheck.isChecked()
 
-    def setPTAL(self):
+    def __setPTAL__(self):
         attribute = self.ptalSelectCombo.currentText()
         self.ptalChanged.emit(attribute)
 
     def getPTAL(self):
         return self.ptalSelectCombo.currentText()
 
-    def showStops(self, state):
+    def __showStops__(self, state):
         self.stopsShow.emit(state)
 
-    def setStopType(self):
+    def __setStopType__(self):
         attribute = self.stopSelectCombo.currentText()
         self.stopsChanged.emit(attribute)
+
+    def isStopsVisible(self):
+        return self.stopFrequencyCheck.isChecked()
 
     def getStops(self):
         return self.stopSelectCombo.currentText()
 
-    def setTimePeriod(self):
+    def __setTimePeriod__(self):
         attribute = self.frequencyTimeCombo.currentText()
         self.frequencyChanged.emit(attribute)
 
-    def getTime(self):
+    def getTimePeriod(self):
         return self.frequencyTimeCombo.currentText()
 
     def updateStopsTable(self, headers, data_values):
-        self.populateDataTable('stopSummaryTable', headers, data_values)
+        self.__populateDataTable__('stopSummaryTable', headers, data_values)
 
-    def setStops(self):
+    def __setStops__(self):
         current_row = self.stopSummaryTable.currentRow()
         current_item = self.stopSummaryTable.item(current_row, 0)
         stop_name = current_item.text()
@@ -323,13 +394,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     #####
     # General functions
-    def setTextField(self, gui_name, text_list):
+    def __setTextField__(self, gui_name, text_list):
         field2 = self.findChild(QtGui.QTextEdit, gui_name)
         field2.clear()
         for line in text_list:
             field2.append(line)
 
-    def populateDataTable(self, gui_name, headers, values):
+    def __populateDataTable__(self, gui_name, headers, values):
         table = self.findChild(QtGui.QTableWidget, gui_name)
         table.clear()
         columns =  len(headers)
@@ -353,7 +424,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         table.resizeRowsToContents()
         table.setSortingEnabled(True)
 
-    def setSliderRange(self, gui_name, min, max, step):
+    def __setSliderRange__(self, gui_name, min, max, step):
         slider = self.findChild(QtGui.QSlider, gui_name)
         slider.setRange(min, max)
         slider.setSingleStep(step)

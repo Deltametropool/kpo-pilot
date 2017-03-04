@@ -959,22 +959,22 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Trein stations</string>
+               <string>Treinstations</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Metro stations</string>
+               <string>Metrostations</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Tram haltes</string>
+               <string>Tramhaltes</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Bus haltes</string>
+               <string>Bushaltes</string>
               </property>
              </item>
             </widget>
@@ -990,7 +990,7 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="frequencyTimeCombo">
              <item>
               <property name="text">
-               <string>Ochtend spits</string>
+               <string>Ochtendspits</string>
               </property>
              </item>
              <item>
@@ -1000,7 +1000,7 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Avond spits</string>
+               <string>Avondspits</string>
               </property>
              </item>
             </widget>

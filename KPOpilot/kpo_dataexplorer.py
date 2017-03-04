@@ -115,19 +115,12 @@ class KPOExplorer:
         self.loadForegroundLayers(True)
         # scenario layers
         self.setScenarioLayers()
-        if self.dlg.isScenarioVisible():
-            self.showScenario(True)
-        else:
-            self.showScenario(False)
+        self.showScenario(self.dlg.isScenarioVisible())
         # isochrone layers
-        if self.dlg.isIsochronesVisible():
-            self.showIsochrones(True)
-        else:
-            self.showIsochrones(False)
+        self.showIsochrones(self.dlg.isIsochronesVisible())
         # knooppunten layers
         self.setKnooppuntenAttribute()
-        if self.dlg.isKnooppuntVisible():
-            self.showKnooppunten(True)
+        self.showKnooppunten(self.dlg.isKnooppuntVisible())
 
     def showScenario(self, onoff):
         self.setLayerVisible('Woonscenarios', onoff)
@@ -175,7 +168,7 @@ class KPOExplorer:
     def showKnooppunten(self, onoff):
         current_scenario = self.dlg.getScenario()
         if onoff:
-            self.setLayerVisible('Stations (voorgrond)', False)
+            self.setLayerVisible('Treinstations (voorgrond)', False)
             if current_scenario == 'Huidige situatie':
                 self.setLayerVisible('Knooppunten', True)
                 self.setLayerExpanded('Knooppunten', True)
@@ -189,7 +182,7 @@ class KPOExplorer:
                 self.setLayerExpanded('Knooppuntenscenarios', True)
                 self.setCurrentLayer('Knooppuntenscenarios')
         else:
-            self.setLayerVisible('Stations (voorgrond)', True)
+            self.setLayerVisible('Treinstations (voorgrond)', True)
             self.setLayerVisible('Knooppunten', False)
             self.setLayerExpanded('Knooppunten', False)
             self.setLayerVisible('Knooppuntenscenarios', False)
@@ -265,12 +258,12 @@ class KPOExplorer:
             # vl.setSubsetString( 'Counties = "Norwich"' )
 
     def setIntensityValueSlider(self):
-        self.dlg.setSliderRange('intensityValueSlider', 0, 100, 10)
+        self.dlg.__setSliderRange__('intensityValueSlider', 0, 100, 10)
         self.dlg.updateIntensityValue()
 
 
     def setAccessibilityValueSlider(self):
-        self.dlg.setSliderRange('accessibilityValueSlider', 0, 8, 1)
+        self.dlg.__setSliderRange__('accessibilityValueSlider', 0, 8, 1)
         self.dlg.updateAccessibilityValue()
 
 
@@ -363,7 +356,15 @@ class KPOExplorer:
     ###
     # Mobiliteit
     def loadMobiliteitLayers(self):
-        pass
+        # isochrones
+        self.showWalkIsochrones(self.dlg.isWalkVisible())
+        self.showBikeIsochrones(self.dlg.isBikeVisible())
+        self.showOVIsochrones(self.dlg.isOvVisible())
+        # PTAL
+        self.showPTAL(self.dlg.isPTALVisible())
+        # frequency
+        self.setStopFrequency()
+        self.showStopFrequency(self.dlg.isStopsVisible())
 
     def showWalkIsochrones(self, onoff):
         self.setLayerVisible('Isochronen lopen', onoff)
@@ -388,30 +389,166 @@ class KPOExplorer:
         if onoff:
             self.setLayerVisible(selection, True)
             self.setCurrentLayer(selection)
+            self.setLayerExpanded(selection, True)
             if selection == 'Bereikbaarheidsniveau':
                 self.setLayerVisible('Bereikbaarheidsindex', False)
+                self.setLayerExpanded('Bereikbaarheidsindex', False)
             else:
                 self.setLayerVisible('Bereikbaarheidsniveau', False)
+                self.setLayerExpanded('Bereikbaarheidsniveau', False)
         else:
             self.setLayerVisible('Bereikbaarheidsniveau', False)
+            self.setLayerExpanded('Bereikbaarheidsniveau', False)
             self.setLayerVisible('Bereikbaarheidsindex', False)
+            self.setLayerExpanded('Bereikbaarheidsindex', False)
+
+    def setStopFrequency(self):
+        time_period = self.dlg.getTimePeriod()
+        self.setLayerStyle('Trein frequentie','mobiliteit_trein_%s' % time_period.lower())
+        self.setLayerStyle('Metro frequentie', 'mobiliteit_metro_%s' % time_period.lower())
+        self.setLayerStyle('Tram frequentie', 'mobiliteit_tram_%s' % time_period.lower())
+        self.setLayerStyle('Bus frequentie', 'mobiliteit_bus_%s' % time_period.lower())
+        self.updateStopSummaryTable()
+
+    def setStopTypes(self):
+        if self.dlg.isStopsVisible():
+            self.showStopFrequency(True)
+        else:
+            self.hideStopFrequency()
+        self.updateStopSummaryTable()
 
     def showStopFrequency(self,onoff):
-        pass
+        current_type = self.dlg.getStops()
+        if current_type == 'Alle OV haltes':
+            self.setLayerVisible('Trein frequentie', onoff)
+            self.setLayerExpanded('Trein frequentie', onoff)
+            self.setCurrentLayer('Trein frequentie')
+            self.setLayerVisible('Metro frequentie', onoff)
+            self.setLayerExpanded('Metro frequentie', onoff)
+            self.setLayerVisible('Tram frequentie', onoff)
+            self.setLayerExpanded('Tram frequentie', onoff)
+            self.setLayerVisible('Bus frequentie', onoff)
+            self.setLayerExpanded('Bus frequentie', onoff)
+        else:
+            self.hideStopFrequency()
+            if current_type == 'Treinstations':
+                self.setLayerVisible('Trein frequentie', onoff)
+                self.setLayerExpanded('Trein frequentie', onoff)
+                self.setCurrentLayer('Trein frequentie')
+            elif current_type == 'Metrostations':
+                self.setLayerVisible('Metro frequentie', onoff)
+                self.setLayerExpanded('Metro frequentie', onoff)
+                self.setCurrentLayer('Metro frequentie')
+            elif current_type == 'Tramhaltes':
+                self.setLayerVisible('Tram frequentie', onoff)
+                self.setLayerExpanded('Tram frequentie', onoff)
+                self.setCurrentLayer('Tram frequentie')
+            elif current_type == 'Bushaltes':
+                self.setLayerVisible('Bus frequentie', onoff)
+                self.setLayerExpanded('Bus frequentie', onoff)
+                self.setCurrentLayer('Bus frequentie')
 
-    def setStopFrequency(self, time_period):
-        pass
-
-    def setStopTypes(self, types):
-        pass
+    def hideStopFrequency(self):
+        self.setLayerVisible('Trein frequentie', False)
+        self.setLayerExpanded('Trein frequentie', False)
+        self.setLayerVisible('Metro frequentie', False)
+        self.setLayerExpanded('Metro frequentie', False)
+        self.setLayerVisible('Tram frequentie', False)
+        self.setLayerExpanded('Tram frequentie', False)
+        self.setLayerVisible('Bus frequentie', False)
+        self.setLayerExpanded('Bus frequentie', False)
 
     def updateStopSummaryTable(self):
-        pass
+        time_period = self.dlg.getTimePeriod().lower()
+        current_type = self.dlg.getStops()
+        stops_layer = ''
+        fields = []
+        headers = []
+        # prepare table
+        if current_type == 'Treinstations':
+            fields = ['halte_naam',
+                      'trein_%s' % time_period,
+                      'hsl_%s' % time_period,
+                      'ic_%s' % time_period,
+                      'spr_%s' % time_period]
+            headers = ['Treinstation', 'Totaal', 'HSL', 'IC', 'Sprinter']
+            stops_layer = 'Trein frequentie'
+        elif current_type == 'Metrostations':
+            fields = ['halte_naam', 'metro_%s' % time_period]
+            headers = ['Metrostation', 'Totaal']
+            stops_layer = 'Metro frequentie'
+        elif current_type == 'Tramhaltes':
+            fields = ['halte_naam', 'tram_%s' % time_period]
+            headers = ['Tramhalte', 'Totaal']
+            stops_layer = 'Tram frequentie'
+        elif current_type == 'Bushaltes':
+            fields = ['halte_naam', 'halte_gemeente', 'bus_%s' % time_period]
+            headers = ['Bushalte', 'Gemeente', 'Totaal']
+            stops_layer = 'Bus frequentie'
+        else:
+            fields = ['halte_naam',
+                      'trein_%s' % time_period,
+                      'metro_%s' % time_period,
+                      'tram_%s' % time_period,
+                      'bus_%s' % time_period]
+            headers = ['OV Halte', 'Trein', 'Metro', 'Tram', 'Bus']
+        # get values
+        if current_type == 'Alle OV haltes':
+            feature_values = self.getFeatureValues('Trein frequentie', fields)
+            more_values = self.getFeatureValues('Metro frequentie', fields)
+            feature_values.update(more_values)
+            more_values = self.getFeatureValues('Tram frequentie', fields)
+            feature_values.update(more_values)
+            more_values = self.getFeatureValues('Bus frequentie', fields)
+            feature_values.update(more_values)
+        else:
+            feature_values = self.getFeatureValues(stops_layer, fields)
+        values = []
+        for feat in feature_values.itervalues():
+            values.append(feat)
+        self.dlg.updateStopsTable(headers, values)
 
     def zoomToStop(self, stop_name):
-        pass
-        # select stop
-        # zoom to stop
+        current_type = self.dlg.getStops()
+        if current_type == 'Treinstations':
+            # select stop
+            self.setFeatureSelection('Trein frequentie', 'halte_naam', stop_name)
+            # zoom to stop
+            self.setExtentToSelection('Trein frequentie')
+            self.setCurrentLayer('Trein frequentie')
+        elif current_type == 'Metrostations':
+            self.setFeatureSelection('Metro frequentie', 'halte_naam', stop_name)
+            self.setExtentToSelection('Metro frequentie')
+            self.setCurrentLayer('Metro frequentie')
+        elif current_type == 'Tramhaltes':
+            self.setFeatureSelection('Tram frequentie', 'halte_naam', stop_name)
+            self.setExtentToSelection('Tram frequentie')
+            self.setCurrentLayer('Tram frequentie')
+        elif current_type == 'Bushaltes':
+            self.setFeatureSelection('Bus frequentie', 'halte_naam', stop_name)
+            self.setExtentToSelection('Bus frequentie')
+            self.setCurrentLayer('Bus frequentie')
+        else:
+            # here must find first instance of stop
+            is_found = self.setFeatureSelection('Bus frequentie', 'halte_naam', stop_name)
+            if not is_found:
+                is_found = self.setFeatureSelection('Tram frequentie', 'halte_naam', stop_name)
+            else:
+                self.setExtentToSelection('Bus frequentie')
+                self.setCurrentLayer('Bus frequentie')
+            if not is_found:
+                is_found = self.setFeatureSelection('Metro frequentie', 'halte_naam', stop_name)
+            else:
+                self.setExtentToSelection('Tram frequentie')
+                self.setCurrentLayer('Tram frequentie')
+            if not is_found:
+                is_found = self.setFeatureSelection('Trein frequentie', 'halte_naam', stop_name)
+                if is_found:
+                    self.setExtentToSelection('Trein frequentie')
+                    self.setCurrentLayer('Trein frequentie')
+            else:
+                self.setExtentToSelection('Metro frequentie')
+                self.setCurrentLayer('Metro frequentie')
 
     ####
     # General methods used by all panels
@@ -451,21 +588,29 @@ class KPOExplorer:
                 values[feat.id()] = feat.attributes()
         return values
 
-    def setFeatureSelection(self, features, layer_name):
+    def setFeatureSelection(self, layer_name, field, selected):
         layer = self.data_layers[layer_name]
-        if features:
-            if layer.isValid():
-                layer.setSelectedFeatures(features)
+        selection = []
+        if selected:
+            features = layer.getFeatures()
+            for feat in features:
+                if feat.attribute(field) == selected:
+                    selection.append(feat.id())
+        if selection:
+            layer.setSelectedFeatures(selection)
+            return True
+        else:
+            return False
 
     def setExtentToLayer(self, layer_name):
         layer = self.data_layers[layer_name]
-        if layer.isValid():
-            self.canvas.setExtent(layer.extent())
-            self.canvas.refresh()
+        self.canvas.setExtent(layer.extent())
+        self.canvas.refresh()
 
     def setExtentToSelection(self, layer_name):
         layer = self.data_layers[layer_name]
-        if layer.isValid():
-            if layer.selectedFeatures():
-                self.canvas.setExtent(layer.boundingBoxOfSelected())
-                self.canvas.refresh()
+        if layer.selectedFeatures():
+            self.canvas.zoomToSelected(layer)
+            if layer.geometryType() == QGis.Point:
+                self.canvas.zoomScale(15000.0)
+            self.canvas.refresh()

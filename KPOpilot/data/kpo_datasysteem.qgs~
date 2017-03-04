@@ -67,13 +67,13 @@
       <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="fietsroutes20170225205921218" name="Fietsroutes">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="ov_routes20170225205922084" name="Bus routes">
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="ov_routes20170225205922084" name="Buslijnen">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Ov_routes_copy20170226211647434" name="Tram routes">
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Ov_routes_copy20170226211647434" name="Tramlijnen">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Ov_routes_copy_copy20170226211650978" name="Metro routes">
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Ov_routes_copy_copy20170226211650978" name="Metrolijnen">
         <customproperties/>
       </layer-tree-layer>
       <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Ov_haltes_copy20170227093009036" name="OV haltes">
@@ -82,7 +82,7 @@
       <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="invloedsgebied_overlap20170225205921647" name="Invloedsgebied overlap">
         <customproperties/>
       </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="regionale_voorzieningen20170225205922118" name="Regionale_voorzieningen">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="regionale_voorzieningen20170225205922118" name="Regionale voorzieningen">
         <customproperties/>
       </layer-tree-layer>
       <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="belangrijke_locaties20170225205921177" name="Belangrijke locaties">
@@ -375,17 +375,17 @@
           <legendlayerfile isInOverview="0" layerid="fietsroutes20170225205921218" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Bus routes" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Buslijnen" showFeatureCount="0">
         <filegroup open="false" hidden="false">
           <legendlayerfile isInOverview="0" layerid="ov_routes20170225205922084" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Tram routes" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Tramlijnen" showFeatureCount="0">
         <filegroup open="false" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Ov_routes_copy20170226211647434" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Metro routes" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Metrolijnen" showFeatureCount="0">
         <filegroup open="false" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Ov_routes_copy_copy20170226211650978" visible="0"/>
         </filegroup>
@@ -400,7 +400,7 @@
           <legendlayerfile isInOverview="0" layerid="invloedsgebied_overlap20170225205921647" visible="0"/>
         </filegroup>
       </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Regionale_voorzieningen" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Regionale voorzieningen" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="regionale_voorzieningen20170225205922118" visible="0"/>
         </filegroup>
@@ -735,7 +735,7 @@
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
       <layerTransparency>0</layerTransparency>
-      <displayfield>sid</displayfield>
+      <displayfield>halte_naam</displayfield>
       <label>0</label>
       <labelattributes>
         <label fieldname="" text="Label"/>
@@ -1295,7 +1295,7 @@ def my_form_open(dialog, layer, feature):
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
       <layerTransparency>0</layerTransparency>
-      <displayfield>sid</displayfield>
+      <displayfield>halte_naam</displayfield>
       <label>0</label>
       <labelattributes>
         <label fieldname="" text="Label"/>
@@ -1575,7 +1575,7 @@ def my_form_open(dialog, layer, feature):
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
       <layerTransparency>0</layerTransparency>
-      <displayfield>sid</displayfield>
+      <displayfield>halte_naam</displayfield>
       <label>0</label>
       <labelattributes>
         <label fieldname="" text="Label"/>
@@ -2415,7 +2415,7 @@ def my_form_open(dialog, layer, feature):
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
       <layerTransparency>0</layerTransparency>
-      <displayfield>sid</displayfield>
+      <displayfield>halte_naam</displayfield>
       <label>0</label>
       <labelattributes>
         <label fieldname="" text="Label"/>
@@ -2695,7 +2695,7 @@ def my_form_open(dialog, layer, feature):
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
       <layerTransparency>0</layerTransparency>
-      <displayfield>sid</displayfield>
+      <displayfield>halte_naam</displayfield>
       <label>0</label>
       <labelattributes>
         <label fieldname="" text="Label"/>
@@ -4625,7 +4625,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Tram routes</layername>
+      <layername>Tramlijnen</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
@@ -5042,7 +5042,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Metro routes</layername>
+      <layername>Metrolijnen</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
@@ -12565,7 +12565,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Bus routes</layername>
+      <layername>Buslijnen</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
@@ -13112,7 +13112,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Regionale_voorzieningen</layername>
+      <layername>Regionale voorzieningen</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
