@@ -339,6 +339,18 @@ p, li { white-space: pre-wrap; }
            </item>
            <item row="1" column="0" colspan="2">
             <widget class="QTableWidget" name="knooppuntenSummaryTable">
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
              <property name="sortingEnabled">
               <bool>true</bool>
              </property>
@@ -520,7 +532,7 @@ p, li { white-space: pre-wrap; }
            <item row="0" column="1">
             <widget class="QCheckBox" name="intensityShowCheck">
              <property name="text">
-              <string>Tonen</string>
+              <string>Zien</string>
              </property>
             </widget>
            </item>
@@ -593,6 +605,18 @@ p, li { white-space: pre-wrap; }
            </item>
            <item row="2" column="0" colspan="2">
             <widget class="QTableWidget" name="planAttributeTable">
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>100</number>
              </attribute>
@@ -630,7 +654,7 @@ p, li { white-space: pre-wrap; }
       </widget>
       <widget class="QWidget" name="koppelingenTab">
        <attribute name="title">
-        <string>3. Koppelingen</string>
+        <string>3. Verbindingen</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3" stretch="3,4">
         <property name="leftMargin">
@@ -714,6 +738,18 @@ p, li { white-space: pre-wrap; }
            </item>
            <item row="1" column="0" colspan="2">
             <widget class="QTableWidget" name="overbelastAttributeTable">
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>80</number>
              </attribute>
@@ -764,12 +800,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Belangrijke Locaties</string>
+               <string>Belangrijke locaties</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Regionale Voorzieningen</string>
+               <string>Regionale voorzieningen</string>
               </property>
              </item>
             </widget>
@@ -777,12 +813,24 @@ p, li { white-space: pre-wrap; }
            <item row="0" column="1">
             <widget class="QCheckBox" name="locationShowCheck">
              <property name="text">
-              <string>Tonen</string>
+              <string>Zien</string>
              </property>
             </widget>
            </item>
            <item row="1" column="0" colspan="2">
             <widget class="QTableWidget" name="locationAttributeTable">
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>100</number>
              </attribute>
@@ -902,7 +950,7 @@ p, li { white-space: pre-wrap; }
            <item>
             <widget class="QCheckBox" name="ptalShowCheck">
              <property name="text">
-              <string>Tonen</string>
+              <string>Zien</string>
              </property>
             </widget>
            </item>
@@ -929,6 +977,18 @@ p, li { white-space: pre-wrap; }
            </property>
            <item row="3" column="0" colspan="2">
             <widget class="QTableWidget" name="stopSummaryTable">
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>50</number>
              </attribute>
@@ -991,7 +1051,7 @@ p, li { white-space: pre-wrap; }
            <item row="1" column="1">
             <widget class="QCheckBox" name="stopFrequencyCheck">
              <property name="text">
-              <string>Tonen</string>
+              <string>Zien</string>
              </property>
             </widget>
            </item>

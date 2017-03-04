@@ -59,9 +59,9 @@
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
-    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="3. Knoppelingen">
+    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="3. Verbindingen">
       <customproperties/>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Knooppunten_copy20170226230435450" name="Overbelast Stations">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Knooppunten_copy20170226230435450" name="Overbelast stations">
         <customproperties/>
       </layer-tree-layer>
       <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="fietsroutes20170225205921218" name="Fietsroutes">
@@ -364,8 +364,8 @@
         </filegroup>
       </legendlayer>
     </legendgroup>
-    <legendgroup open="false" checked="Qt::Unchecked" name="3. Knoppelingen">
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Overbelast Stations" showFeatureCount="0">
+    <legendgroup open="false" checked="Qt::Unchecked" name="3. Verbindingen">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Overbelast stations" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Knooppunten_copy20170226230435450" visible="0"/>
         </filegroup>
@@ -3123,7 +3123,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Overbelast Stations</layername>
+      <layername>Overbelast stations</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>

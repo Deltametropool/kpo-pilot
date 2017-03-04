@@ -5,7 +5,7 @@
     <customproperties/>
     <layer-tree-group expanded="0" checked="Qt::Unchecked" name="Voorgrond">
       <customproperties/>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Stations_copy20170227111208468" name="Stations (voorgrond)">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Stations_copy20170227111208468" name="Treinstations (voorgrond)">
         <customproperties/>
       </layer-tree-layer>
       <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Spoorwegen_trein_copy20170226132402722" name="Spoorvakken trein (voorgrond)">
@@ -59,9 +59,9 @@
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
-    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="3. Knoppelingen">
+    <layer-tree-group expanded="1" checked="Qt::Unchecked" name="3. Knoppelingen">
       <customproperties/>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Knooppunten_copy20170226230435450" name="Overbelast Stations">
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Knooppunten_copy20170226230435450" name="Overbelast stations">
         <customproperties/>
       </layer-tree-layer>
       <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="fietsroutes20170225205921218" name="Fietsroutes">
@@ -128,9 +128,9 @@
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
-    <layer-tree-group expanded="0" checked="Qt::Checked" name="Achtergrond">
+    <layer-tree-group expanded="1" checked="Qt::Checked" name="Achtergrond">
       <customproperties/>
-      <layer-tree-layer expanded="1" checked="Qt::Checked" id="Knooppunten_copy20170227111107686" name="Stations">
+      <layer-tree-layer expanded="1" checked="Qt::Checked" id="Knooppunten_copy20170227111107686" name="Treinstations">
         <customproperties/>
       </layer-tree-layer>
       <layer-tree-layer expanded="1" checked="Qt::Checked" id="boundary20170225205921198" name="Provincie grens">
@@ -284,7 +284,7 @@
   </layer-tree-canvas>
   <legend updateDrawingOrder="true">
     <legendgroup open="false" checked="Qt::Unchecked" name="Voorgrond">
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Stations (voorgrond)" showFeatureCount="0">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Treinstations (voorgrond)" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Stations_copy20170227111208468" visible="0"/>
         </filegroup>
@@ -364,8 +364,8 @@
         </filegroup>
       </legendlayer>
     </legendgroup>
-    <legendgroup open="false" checked="Qt::Unchecked" name="3. Knoppelingen">
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Overbelast Stations" showFeatureCount="0">
+    <legendgroup open="true" checked="Qt::Unchecked" name="3. Knoppelingen">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Overbelast stations" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Knooppunten_copy20170226230435450" visible="0"/>
         </filegroup>
@@ -473,8 +473,8 @@
         </filegroup>
       </legendlayer>
     </legendgroup>
-    <legendgroup open="false" checked="Qt::Checked" name="Achtergrond">
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Stations" showFeatureCount="0">
+    <legendgroup open="true" checked="Qt::Checked" name="Achtergrond">
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Checked" name="Treinstations" showFeatureCount="0">
         <filegroup open="true" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Knooppunten_copy20170227111107686" visible="1"/>
         </filegroup>
@@ -3123,7 +3123,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Overbelast Stations</layername>
+      <layername>Overbelast stations</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
@@ -3469,7 +3469,7 @@ def my_form_open(dialog, layer, feature):
         <fieldstyles/>
       </conditionalstyles>
     </maplayer>
-    <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+    <maplayer minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <extent>
         <xmin>96852</xmin>
         <ymin>469788.10000000521540642</ymin>
@@ -3481,7 +3481,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Stations</layername>
+      <layername>Treinstations</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
@@ -3750,7 +3750,7 @@ def my_form_open(dialog, layer, feature):
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
       <layerTransparency>0</layerTransparency>
-      <displayfield>sid</displayfield>
+      <displayfield>station_naam</displayfield>
       <label>0</label>
       <labelattributes>
         <label fieldname="" text="Label"/>
@@ -3773,7 +3773,7 @@ def my_form_open(dialog, layer, feature):
         <selectedonly on=""/>
       </labelattributes>
       <SingleCategoryDiagramRenderer diagramType="Pie">
-        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
+        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
           <fontProperties description=".Helvetica Neue DeskInterface,13,-1,5,50,0,0,0,0,0" style=""/>
           <attribute field="" color="#000000" label=""/>
         </DiagramCategory>
@@ -8130,7 +8130,7 @@ def my_form_open(dialog, layer, feature):
         <fieldstyles/>
       </conditionalstyles>
     </maplayer>
-    <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+    <maplayer minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <extent>
         <xmin>96852</xmin>
         <ymin>469788.10000000521540642</ymin>
@@ -8142,7 +8142,7 @@ def my_form_open(dialog, layer, feature):
       <keywordList>
         <value></value>
       </keywordList>
-      <layername>Stations (voorgrond)</layername>
+      <layername>Treinstations (voorgrond)</layername>
       <srs>
         <spatialrefsys>
           <proj4>+proj=sterea +lat_0=52.15616055555555 +lon_0=5.38763888888889 +k=0.9999079 +x_0=155000 +y_0=463000 +ellps=bessel +towgs84=565.417,50.3319,465.552,-0.398957,0.343988,-1.8774,4.0725 +units=m +no_defs</proj4>
@@ -8411,7 +8411,7 @@ def my_form_open(dialog, layer, feature):
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
       <layerTransparency>0</layerTransparency>
-      <displayfield>sid</displayfield>
+      <displayfield>station_naam</displayfield>
       <label>0</label>
       <labelattributes>
         <label fieldname="" text="Label"/>
@@ -8434,7 +8434,7 @@ def my_form_open(dialog, layer, feature):
         <selectedonly on=""/>
       </labelattributes>
       <SingleCategoryDiagramRenderer diagramType="Pie">
-        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
+        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
           <fontProperties description=".Helvetica Neue DeskInterface,13,-1,5,50,0,0,0,0,0" style=""/>
           <attribute field="" color="#000000" label=""/>
         </DiagramCategory>
