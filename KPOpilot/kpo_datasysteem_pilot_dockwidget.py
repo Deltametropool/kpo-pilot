@@ -31,7 +31,7 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 
 class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
-    #### set dialog user signals
+    # set dialog user signals
     closingPlugin = pyqtSignal()
     tabChanged = pyqtSignal(int)
     # knooppunten
@@ -62,7 +62,6 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     isochroneWalkShow = pyqtSignal(bool)
     isochroneBikeShow = pyqtSignal(bool)
     isochroneOVShow = pyqtSignal(bool)
-    ptalChanged = pyqtSignal(str)
     ptalShow = pyqtSignal(bool)
     frequencyChanged = pyqtSignal(str)
     stopsChanged = pyqtSignal(str)
@@ -82,7 +81,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.plugin_dir = os.path.dirname(__file__)
         self.logosLabel.setPixmap(QtGui.QPixmap(self.plugin_dir + '/images/partner_logos.png'))
 
-        #### set-up dialog defaults
+        # set-up dialog defaults
         #  Knooppunten
         self.scenarioSelectCombo.setCurrentIndex(0)
         self.scenarioShowCheck.setChecked(True)
@@ -93,18 +92,18 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.knooppuntenShowCheck.setChecked(True)
         #
 
-        #### set-up UI interaction signals
+        # set-up UI interaction signals
         self.vragenTabWidget.currentChanged.connect(self.changeQuestionTab)
 
-        ##  Knooppunten
+        #  Knooppunten
         self.scenarioSelectCombo.currentIndexChanged.connect(self.setScenario)
-        self.scenarioShowCheck.stateChanged.connect(self.makeScenarioVisible)
-        self.isochronesShowCheck.stateChanged.connect(self.makeIsochronesVisible)
+        self.scenarioShowCheck.stateChanged.connect(self.showScenario)
+        self.isochronesShowCheck.stateChanged.connect(self.showIsochrones)
         self.todPolicySlider.valueChanged.connect(self.updateTODLevel)
         self.knooppuntenAttributeCombo.currentIndexChanged.connect(self.setKnooppuntKenmerk)
-        self.knooppuntenShowCheck.stateChanged.connect(self.makeKnooppuntVisible)
+        self.knooppuntenShowCheck.stateChanged.connect(self.showKnooppunt)
         self.knooppuntenSummaryTable.itemSelectionChanged.connect(self.setKnooppunt)
-        # # Verstedelijking
+        # Verstedelijking
         # self.intensitySelectCombo.activated.connect(self.setIntensityValueSlider)
         # self.intensitySelectCombo.activated.connect(self.setAccessibilityValueSlider)
         # self.intensitySelectCombo.activated.connect(self.showIntensity)
@@ -115,21 +114,22 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # self.locationSelectCombo.activated.connect(self.updateDevelopmentAttributeTable)
         # self.locationSelectCombo.activated.connect(self.showDevelopments)
         # self.locationShowCheck.stateChanged.connect(self.showDevelopments)
-        # # Koppelingen
+        # Koppelingen
         # self.overbelastAttributeCombo.activated.connect(self.showOverbelast)
         # self.overbelastShowCheck.stateChanged.connect(self.showOverbelast)
         # self.importantSelectCombo.activated.connect(self.updateImportantAttributeTable)
         # self.importantSelectCombo.activated.connect(self.showImportant)
         # self.importantShowCheck.stateChanged.connect(self.showImportant)
-        # # Mobiliteit
-        # self.isochroneWalkCheck.stateChanged.connect(self.showWalk)
-        # self.isochroneWalkCheck.stateChanged.connect(self.showCycling)
-        # self.isochroneWalkCheck.stateChanged.connect(self.showOV)
-        # self.ptalSelectCombo.activated.connect(self.showPTAL)
-        # self.ptalShowCheck.stateChanged.connect(self.showPTAL)
-        # self.stopSelectCombo.activated.connect(self.showStopFrequency)
-        # self.stopFrequencyCheck.stateChanged.connect(self.showStopFrequency)
-        # self.frequencyTimeCombo.activated.connect(self.updateStopSummaryTable)
+        # Mobiliteit
+        self.isochroneWalkCheck.stateChanged.connect(self.showWalk)
+        self.isochroneBikeCheck.stateChanged.connect(self.showBike)
+        self.isochroneOvCheck.stateChanged.connect(self.showOV)
+        self.ptalSelectCombo.activated.connect(self.showPTAL)
+        self.ptalShowCheck.stateChanged.connect(self.showPTAL)
+        self.frequencyTimeCombo.currentIndexChanged.connect(self.setTimePeriod)
+        self.stopSelectCombo.currentIndexChanged.connect(self.setStopType)
+        self.stopFrequencyCheck.stateChanged.connect(self.showStops)
+        self.stopSummaryTable.itemSelectionChanged.connect(self.setStops)
 
         # some globals
         self.current_tab = 0
@@ -153,7 +153,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     #####
     # Knooppunten
-    def setScenario(self, id):
+    def setScenario(self):
         scenario_name = self.scenarioSelectCombo.currentText()
         self.scenarioChanged.emit(scenario_name)
         if scenario_name == 'Huidige situatie':
@@ -167,13 +167,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def isScenarioVisible(self):
         return self.scenarioShowCheck.isChecked()
 
-    def makeScenarioVisible(self, state):
+    def showScenario(self, state):
         self.scenarioShow.emit(state)
 
     def isIsochronesVisible(self):
         return self.isochronesShowCheck.isChecked()
 
-    def makeIsochronesVisible(self, state):
+    def showIsochrones(self, state):
         self.isochronesShow.emit(state)
 
     def activateTODLevel(self, onoff):
@@ -221,7 +221,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def isKnooppuntVisible(self):
         return self.knooppuntenShowCheck.isChecked()
 
-    def makeKnooppuntVisible(self, state):
+    def showKnooppunt(self, state):
         self.knooppuntShow.emit(state)
 
     def updateKnooppuntenTable(self, headers, data_values):
@@ -233,7 +233,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         station_name = current_item.text()
         self.knooppuntSelected.emit(station_name)
 
-    '''Verstedelijking'''
+    def isKnooppuntSelected(self):
+        return self.knooppuntenSummaryTable.isItemSelected()
+
+    #####
+    # Verstedelijking
     def getIntensity(self):
         return self.intensitySelectCombo.currentText()
 
@@ -254,8 +258,8 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def clearLocationSummary(self):
         self.locationSummaryText.clear()
 
-
-    '''Koppelingen'''
+    #####
+    # Koppelingen
     def getOverbelast(self):
         return self.overbelastAttributeCombo.currentText()
 
@@ -263,22 +267,51 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def getLocations(self):
         return self.importantSelectCombo.currentText()
 
+    #####
+    # Mobiliteit
+    def showWalk(self, state):
+        self.isochroneWalkShow.emit(state)
 
-    '''Mobiliteit'''
+    def showBike(self, state):
+        self.isochroneBikeShow.emit(state)
+
+    def showOV(self, state):
+        self.isochroneOVShow.emit(state)
+
+    def showPTAL(self, state):
+        self.ptalShow.emit(state)
+
     def getPTAL(self):
         return self.ptalSelectCombo.currentText()
 
+    def showStops(self, state):
+        self.stopsShow.emit(state)
 
-    def getLinks(self):
-        return self.linkSelectCombo.currentText()
-
+    def setStopType(self):
+        attribute = self.stopSelectCombo.currentText()
+        self.stopsChanged.emit(attribute)
 
     def getStops(self):
         return self.stopSelectCombo.currentText()
 
+    def setTimePeriod(self):
+        attribute = self.frequencyTimeCombo.currentText()
+        self.frequencyChanged.emit(attribute)
 
     def getTime(self):
         return self.frequencyTimeCombo.currentText()
+
+    def updateStopsTable(self, headers, data_values):
+        self.populateDataTable('stopSummaryTable', headers, data_values)
+
+    def setStops(self):
+        current_row = self.stopSummaryTable.currentRow()
+        current_item = self.stopSummaryTable.item(current_row, 0)
+        stop_name = current_item.text()
+        self.stopsSelected.emit(stop_name)
+
+    def isStopSelected(self):
+        return self.stopSummaryTable.isItemSelected()
 
     #####
     # General functions
