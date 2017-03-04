@@ -57,8 +57,15 @@ class KPOExplorer:
         # koppelingen
 
         # mobiliteit
-
-
+        self.dlg.isochroneWalkShow.connect(self.showWalkIsochrones)
+        self.dlg.isochroneBikeShow.connect(self.showBikeIsochrones)
+        self.dlg.isochroneOVShow.connect(self.showOVIsochrones)
+        self.dlg.ptalChanged.connect(self.setPTAL)
+        self.dlg.ptalShow.connect(self.showPTAL)
+        self.dlg.frequencyChanged.connect(self.setStopFrequency)
+        self.dlg.stopsChanged.connect(self.setStopTypes)
+        self.dlg.stopsShow.connect(self.showStopFrequency)
+        self.dlg.stopsSelected.connect(self.zoomToStop)
 
     ###
     # General
@@ -360,36 +367,51 @@ class KPOExplorer:
 
     def showWalkIsochrones(self, onoff):
         self.setLayerVisible('Isochronen lopen', onoff)
+        self.setCurrentLayer('Isochronen lopen')
 
     def showBikeIsochrones(self, onoff):
         self.setLayerVisible('Isochronen fiets', onoff)
+        self.setCurrentLayer('Isochronen fiets')
 
     def showOVIsochrones(self, onoff):
         self.setLayerVisible('Isochronen tram', onoff)
         self.setLayerVisible('Isochronen metro', onoff)
         self.setLayerVisible('Isochronen bus', onoff)
+        self.setCurrentLayer('Isochronen bus')
+
+    def setPTAL(self):
+        if self.dlg.isPTALVisible():
+            self.showPTAL(True)
 
     def showPTAL(self, onoff):
-
-        self.setLayerVisible('Isochronen fiets', onoff)
+        selection = self.dlg.getPTAL()
+        if onoff:
+            self.setLayerVisible(selection, True)
+            self.setCurrentLayer(selection)
+            if selection == 'Bereikbaarheidsniveau':
+                self.setLayerVisible('Bereikbaarheidsindex', False)
+            else:
+                self.setLayerVisible('Bereikbaarheidsniveau', False)
+        else:
+            self.setLayerVisible('Bereikbaarheidsniveau', False)
+            self.setLayerVisible('Bereikbaarheidsindex', False)
 
     def showStopFrequency(self,onoff):
-        stops = self.dlg.getStops()
-        stop_layers = {'All OV stops': 'bus stop frequency',
-                            'Bus stop': 'bus stop frequency',
-                            'Tram stop': 'bus stop frequency',
-                            'Metro stop': 'bus stop frequency',
-                            'Rail stop': 'bus stop frequency',
-                            'Ferry stop': 'bus stop frequency',
-                            'all': 'bus stop frequency'}
-        if self.dlg.stopFrequencyCheck.isChecked():
-            self.setLayerVisible(stop_layers['all'], False)
-            self.setLayerVisible(stop_layers[stops], True)
-        else:
-            self.setLayerVisible(stop_layers['all'], False)
+        pass
+
+    def setStopFrequency(self, time_period):
+        pass
+
+    def setStopTypes(self, types):
+        pass
 
     def updateStopSummaryTable(self):
         pass
+
+    def zoomToStop(self, stop_name):
+        pass
+        # select stop
+        # zoom to stop
 
     ####
     # General methods used by all panels

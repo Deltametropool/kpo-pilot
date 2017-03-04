@@ -62,6 +62,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     isochroneWalkShow = pyqtSignal(bool)
     isochroneBikeShow = pyqtSignal(bool)
     isochroneOVShow = pyqtSignal(bool)
+    ptalChanged = pyqtSignal(str)
     ptalShow = pyqtSignal(bool)
     frequencyChanged = pyqtSignal(str)
     stopsChanged = pyqtSignal(str)
@@ -124,7 +125,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.isochroneWalkCheck.stateChanged.connect(self.showWalk)
         self.isochroneBikeCheck.stateChanged.connect(self.showBike)
         self.isochroneOvCheck.stateChanged.connect(self.showOV)
-        self.ptalSelectCombo.activated.connect(self.showPTAL)
+        self.ptalSelectCombo.activated.connect(self.setPTAL)
         self.ptalShowCheck.stateChanged.connect(self.showPTAL)
         self.frequencyTimeCombo.currentIndexChanged.connect(self.setTimePeriod)
         self.stopSelectCombo.currentIndexChanged.connect(self.setStopType)
@@ -280,6 +281,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def showPTAL(self, state):
         self.ptalShow.emit(state)
+
+    def isPTALVisible(self):
+        return self.ptalShowCheck.isChecked()
+
+    def setPTAL(self):
+        attribute = self.ptalSelectCombo.currentText()
+        self.ptalChanged.emit(attribute)
 
     def getPTAL(self):
         return self.ptalSelectCombo.currentText()

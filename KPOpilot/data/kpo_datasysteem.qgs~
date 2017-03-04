@@ -160,10 +160,10 @@
   <mapcanvas>
     <units>meters</units>
     <extent>
-      <xmin>72964.98279148348956369</xmin>
-      <ymin>476967.33549662050791085</ymin>
-      <xmax>113311.04379148464067839</xmax>
-      <ymax>538260.29799661715514958</ymax>
+      <xmin>91082.75900000202818774</xmin>
+      <ymin>461332.78750000742729753</ymin>
+      <xmax>171774.8810000043886248</xmax>
+      <ymax>583918.71249999979045242</ymax>
     </extent>
     <rotation>0</rotation>
     <projections>1</projections>
@@ -6275,7 +6275,7 @@ def my_form_open(dialog, layer, feature):
       <blendMode>0</blendMode>
       <featureBlendMode>0</featureBlendMode>
       <layerTransparency>0</layerTransparency>
-      <displayfield>sid</displayfield>
+      <displayfield>ov_bereikbaarheidsniveau</displayfield>
       <label>0</label>
       <labelattributes>
         <label fieldname="" text="Label"/>
@@ -6298,7 +6298,7 @@ def my_form_open(dialog, layer, feature):
         <selectedonly on=""/>
       </labelattributes>
       <SingleCategoryDiagramRenderer diagramType="Pie">
-        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
+        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
           <fontProperties description=".Helvetica Neue DeskInterface,13,-1,5,50,0,0,0,0,0" style=""/>
           <attribute field="" color="#000000" label=""/>
         </DiagramCategory>

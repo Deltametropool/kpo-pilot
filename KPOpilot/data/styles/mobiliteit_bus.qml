@@ -185,7 +185,7 @@
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerTransparency>0</layerTransparency>
-  <displayfield>sid</displayfield>
+  <displayfield>halte_naam</displayfield>
   <label>0</label>
   <labelattributes>
     <label fieldname="" text="Label"/>
