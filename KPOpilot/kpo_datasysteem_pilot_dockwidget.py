@@ -43,12 +43,12 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     knooppuntShow = pyqtSignal(bool)
     knooppuntSelected = pyqtSignal(str)
     # verstedelijking
-    intensityChanged = pyqtSignal(str)
+    intensityTypeChanged = pyqtSignal(str)
     intensityShow = pyqtSignal(bool)
     intensityLevelChanged = pyqtSignal(int)
     accessibilityShow = pyqtSignal(bool)
     accessibilityLevelChanged = pyqtSignal(int)
-    planChanged = pyqtSignal(str)
+    planTypeChanged = pyqtSignal(str)
     planShow = pyqtSignal(bool)
     planSelected = pyqtSignal(str)
     # koppelingen
@@ -92,8 +92,17 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.knooppuntenAttributeCombo.setCurrentIndex(0)
         self.knooppuntenShowCheck.setChecked(True)
 
+        # Verstedelijking
+        self.intensitySelectCombo.setCurrentIndex(0)
+        self.intensityShowCheck.setChecked(False)
+        self.intensityValueSlider.setValue(7)
+        self.accessibilityShowCheck.setChecked(False)
+        self.accessibilityValueSlider.setValue(1)
+        self.planSelectCombo.setCurrentIndex(0)
+        self.planShowCheck.setChecked(False)
+
         # Koppelingen
-        self.overbelastSelectCombo.setCurrentIndex(0)
+        self.overbelastAttributeCombo.setCurrentIndex(0)
         self.overbelastShowCheck.setChecked(True)
         self.locationSelectCombo.setCurrentIndex(0)
         self.locationShowCheck.setChecked(False)
@@ -120,18 +129,16 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.knooppuntenShowCheck.stateChanged.connect(self.__showKnooppunt__)
         self.knooppuntenSummaryTable.itemSelectionChanged.connect(self.__setKnooppunt__)
         # Verstedelijking
-        # self.intensitySelectCombo.activated.connect(self.setIntensityValueSlider)
-        # self.intensitySelectCombo.activated.connect(self.setAccessibilityValueSlider)
-        # self.intensitySelectCombo.activated.connect(self.showIntensity)
-        # self.intensityShowCheck.stateChanged.connect(self.showIntensity)
-        # self.intensityValueSlider.valueChanged.connect(self.setIntensityValueSlider)
-        # self.accessibilityValueSlider.valueChanged.connect(self.setAccessibilityValueSlider)
-        # self.locationSelectCombo.activated.connect(self.updateDevelopmentSummaryText)
-        # self.locationSelectCombo.activated.connect(self.updateDevelopmentAttributeTable)
-        # self.locationSelectCombo.activated.connect(self.showDevelopments)
-        # self.locationShowCheck.stateChanged.connect(self.showDevelopments)
+        self.intensitySelectCombo.currentIndexChanged.connect(self.__setIntensity__)
+        self.intensityShowCheck.stateChanged.connect(self.__showIntensity__)
+        self.intensityValueSlider.valueChanged.connect(self.__updateIntensityLevel__)
+        self.accessibilityShowCheck.stateChanged.connect(self.__showAccessibility__)
+        self.accessibilityValueSlider.valueChanged.connect(self.__updateAccessibilityLevel__)
+        self.planSelectCombo.currentIndexChanged.connect(self.__setPlan__)
+        self.planShowCheck.stateChanged.connect(self.__showPlan__)
+        self.planAttributeTable.itemSelectionChanged.connect(self.__setPlanLocation__)
         # Koppelingen
-        self.overbelastSelectCombo.currentIndexChanged.connect(self.__setStationKenmerk__)
+        self.overbelastAttributeCombo.currentIndexChanged.connect(self.__setStationKenmerk__)
         self.overbelastShowCheck.stateChanged.connect(self.__showStations__)
         self.overbelastAttributeTable.itemSelectionChanged.connect(self.__setStation__)
         self.locationSelectCombo.currentIndexChanged.connect(self.__setLocationType__)
@@ -170,6 +177,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     #####
     # Knooppunten
+    # Methods for Woonscenario
     def __setScenario__(self):
         scenario_name = self.scenarioSelectCombo.currentText()
         self.scenarioChanged.emit(scenario_name)
@@ -193,6 +201,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def __showIsochrones__(self, state):
         self.isochronesShow.emit(state)
 
+    # Methods for TOD level
     def __activateTODLevel__(self, onoff):
         self.todPolicyLabel.setEnabled(onoff)
         self.todPolicySlider.setEnabled(onoff)
@@ -228,6 +237,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
             text_list.append('%d buiten invloedsgebied van knooppunten' % data_values[3])
             self.__setTextField__('scenarioSummaryText', text_list)
 
+    # Methods for Knooppunten
     def __setKnooppuntKenmerk__(self):
         attribute = self.knooppuntenAttributeCombo.currentText()
         self.knooppuntChanged.emit(attribute)
@@ -255,28 +265,83 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     #####
     # Verstedelijking
-    def getIntensity(self):
+    # Methods for opportunities
+    def __showIntensity__(self, state):
+        self.intensityShow.emit(state)
+
+    def isIntensityVisible(self):
+        return self.intensityShowCheck.isChecked()
+
+    def __setIntensity__(self):
+        attribute = self.intensitySelectCombo.currentText()
+        self.intensityTypeChanged.emit(attribute)
+
+    def getIntensityType(self):
         return self.intensitySelectCombo.currentText()
 
+    def getIntensityLevel(self):
+        value = self.intensityValueSlider.value()
+        return value
 
-    def updateIntensityValue(self):
-        value = str(self.intensityValueSlider.value())
-        self.setLabelValue('intensityValueLabel', value)
+    def __updateIntensityLevel__(self, value):
+         self.todLevelChanged.emit(value)
 
+    def updateIntensityLabel(self, intensity_label):
+        self.intesityValueLabel.setText('%d%%' % intensity_label)
 
-    def updateAccessibilityValue(self):
-        value = str(self.accessibilityValueSlider.value())
-        self.setLabelValue('accessibilityValueLabel', value)
+    def __showAccessibility__(self, state):
+        self.accessibilityShow.emit(state)
 
-    def getDevelopment(self):
-        return self.locationSelectCombo.currentText()
+    def isAccessibilityVisible(self):
+        return self.accessibilityShowCheck.isChecked()
 
+    def getAccessibilityLevel(self):
+        value = self.accessibilityValueSlider.value()
+        return value
 
-    def clearLocationSummary(self):
-        self.locationSummaryText.clear()
+    def __updateAccessibilityLevel__(self, value):
+         self.accessibilityLevelChanged.emit(value)
+
+    def updateAccessibilityLabel(self, intensity_label):
+        self.accessibilityValueLabel.setText('%d%%' % intensity_label)
+
+    # Methods for plans
+    def __showPlan__(self, state):
+        self.planShow.emit(state)
+
+    def isPlanVisible(self):
+        return self.planShowCheck.isChecked()
+
+    def __setPlan__(self):
+        attribute = self.planSelectCombo.currentText()
+        self.planTypeChanged.emit(attribute)
+
+    def getPlanType(self):
+        return self.planSelectCombo.currentText()
+
+    def updatePlanSummary(self, data_values):
+        text_list = []
+        if len(data_values) == 3:
+            text_list.append('%d totaal woningen' % data_values[0])
+            text_list.append('%d in onderbenut bereikbaare locaties' % data_values[1])
+            text_list.append('%d buiten onderbenut bereikbaare locaties' % data_values[2])
+            self.__setTextField__('planSummaryText', text_list)
+
+    def updatePlanTable(self, headers, data_values):
+        self.__populateDataTable__('planAttributeTable', headers, data_values)
+
+    def __setPlanLocation__(self):
+        current_row = self.planAttributeTable.currentRow()
+        current_item = self.planAttributeTable.item(current_row, 0)
+        location_name = current_item.text()
+        self.planSelected.emit(location_name)
+
+    def isPlanLocationSelected(self):
+        return self.planAttributeTable.isItemSelected()
 
     #####
     # Koppelingen
+    # Methods for Overbelast stations
     def __showStations__(self, state):
         self.stationShow.emit(state)
 
@@ -302,6 +367,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def isStationSelected(self):
         return self.overbelastAttributeTable.isItemSelected()
 
+    # Methods for Locaties
     def __showLocations__(self, state):
         self.locationShow.emit(state)
 
@@ -316,7 +382,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return self.locationSelectCombo.currentText()
 
     def updateLocationsTable(self, headers, data_values):
-        self.__populateDataTable__('overbelastAttributeTable', headers, data_values)
+        self.__populateDataTable__('locationAttributeTable', headers, data_values)
 
     def __setLocation__(self):
         current_row = self.locationAttributeTable.currentRow()
@@ -329,6 +395,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     #####
     # Mobiliteit
+    # Methods for Isochronen
     def __showWalk__(self, state):
         self.isochroneWalkShow.emit(state)
 
@@ -347,6 +414,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def isOvVisible(self):
         return self.isochroneOvCheck.isChecked()
 
+    # Methods for Bereikbaarheid
     def __showPTAL__(self, state):
         self.ptalShow.emit(state)
 
@@ -360,6 +428,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def getPTAL(self):
         return self.ptalSelectCombo.currentText()
 
+    # Methods for stops frequency
     def __showStops__(self, state):
         self.stopsShow.emit(state)
 
@@ -403,7 +472,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def __populateDataTable__(self, gui_name, headers, values):
         table = self.findChild(QtGui.QTableWidget, gui_name)
         table.clear()
-        columns =  len(headers)
+        columns = len(headers)
         table.setColumnCount(columns)
         table.setHorizontalHeaderLabels(headers)
         table.setSortingEnabled(False)
@@ -424,7 +493,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         table.resizeRowsToContents()
         table.setSortingEnabled(True)
 
-    def __setSliderRange__(self, gui_name, min, max, step):
+    def __setSliderRange__(self, gui_name, minimum, maximum, step):
         slider = self.findChild(QtGui.QSlider, gui_name)
-        slider.setRange(min, max)
+        slider.setRange(minimum, maximum)
         slider.setSingleStep(step)
