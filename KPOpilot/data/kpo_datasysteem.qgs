@@ -2757,7 +2757,7 @@ def my_form_open(dialog, layer, feature):
         <fieldstyles/>
       </conditionalstyles>
     </maplayer>
-    <maplayer minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+    <maplayer minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" geometry="Point" simplifyMaxScale="1" type="vector" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
       <extent>
         <xmin>96852</xmin>
         <ymin>469788.10000000521540642</ymin>
@@ -2970,7 +2970,7 @@ def my_form_open(dialog, layer, feature):
         <property key="labeling/repeatDistanceUnit" value="1"/>
         <property key="labeling/reverseDirectionSymbol" value="false"/>
         <property key="labeling/rightDirectionSymbol" value=">"/>
-        <property key="labeling/scaleMax" value="100000"/>
+        <property key="labeling/scaleMax" value="150000"/>
         <property key="labeling/scaleMin" value="1"/>
         <property key="labeling/scaleVisibility" value="true"/>
         <property key="labeling/shadowBlendMode" value="6"/>
@@ -3072,7 +3072,7 @@ P+R bezetting: [% "pr_bezetting" %] %&lt;br></displayfield>
         <selectedonly on=""/>
       </labelattributes>
       <SingleCategoryDiagramRenderer diagramType="Pie">
-        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
+        <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
           <fontProperties description=".Helvetica Neue DeskInterface,13,-1,5,50,0,0,0,0,0" style=""/>
           <attribute field="" color="#000000" label=""/>
         </DiagramCategory>
@@ -8278,7 +8278,7 @@ def my_form_open(dialog, layer, feature):
         <property key="labeling/bufferColorB" value="255"/>
         <property key="labeling/bufferColorG" value="255"/>
         <property key="labeling/bufferColorR" value="255"/>
-        <property key="labeling/bufferDraw" value="false"/>
+        <property key="labeling/bufferDraw" value="true"/>
         <property key="labeling/bufferJoinStyle" value="64"/>
         <property key="labeling/bufferNoFill" value="false"/>
         <property key="labeling/bufferSize" value="1"/>
@@ -8292,9 +8292,9 @@ def my_form_open(dialog, layer, feature):
         <property key="labeling/dist" value="0"/>
         <property key="labeling/distInMapUnits" value="false"/>
         <property key="labeling/distMapUnitScale" value="0,0,0,0,0,0"/>
-        <property key="labeling/drawLabels" value="false"/>
-        <property key="labeling/enabled" value="false"/>
-        <property key="labeling/fieldName" value=""/>
+        <property key="labeling/drawLabels" value="true"/>
+        <property key="labeling/enabled" value="true"/>
+        <property key="labeling/fieldName" value="station_naam"/>
         <property key="labeling/fitInPolygonOnly" value="false"/>
         <property key="labeling/fontCapitals" value="0"/>
         <property key="labeling/fontFamily" value=".Helvetica Neue DeskInterface"/>
@@ -8311,7 +8311,7 @@ def my_form_open(dialog, layer, feature):
         <property key="labeling/fontWeight" value="50"/>
         <property key="labeling/fontWordSpacing" value="0"/>
         <property key="labeling/formatNumbers" value="false"/>
-        <property key="labeling/isExpression" value="true"/>
+        <property key="labeling/isExpression" value="false"/>
         <property key="labeling/labelOffsetInMapUnits" value="true"/>
         <property key="labeling/labelOffsetMapUnitScale" value="0,0,0,0,0,0"/>
         <property key="labeling/labelPerPart" value="false"/>
@@ -8330,14 +8330,14 @@ def my_form_open(dialog, layer, feature):
         <property key="labeling/obstacleType" value="0"/>
         <property key="labeling/offsetType" value="0"/>
         <property key="labeling/placeDirectionSymbol" value="0"/>
-        <property key="labeling/placement" value="0"/>
+        <property key="labeling/placement" value="1"/>
         <property key="labeling/placementFlags" value="10"/>
         <property key="labeling/plussign" value="false"/>
         <property key="labeling/predefinedPositionOrder" value="TR,TL,BR,BL,R,L,TSR,BSR"/>
         <property key="labeling/preserveRotation" value="true"/>
         <property key="labeling/previewBkgrdColor" value="#ffffff"/>
         <property key="labeling/priority" value="5"/>
-        <property key="labeling/quadOffset" value="4"/>
+        <property key="labeling/quadOffset" value="1"/>
         <property key="labeling/repeatDistance" value="0"/>
         <property key="labeling/repeatDistanceMapUnitScale" value="0,0,0,0,0,0"/>
         <property key="labeling/repeatDistanceUnit" value="1"/>
@@ -8403,7 +8403,7 @@ def my_form_open(dialog, layer, feature):
         <property key="labeling/upsidedownLabels" value="0"/>
         <property key="labeling/wrapChar" value=""/>
         <property key="labeling/xOffset" value="0"/>
-        <property key="labeling/yOffset" value="0"/>
+        <property key="labeling/yOffset" value="-100"/>
         <property key="labeling/zIndex" value="0"/>
         <property key="variableNames" value="_fields_"/>
         <property key="variableValues" value=""/>
@@ -11055,7 +11055,7 @@ def my_form_open(dialog, layer, feature):
         </spatialrefsys>
       </srs>
       <provider encoding="System">spatialite</provider>
-      <previewExpression></previewExpression>
+      <previewExpression>COALESCE( "station_namen", '&lt;NULL>' )</previewExpression>
       <vectorjoins/>
       <layerDependencies/>
       <expressionfields/>
@@ -11410,7 +11410,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>552229.00000001094304025</ymax>
       </extent>
       <id>knooppuntenscenarios20170225205921740</id>
-      <datasource>dbname='./kpo_datasysteem.sqlite' table="knooppuntenscenarios" (geom) sql="scenario_naam" = 'WLO 2040 Hoog' AND "tod_beleidsniveau" = 100</datasource>
+      <datasource>dbname='./kpo_datasysteem.sqlite' table="knooppuntenscenarios" (geom) sql=</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -13034,7 +13034,7 @@ def my_form_open(dialog, layer, feature):
     </maplayer>
     <maplayer minimumScale="0" maximumScale="1e+08" geometry="No geometry" type="vector" hasScaleBasedVisibilityFlag="0">
       <id>overzicht_woonscenarios20170225210013677</id>
-      <datasource>dbname='./kpo_datasysteem.sqlite' table="overzicht_woonscenarios" sql="scenario_naam" = 'Huidige situatie'</datasource>
+      <datasource>dbname='./kpo_datasysteem.sqlite' table="overzicht_woonscenarios" sql=</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -14242,7 +14242,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>577521.57000160100869834</ymax>
       </extent>
       <id>woonscenarios20170225205926430</id>
-      <datasource>dbname='./kpo_datasysteem.sqlite' table="woonscenarios" (geom) sql="scenario_naam" = 'WLO 2040 Hoog'</datasource>
+      <datasource>dbname='./kpo_datasysteem.sqlite' table="woonscenarios" (geom) sql="scenario_naam" = 'Huidige situatie'</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -14305,20 +14305,20 @@ def my_form_open(dialog, layer, feature):
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>
       </edittypes>
-      <renderer-v2 attr="nieuwe_huishoudens" forceraster="0" symbollevels="0" type="graduatedSymbol" graduatedMethod="GraduatedColor" enableorderby="0">
+      <renderer-v2 attr="huishoudens" forceraster="0" symbollevels="0" type="graduatedSymbol" graduatedMethod="GraduatedColor" enableorderby="0">
         <ranges>
-          <range render="true" symbol="0" lower="-1328.000000000000000" upper="-500.000000000000000" label=" -1328 - -500 "/>
-          <range render="true" symbol="1" lower="-500.000000000000000" upper="-100.000000000000000" label=" -500 - -100 "/>
-          <range render="true" symbol="2" lower="-100.000000000000000" upper="0.000000000000000" label=" -100 - 0 "/>
-          <range render="true" symbol="3" lower="0.000000000000000" upper="100.000000000000000" label=" 0 - 100 "/>
-          <range render="true" symbol="4" lower="100.000000000000000" upper="500.000000000000000" label=" 100 - 500 "/>
-          <range render="true" symbol="5" lower="500.000000000000000" upper="3510.000000000000000" label=" 500 - 3510 "/>
+          <range render="true" symbol="0" lower="0.000000000000000" upper="1000.000000000000000" label=" 0 - 1000 "/>
+          <range render="true" symbol="1" lower="1000.000000000000000" upper="2000.000000000000000" label=" 1000 - 2000 "/>
+          <range render="true" symbol="2" lower="2000.000000000000000" upper="3000.000000000000000" label=" 2000 - 3000 "/>
+          <range render="true" symbol="3" lower="3000.000000000000000" upper="4000.000000000000000" label=" 3000 - 4000 "/>
+          <range render="true" symbol="4" lower="4000.000000000000000" upper="5000.000000000000000" label=" 4000 - 5000 "/>
+          <range render="true" symbol="5" lower="5000.000000000000000" upper="8000.000000000000000" label=" 5000 - 8000 "/>
         </ranges>
         <symbols>
           <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="212,69,83,255"/>
+              <prop k="color" v="47,132,53,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -14333,7 +14333,7 @@ def my_form_open(dialog, layer, feature):
           <symbol alpha="1" clip_to_extent="1" type="fill" name="1">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="224,141,144,255"/>
+              <prop k="color" v="123,180,125,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -14348,7 +14348,7 @@ def my_form_open(dialog, layer, feature):
           <symbol alpha="1" clip_to_extent="1" type="fill" name="2">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="235,204,204,255"/>
+              <prop k="color" v="201,217,198,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -14363,7 +14363,7 @@ def my_form_open(dialog, layer, feature):
           <symbol alpha="1" clip_to_extent="1" type="fill" name="3">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="201,217,198,255"/>
+              <prop k="color" v="235,204,204,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -14378,7 +14378,7 @@ def my_form_open(dialog, layer, feature):
           <symbol alpha="1" clip_to_extent="1" type="fill" name="4">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="123,180,125,255"/>
+              <prop k="color" v="224,141,144,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -14393,7 +14393,7 @@ def my_form_open(dialog, layer, feature):
           <symbol alpha="1" clip_to_extent="1" type="fill" name="5">
             <layer pass="0" class="SimpleFill" locked="0">
               <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-              <prop k="color" v="47,132,53,255"/>
+              <prop k="color" v="212,69,83,255"/>
               <prop k="joinstyle" v="bevel"/>
               <prop k="offset" v="0,0"/>
               <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -14429,7 +14429,7 @@ def my_form_open(dialog, layer, feature):
           <prop k="discrete" v="0"/>
           <prop k="stops" v="0.25;228,160,160,255:0.5;241,234,234,255:0.75;143,192,144,255"/>
         </colorramp>
-        <invertedcolorramp value="0"/>
+        <invertedcolorramp value="1"/>
         <mode name="equal"/>
         <rotation/>
         <sizescale scalemethod="diameter"/>
@@ -14583,8 +14583,7 @@ def my_form_open(dialog, layer, feature):
 Code: [% "code" %]
 
 Huishoudens: [% "huishoudens" %]
-Nieuwe huishoudens: [% "nieuwe_huishoudens" %]
-% verandering: [% round(  "procentuele_verandering"*100 ,0)%]
+Dichtheid: [% round("dichtheid",0) %]
 
 Station: [% "dichtstbijzijnde_station" %]
 Op loopafstand? [% if("op_loopafstand"='t','Ja','Nej') %]

@@ -181,17 +181,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>WLO Laag 2040</string>
+               <string>WLO 2040 Laag</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>WLO Hoog 2040</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Primos</string>
+               <string>WLO 2040 Hoog</string>
               </property>
              </item>
             </widget>
@@ -200,6 +195,9 @@ p, li { white-space: pre-wrap; }
             <widget class="QCheckBox" name="scenarioShowCheck">
              <property name="text">
               <string>Scenario</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -219,7 +217,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.Helvetica Neue DeskInterface'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxxx totaal huishuiden&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxxx totaal huishouden&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxx op loopafstand van knooppunten&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxx op fietsafstand van knooppunten&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxx buiten invloedsgebied van knooppunten&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -260,6 +258,9 @@ p, li { white-space: pre-wrap; }
              <property name="text">
               <string>Isochronen</string>
              </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
             </widget>
            </item>
            <item row="2" column="1">
@@ -294,27 +295,37 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="knooppuntenAttributeCombo">
              <item>
               <property name="text">
-               <string>in- en uitstappers</string>
+               <string>Passanten</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>fietsparkeerplaatsen</string>
+               <string>In- en uitstappers trein</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>capaciteit van de perrons</string>
+               <string>Overstappers</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>capaciteit van stijgpunten</string>
+               <string>In- en uitstappers BTM</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>capaciteit van loopstromen</string>
+               <string>Bezoekers</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Fiets bezetting %</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>P+R bezetting %</string>
               </property>
              </item>
             </widget>
@@ -404,13 +415,6 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="1" column="1">
-            <widget class="QCheckBox" name="intensityShowCheck">
-             <property name="text">
-              <string>Dichtheid</string>
-             </property>
-            </widget>
-           </item>
            <item row="2" column="0" colspan="2">
             <widget class="QLabel" name="intensityValueLabel">
              <property name="text">
@@ -484,6 +488,11 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
+               <string>Huishouden</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>Intensiteit (werknemer, studenten)</string>
               </property>
              </item>
@@ -499,11 +508,18 @@ p, li { white-space: pre-wrap; }
              </item>
             </widget>
            </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="intensityShowCheck">
+             <property name="text">
+              <string>Tonen</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="locationsBox">
+         <widget class="QGroupBox" name="plansBox">
           <property name="title">
            <string>Ontwikkellocaties</string>
           </property>
@@ -521,7 +537,7 @@ p, li { white-space: pre-wrap; }
             <number>5</number>
            </property>
            <item row="0" column="0">
-            <widget class="QComboBox" name="locationSelectCombo">
+            <widget class="QComboBox" name="planSelectCombo">
              <item>
               <property name="text">
                <string>RAP</string>
@@ -545,7 +561,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="1" column="0" colspan="2">
-            <widget class="QTextEdit" name="locationSummaryText">
+            <widget class="QTextEdit" name="planSummaryText">
              <property name="frameShape">
               <enum>QFrame::NoFrame</enum>
              </property>
@@ -567,7 +583,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="2" column="0" colspan="2">
-            <widget class="QTableWidget" name="locationAttributeTable">
+            <widget class="QTableWidget" name="planAttributeTable">
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>100</number>
              </attribute>
@@ -592,7 +608,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QCheckBox" name="locationShowCheck">
+            <widget class="QCheckBox" name="planShowCheck">
              <property name="text">
               <string>Plan</string>
              </property>
@@ -642,27 +658,37 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="overbelastAttributeCombo">
              <item>
               <property name="text">
-               <string>in- en uitstappers</string>
+               <string>Passanten</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>fietsenstallingen</string>
+               <string>In- en uitstappers trein</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>perrons</string>
+               <string>Overstappers</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>stijgpunten</string>
+               <string>In- en uitstappers BTM</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>loopstromen</string>
+               <string>Bezoekers</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Fiets bezetting %</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>P+R bezetting %</string>
               </property>
              </item>
             </widget>
@@ -670,7 +696,10 @@ p, li { white-space: pre-wrap; }
            <item row="0" column="1">
             <widget class="QCheckBox" name="overbelastShowCheck">
              <property name="text">
-              <string>Stations</string>
+              <string>Treinstations</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -713,7 +742,7 @@ p, li { white-space: pre-wrap; }
             <number>5</number>
            </property>
            <item row="0" column="0">
-            <widget class="QComboBox" name="importantSelectCombo">
+            <widget class="QComboBox" name="locationSelectCombo">
              <item>
               <property name="text">
                <string>Overlap herkomst</string>
@@ -726,25 +755,25 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Belangrijke locaties</string>
+               <string>Belangrijke Locaties</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Voorzieningen</string>
+               <string>Regionale Voorzieningen</string>
               </property>
              </item>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QCheckBox" name="importantShowCheck">
+            <widget class="QCheckBox" name="locationShowCheck">
              <property name="text">
-              <string>Locations</string>
+              <string>Tonen</string>
              </property>
             </widget>
            </item>
            <item row="1" column="0" colspan="2">
-            <widget class="QTableWidget" name="importantAttributeTable">
+            <widget class="QTableWidget" name="locationAttributeTable">
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>100</number>
              </attribute>
@@ -864,7 +893,7 @@ p, li { white-space: pre-wrap; }
            <item>
             <widget class="QCheckBox" name="ptalShowCheck">
              <property name="text">
-              <string>PTAL</string>
+              <string>Tonen</string>
              </property>
             </widget>
            </item>
@@ -948,17 +977,12 @@ p, li { white-space: pre-wrap; }
                <string>Bus haltes</string>
               </property>
              </item>
-             <item>
-              <property name="text">
-               <string>Ferry terminals</string>
-              </property>
-             </item>
             </widget>
            </item>
            <item row="1" column="1">
             <widget class="QCheckBox" name="stopFrequencyCheck">
              <property name="text">
-              <string>Haltes</string>
+              <string>Tonen</string>
              </property>
             </widget>
            </item>

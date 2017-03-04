@@ -199,7 +199,7 @@ class KPOpilot:
 
         # remove this statement if dockwidget is to remain
         # for reuse if plugin is reopened
-        # Commented next statement since it causes QGIS crashe
+        # Commented next statement since it causes QGIS crash
         # when closing the docked window:
         # self.dockwidget = None
 
