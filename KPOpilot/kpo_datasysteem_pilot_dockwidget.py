@@ -43,6 +43,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     knooppuntShow = pyqtSignal(bool)
     knooppuntSelected = pyqtSignal(str)
     # verstedelijking
+    onderbenutShow = pyqtSignal(bool)
     intensityTypeChanged = pyqtSignal(str)
     intensityShow = pyqtSignal(bool)
     intensityLevelChanged = pyqtSignal(int)
@@ -93,13 +94,14 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.knooppuntenShowCheck.setChecked(True)
 
         # Verstedelijking
+        self.locatiesShowCheck.setChecked(True)
         self.intensitySelectCombo.setCurrentIndex(0)
         self.intensityShowCheck.setChecked(False)
         self.intensityValueSlider.setValue(7)
         self.accessibilityShowCheck.setChecked(False)
-        self.accessibilityValueSlider.setValue(1)
+        self.accessibilityValueSlider.setValue(0)
         self.planSelectCombo.setCurrentIndex(0)
-        self.planShowCheck.setChecked(False)
+        self.planShowCheck.setChecked(True)
 
         # Verbindingen
         self.overbelastAttributeCombo.setCurrentIndex(0)
@@ -129,6 +131,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.knooppuntenShowCheck.stateChanged.connect(self.__showKnooppunt__)
         self.knooppuntenSummaryTable.itemClicked.connect(self.__setKnooppunt__)
         # Verstedelijking
+        self.locatiesShowCheck.stateChanged.connect(self.__showOnderbenutLocaties__)
         self.intensitySelectCombo.currentIndexChanged.connect(self.__setIntensity__)
         self.intensityShowCheck.stateChanged.connect(self.__showIntensity__)
         self.intensityValueSlider.valueChanged.connect(self.__updateIntensityLevel__)
@@ -157,6 +160,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # some globals
         self.current_tab = 0
+        self.locatiesShowCheck.hide()
 
     #####
     # Main
@@ -269,6 +273,12 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     #####
     # Verstedelijking
     # Methods for opportunities
+    def __showOnderbenutLocaties__(self, state):
+        self.onderbenutShow.emit(state)
+
+    def isLocatiesVisible(self):
+        return self.locatiesShowCheck.isChecked()
+
     def __showIntensity__(self, state):
         self.intensityShow.emit(state)
 
@@ -287,10 +297,10 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return value
 
     def __updateIntensityLevel__(self, value):
-        self.todLevelChanged.emit(value)
+        self.intensityLevelChanged.emit(value)
 
     def updateIntensityLabel(self, intensity_label):
-        self.intesityValueLabel.setText('%d%%' % intensity_label)
+        self.intensityValueLabel.setText('%s' % intensity_label)
 
     def __showAccessibility__(self, state):
         self.accessibilityShow.emit(state)
@@ -305,8 +315,8 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def __updateAccessibilityLevel__(self, value):
         self.accessibilityLevelChanged.emit(value)
 
-    def updateAccessibilityLabel(self, intensity_label):
-        self.accessibilityValueLabel.setText('%d%%' % intensity_label)
+    def updateAccessibilityLabel(self, ptal_label):
+        self.accessibilityValueLabel.setText('%s' % ptal_label)
 
     # Methods for plans
     def __showPlan__(self, state):

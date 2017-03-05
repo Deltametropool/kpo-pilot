@@ -53,11 +53,12 @@ class KPOExplorer:
         self.dlg.knooppuntShow.connect(self.showKnooppunten)
         self.dlg.knooppuntSelected.connect(self.zoomToKnooppunt)
         # verstedelijking
-        self.dlg.intensityTypeChanged.connect(self.setIntensityType)
+        self.dlg.onderbenutShow.connect(self.showOnderbenutLocaties)
+        self.dlg.intensityTypeChanged.connect(self.setIntensityLevel)
         self.dlg.intensityShow.connect(self.showIntensity)
         self.dlg.intensityLevelChanged.connect(self.setIntensityLevel)
-        self.dlg.accessibilityShow.connect(self.showAccessibility)
-        self.dlg.accessibilityLevelChanged.connect(self.setAccessibilityLevel)
+        self.dlg.accessibilityShow.connect(self.showPTAL)
+        self.dlg.accessibilityLevelChanged.connect(self.setPTALLevel)
         self.dlg.planTypeChanged.connect(self.setPlanType)
         self.dlg.planShow.connect(self.showPlan)
         self.dlg.planSelected.connect(self.zoomToPlan)
@@ -72,12 +73,77 @@ class KPOExplorer:
         self.dlg.isochroneWalkShow.connect(self.showWalkIsochrones)
         self.dlg.isochroneBikeShow.connect(self.showBikeIsochrones)
         self.dlg.isochroneOVShow.connect(self.showOVIsochrones)
-        self.dlg.ptalChanged.connect(self.setPTAL)
-        self.dlg.ptalShow.connect(self.showPTAL)
+        self.dlg.ptalChanged.connect(self.setAccessibility)
+        self.dlg.ptalShow.connect(self.showAccessibility)
         self.dlg.frequencyChanged.connect(self.setStopFrequency)
         self.dlg.stopsChanged.connect(self.setStopTypes)
         self.dlg.stopsShow.connect(self.showStopFrequency)
         self.dlg.stopsSelected.connect(self.zoomToStop)
+
+        # constants
+        self.onderbenutLabels = {
+            'ptal': ['Minimaal PTAL: 1a - Very poor (0.01 tot 2.5)',
+                              'Minimaal PTAL: 1b - Very poor (2.5 tot 5)',
+                              'Minimaal PTAL: 2 - Poor (5 tot 10)',
+                              'Minimaal PTAL: 3 - Moderate (10 tot 15)',
+                              'Minimaal PTAL: 4 - Good (15 tot 20)',
+                              'Minimaal PTAL: 5 - Very Good (20 tot 25)',
+                              'Minimaal PTAL: 6a - Excellent (25 tot 40)',
+                              'Minimaal PTAL: 6b - Excellent (40 of meer)'],
+            'inwoners': ['Maximum: 25 inwoners',
+                         'Maximum: 50 inwoners',
+                         'Maximum: 100 inwoners',
+                         'Maximum: 150 inwoners',
+                         'Maximum: 200 inwoners',
+                         'Maximum: 250 inwoners',
+                         'Maximum: 250 of meer inwoners'],
+            'huishoudens': ['Maximum: 10 huishoudens',
+                            'Maximum: 20 huishoudens',
+                            'Maximum: 40 huishoudens',
+                            'Maximum: 60 huishoudens',
+                            'Maximum: 80 huishoudens',
+                            'Maximum: 100 huishoudens',
+                            'Maximum: 100 of meer huishoudens'],
+            'intensiteit': ['Maximum: 10 werknemers/studenten',
+                            'Maximum: 25 werknemers/studenten',
+                            'Maximum: 50 werknemers/studenten',
+                            'Maximum: 100 werknemers/studenten',
+                            'Maximum: 200 werknemers/studenten',
+                            'Maximum: 300 werknemers/studenten',
+                            'Maximum: 300 of meer werknemers/studenten'],
+            'fysieke_dichtheid': ['Maximum: 0.1 FSI',
+                                  'Maximum: 0.4 FSI',
+                                  'Maximum: 0.7 FSI',
+                                  'Maximum: 1.0 FSI',
+                                  'Maximum: 1.5 FSI',
+                                  'Maximum: 2.0 FSI',
+                                  'Maximum: 2.0 of meer FSI'],
+            'woz_waarde': ['Maximum: 150k WOZ',
+                           'Maximum: 200k WOZ',
+                           'Maximum: 300k WOZ',
+                           'Maximum: 500k WOZ',
+                           'Maximum: 750k WOZ',
+                           'Maximum: 1000k WOZ',
+                           'Maximum: 1000k of meer WOZ']
+        }
+        self.onderbenutLevels = {
+            'ptal': ['(\'1a\', \'1b\', \'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')',
+                              '(\'1b\', \'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')',
+                              '(\'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')',
+                              '(\'3\', \'4\', \'5\', \'6a\', \'6b\')',
+                              '(\'4\', \'5\', \'6a\', \'6b\')',
+                              '(\'5\', \'6a\', \'6b\')',
+                              '(\'6a\', \'6b\')',
+                              '(\'6b\')'],
+            'inwoners': [25, 50, 100, 150, 200, 250],
+            'huishoudens': [10, 20, 40, 60, 80, 100],
+            'intensiteit': [10, 25, 50, 100, 200, 300],
+            'fysieke_dichtheid': [0.1, 0.4, 0.7, 1.0, 1.5, 2.0],
+            'woz_waarde': [150, 200, 300, 500, 750, 1000]
+        }
+        # globals
+        self.intensity_level = '"inwoners" < 250'
+        self.ptal_level = '"ov_bereikbaarheidsniveau" in (\'1a\', \'1b\', \'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')'
 
     ###
     # General
@@ -262,34 +328,145 @@ class KPOExplorer:
     ###
     # Verstedelijking
     def loadVerstedelijkingLayers(self):
-        pass
+        self.showOnderbenutLocaties(self.dlg.isLocatiesVisible())
+        # Intensity
+        self.setIntensityLevel()
+        self.showIntensity(self.dlg.isIntensityVisible())
+        # Accessibility
+        self.setPTALLevel()
+        self.showPTAL(self.dlg.isAccessibilityVisible())
+        # Plans
+        self.setPlanType()
+        self.showPlan(self.dlg.isPlanVisible())
+
+    def showOnderbenutLocaties(self, onoff):
+        self.setLayerVisible('Onderbenut bereikbare lokaties', False)
+        if onoff:
+            if not self.dlg.isIntensityVisible() and not self.dlg.isAccessibilityVisible():
+                self.setLayerVisible('Onderbenut bereikbare lokaties', onoff)
+                self.setCurrentLayer('Onderbenut bereikbare lokaties')
 
     # Intensity methods
-    def setIntensityType(self):
-        pass
-
-    def showIntensity(self):
-        pass
+    def showIntensity(self, onoff):
+        self.setLayerVisible('Ruimtelijke kenmerken', onoff)
+        self.setLayerExpanded('Ruimtelijke kenmerken', onoff)
+        self.showOnderbenutLocaties(not onoff)
+        if onoff:
+            self.setCurrentLayer('Ruimtelijke kenmerken')
 
     def setIntensityLevel(self):
-        pass
+        intensity_level = self.dlg.getIntensityLevel()
+        intensity_type = self.dlg.getIntensityType()
+        label = ''
+        expression = ''
+        style = ''
+        # get relevant level values
+        if intensity_type == 'Inwoners':
+            label = self.onderbenutLabels['inwoners'][intensity_level]
+            if intensity_level < 6:
+                expression = '"inwoners" < %s' % self.onderbenutLevels['inwoners'][intensity_level]
+            style = 'verstedelijking_inwoners'
+        elif intensity_type == 'Huishouden':
+            label = self.onderbenutLabels['huishoudens'][intensity_level]
+            if intensity_level < 6:
+                expression = '"huishoudens" < %s' % self.onderbenutLevels['huishoudens'][intensity_level]
+            style = 'verstedelijking_huishoudens'
+        elif intensity_type == 'Intensiteit (werknemer, studenten)':
+            label = self.onderbenutLabels['intensiteit'][intensity_level]
+            if intensity_level < 6:
+                expression = '"intensiteit" < %s' % self.onderbenutLevels['intensiteit'][intensity_level]
+            style = 'verstedelijking_intensiteit'
+        elif intensity_type == 'Fysieke dichtheid (FSI)':
+            label = self.onderbenutLabels['fysieke_dichtheid'][intensity_level]
+            if intensity_level < 6:
+                expression = '"fysieke_dichtheid" < %s' % self.onderbenutLevels['fysieke_dichtheid'][intensity_level]
+            style = 'verstedelijking_dichtheid'
+        elif intensity_type == 'WOZ waarde':
+            label = self.onderbenutLabels['woz_waarde'][intensity_level]
+            if intensity_level < 6:
+                expression = '"woz_waarde" < %s' % self.onderbenutLevels['woz_waarde'][intensity_level]
+            style = 'verstedelijking_woz'
+        # update dialog label
+        self.dlg.updateIntensityLabel(label)
+        # update layers
+        self.setFilterExpression('Ruimtelijke kenmerken', expression)
+        self.setLayerStyle('Ruimtelijke kenmerken', style)
+        self.intensity_level = expression
+        self.identifySpatialPotential()
 
     # Accessibility methods
-    def showAccessibility(self):
-        pass
+    def showPTAL(self, onoff):
+        self.setLayerVisible('PTAL', onoff)
+        self.setLayerExpanded('PTAL', onoff)
+        self.showOnderbenutLocaties(not onoff)
+        if onoff:
+            self.setCurrentLayer('PTAL')
 
-    def setAccessibilityLevel(self):
-        pass
+    def setPTALLevel(self):
+        ptal_level = self.dlg.getAccessibilityLevel()
+        # get relevant level values
+        label = self.onderbenutLabels['ptal'][ptal_level]
+        expression = '"ov_bereikbaarheidsniveau" in %s' % self.onderbenutLevels['ptal'][ptal_level]
+        # update dialog label
+        self.dlg.updateAccessibilityLabel(label)
+        # update layers
+        self.setFilterExpression('PTAL', expression)
+        self.ptal_level = expression
+        self.identifySpatialPotential()
+
+    def identifySpatialPotential(self):
+        expression  = ''
+        if self.ptal_level and self.intensity_level:
+            expression = '%s AND %s' % (self.ptal_level, self.intensity_level)
+        elif self.ptal_level:
+            expression = self.ptal_level
+        elif self.intensity_level:
+            expression = self.intensity_level
+        self.setFilterExpression('Onderbenut bereikbare lokaties', expression)
 
     # Plan location methods
+    def showPlan(self, onoff):
+        self.setLayerVisible('Ontwikkellocaties', onoff)
+        self.setLayerExpanded('Ontwikkellocaties', onoff)
+        if onoff:
+            self.setCurrentLayer('Ontwikkellocaties')
+
     def setPlanType(self):
+        plan_type = self.dlg.getPlanType()
+        # update map
+        expression = '"plan_naam" = \'%s\'' % plan_type
+        style = ''
+        headers = ''
+        fields = ''
+        if plan_type in ('RAP 2020', 'RAP minder Plancapaciteit'):
+            style = 'verstedelijking_RAP'
+            fields = ['gemeente', 'net_nieuwe_woningen', 'gemiddelde_bereikbaarheidsindex']
+            headers = ['Gemeente', 'Woningen', 'Bereikbaarheid']
+        elif plan_type in ('Plancapaciteit', 'Leegstanden'):
+            style = 'verstedelijking_plancapaciteit'
+            fields = ['plaatsnaam', 'net_nieuwe_woningen', 'gemiddelde_bereikbaarheidsindex']
+            headers = ['Plaatsnaam', 'Woningen', 'Bereikbaarheid']
+        self.setFilterExpression('Ontwikkellocaties', expression)
+        self.setLayerStyle('Ontwikkellocaties', style)
+        self.setExtentToLayer('Ontwikkellocaties')
+        # update table
+        self.setCurrentLayer('Ontwikkellocaties')
+        feature_values = self.getFeatureValues('Ontwikkellocaties', fields)
+        values = []
+        for feat in feature_values.itervalues():
+            values.append(feat)
+        self.dlg.updatePlanTable(headers, values)
+
+    def calculatePlanSummary(self):
         pass
 
-    def showPlan(self):
-        pass
-
-    def zoomToPlan(self):
-        pass
+    def zoomToPlan(self, plan_name):
+        plan_type = self.dlg.getPlanType()
+        if plan_type in ('RAP 2020', 'RAP minder Plancapaciteit'):
+            self.setFeatureSelection('Ontwikkellocaties', 'gemeente', plan_name)
+        elif plan_type in ('Plancapaciteit', 'Leegstanden'):
+            self.setFeatureSelection('Ontwikkellocaties', 'plaatsnaam', plan_name)
+        self.setExtentToSelection('Ontwikkellocaties')
 
     ###
     # Verbindingen
@@ -300,7 +477,6 @@ class KPOExplorer:
         # locations
         self.setLocationType()
         self.showLocation(self.dlg.isLocationVisible())
-
 
     # Station methods
     def showStation(self, onoff):
@@ -474,8 +650,8 @@ class KPOExplorer:
                 self.setFilterExpression('Tramlijnen', '"modaliteit" = \'tram\' AND %s' % expression)
                 self.setFilterExpression('Metrolijnen', '"modaliteit" = \'metro\' AND %s' % expression)
                 # show BTM lines layers
-                #self.setLayerVisible('OV haltes', True)
-                #self.setLayerExpanded('OV haltes', True)
+                # self.setLayerVisible('OV haltes', True)
+                # self.setLayerExpanded('OV haltes', True)
                 self.setLayerVisible('Buslijnen', True)
                 self.setLayerExpanded('Buslijnen', True)
                 self.setLayerVisible('Tramlijnen', True)
@@ -503,7 +679,7 @@ class KPOExplorer:
         self.showBikeIsochrones(self.dlg.isBikeVisible())
         self.showOVIsochrones(self.dlg.isOvVisible())
         # PTAL
-        self.showPTAL(self.dlg.isPTALVisible())
+        self.showAccessibility(self.dlg.isPTALVisible())
         # frequency
         self.setStopFrequency()
         self.showStopFrequency(self.dlg.isStopsVisible())
@@ -526,11 +702,11 @@ class KPOExplorer:
             self.setCurrentLayer('Isochronen bus')
 
     # PTAL methods
-    def setPTAL(self):
+    def setAccessibility(self):
         if self.dlg.isPTALVisible():
             self.showPTAL(True)
 
-    def showPTAL(self, onoff):
+    def showAccessibility(self, onoff):
         selection = self.dlg.getPTAL()
         if onoff:
             self.setLayerVisible(selection, True)
@@ -551,7 +727,7 @@ class KPOExplorer:
     # Stop Frequency methods
     def setStopFrequency(self):
         time_period = self.dlg.getTimePeriod()
-        self.setLayerStyle('Trein frequentie','mobiliteit_trein_%s' % time_period.lower())
+        self.setLayerStyle('Trein frequentie', 'mobiliteit_trein_%s' % time_period.lower())
         self.setLayerStyle('Metro frequentie', 'mobiliteit_metro_%s' % time_period.lower())
         self.setLayerStyle('Tram frequentie', 'mobiliteit_tram_%s' % time_period.lower())
         self.setLayerStyle('Bus frequentie', 'mobiliteit_bus_%s' % time_period.lower())
@@ -564,7 +740,7 @@ class KPOExplorer:
             self.hideStopFrequency()
         self.updateStopSummaryTable()
 
-    def showStopFrequency(self,onoff):
+    def showStopFrequency(self, onoff):
         current_type = self.dlg.getStops()
         if current_type == 'Alle OV haltes':
             self.setLayerVisible('Trein frequentie', onoff)
@@ -609,8 +785,6 @@ class KPOExplorer:
         time_period = self.dlg.getTimePeriod().lower()
         current_type = self.dlg.getStops()
         stops_layer = ''
-        fields = []
-        headers = []
         # prepare table
         if current_type == 'Treinstations':
             fields = ['halte_naam',
@@ -661,19 +835,19 @@ class KPOExplorer:
             # select stop
             self.setFeatureSelection('Trein frequentie', 'halte_naam', stop_name)
             # zoom to stop
-            self.setExtentToSelection('Trein frequentie')
+            self.setExtentToSelection('Trein frequentie', 15000.0)
             self.setCurrentLayer('Trein frequentie')
         elif current_type == 'Metrostations':
             self.setFeatureSelection('Metro frequentie', 'halte_naam', stop_name)
-            self.setExtentToSelection('Metro frequentie')
+            self.setExtentToSelection('Metro frequentie', 15000.0)
             self.setCurrentLayer('Metro frequentie')
         elif current_type == 'Tramhaltes':
             self.setFeatureSelection('Tram frequentie', 'halte_naam', stop_name)
-            self.setExtentToSelection('Tram frequentie')
+            self.setExtentToSelection('Tram frequentie', 15000.0)
             self.setCurrentLayer('Tram frequentie')
         elif current_type == 'Bushaltes':
             self.setFeatureSelection('Bus frequentie', 'halte_naam', stop_name)
-            self.setExtentToSelection('Bus frequentie')
+            self.setExtentToSelection('Bus frequentie', 15000.0)
             self.setCurrentLayer('Bus frequentie')
         else:
             # here must find first instance of stop
@@ -681,20 +855,20 @@ class KPOExplorer:
             if not is_found:
                 is_found = self.setFeatureSelection('Tram frequentie', 'halte_naam', stop_name)
             else:
-                self.setExtentToSelection('Bus frequentie')
+                self.setExtentToSelection('Bus frequentie', 15000.0)
                 self.setCurrentLayer('Bus frequentie')
             if not is_found:
                 is_found = self.setFeatureSelection('Metro frequentie', 'halte_naam', stop_name)
             else:
-                self.setExtentToSelection('Tram frequentie')
+                self.setExtentToSelection('Tram frequentie', 15000.0)
                 self.setCurrentLayer('Tram frequentie')
             if not is_found:
                 is_found = self.setFeatureSelection('Trein frequentie', 'halte_naam', stop_name)
                 if is_found:
-                    self.setExtentToSelection('Trein frequentie')
+                    self.setExtentToSelection('Trein frequentie', 15000.0)
                     self.setCurrentLayer('Trein frequentie')
             else:
-                self.setExtentToSelection('Metro frequentie')
+                self.setExtentToSelection('Metro frequentie', 15000.0)
                 self.setCurrentLayer('Metro frequentie')
 
     ####
@@ -754,9 +928,10 @@ class KPOExplorer:
         self.canvas.setExtent(layer.extent())
         self.canvas.refresh()
 
-    def setExtentToSelection(self, layer_name, zoom_level=15000.0):
+    def setExtentToSelection(self, layer_name, zoom_level=None):
         layer = self.data_layers[layer_name]
         if layer.selectedFeatures():
             self.canvas.zoomToSelected(layer)
-            self.canvas.zoomScale(zoom_level)
+            if zoom_level:
+                self.canvas.zoomScale(zoom_level)
             self.canvas.refresh()
