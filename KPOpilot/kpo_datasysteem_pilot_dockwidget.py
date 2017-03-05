@@ -261,8 +261,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.knooppuntSelected.emit(station_name)
 
     def isKnooppuntSelected(self):
-        return self.knooppuntenSummaryTable.isItemSelected()
-
+        row = self.knooppuntenSummaryTable.currentRow()
+        if row >= 0:
+            return True
+        else:
+            return False
     #####
     # Verstedelijking
     # Methods for opportunities
@@ -337,7 +340,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.planSelected.emit(location_name)
 
     def isPlanLocationSelected(self):
-        return self.planAttributeTable.isItemSelected()
+        row = self.planAttributeTable.currentRow()
+        if row >= 0:
+            return True
+        else:
+            return False
 
     #####
     # Verbindingen
@@ -365,7 +372,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.stationSelected.emit(station_name)
 
     def isStationSelected(self):
-        return self.overbelastAttributeTable.isItemSelected()
+        row = self.overbelastAttributeTable.currentRow()
+        if row >= 0:
+            return True
+        else:
+            return False
 
     # Methods for Locaties
     def __showLocations__(self, state):
@@ -391,7 +402,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.locationSelected.emit(location_name)
 
     def isLocationSelected(self):
-        return self.locationAttributeTable.isItemSelected()
+        row = self.locationAttributeTable.currentRow()
+        if row >= 0:
+            return True
+        else:
+            return False
 
     #####
     # Mobiliteit
@@ -459,7 +474,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.stopsSelected.emit(stop_name)
 
     def isStopSelected(self):
-        return self.stopSummaryTable.isItemSelected()
+        row = self.stopSummaryTable.currentRow()
+        if row >= 0:
+            return True
+        else:
+            return False
 
     #####
     # General functions

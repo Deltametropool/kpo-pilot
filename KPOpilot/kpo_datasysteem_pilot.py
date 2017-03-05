@@ -32,7 +32,7 @@ from kpo_dataexplorer import KPOExplorer
 import os.path
 
 # setup for remote debugging. Pycharm professional, only
-is_debug = False
+is_debug = True
 try:
     import pydevd
     has_pydevd = True
