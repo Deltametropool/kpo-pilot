@@ -142,7 +142,7 @@
     <property key="labeling/repeatDistanceUnit" value="1"/>
     <property key="labeling/reverseDirectionSymbol" value="false"/>
     <property key="labeling/rightDirectionSymbol" value=">"/>
-    <property key="labeling/scaleMax" value="20000"/>
+    <property key="labeling/scaleMax" value="61000"/>
     <property key="labeling/scaleMin" value="1"/>
     <property key="labeling/scaleVisibility" value="true"/>
     <property key="labeling/shadowBlendMode" value="6"/>
@@ -170,7 +170,7 @@
     <property key="labeling/shapeBorderWidth" value="0"/>
     <property key="labeling/shapeBorderWidthMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/shapeBorderWidthUnits" value="1"/>
-    <property key="labeling/shapeDraw" value="true"/>
+    <property key="labeling/shapeDraw" value="false"/>
     <property key="labeling/shapeFillColorA" value="255"/>
     <property key="labeling/shapeFillColorB" value="255"/>
     <property key="labeling/shapeFillColorG" value="255"/>
@@ -201,7 +201,7 @@
     <property key="labeling/textTransp" value="0"/>
     <property key="labeling/upsidedownLabels" value="0"/>
     <property key="labeling/wrapChar" value=""/>
-    <property key="labeling/xOffset" value="-0.1"/>
+    <property key="labeling/xOffset" value="0"/>
     <property key="labeling/yOffset" value="-100"/>
     <property key="labeling/zIndex" value="0"/>
     <property key="variableNames" value="_fields_"/>
