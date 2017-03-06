@@ -102,7 +102,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;fiets_plaatsen&quot;, 0, 8316, 2, 15, 1), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -127,7 +127,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;fiets_plaatsen&quot;, 0, 8316, 2, 15, 1), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -152,7 +152,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;fiets_plaatsen&quot;, 0, 8316, 2, 15, 1), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -177,7 +177,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;fiets_plaatsen&quot;, 0, 8316, 2, 15, 1), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -214,7 +214,7 @@
     <property key="labeling/distMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/drawLabels" value="true"/>
     <property key="labeling/enabled" value="true"/>
-    <property key="labeling/fieldName" value="station_naam"/>
+    <property key="labeling/fieldName" value="halte_naam"/>
     <property key="labeling/fitInPolygonOnly" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
     <property key="labeling/fontFamily" value=".Helvetica Neue DeskInterface"/>
@@ -365,7 +365,7 @@ P+R bezetting: [% "pr_bezetting" %] %&lt;br></displayfield>
     <selectedonly on=""/>
   </labelattributes>
   <SingleCategoryDiagramRenderer diagramType="Pie">
-    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
+    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
       <fontProperties description=".Helvetica Neue DeskInterface,13,-1,5,50,0,0,0,0,0" style=""/>
       <attribute field="" color="#000000" label=""/>
     </DiagramCategory>

@@ -237,8 +237,8 @@ class KPOExplorer:
         self.dlg.updateScenarioSummary(summary_values)
         # update knooppunten
         self.setKnooppuntenAttribute()
-        # if self.dlg.isKnooppuntVisible():
-        #    self.showKnooppunten(True)
+        if self.dlg.isKnooppuntVisible():
+            self.showKnooppunten(True)
 
     def showIsochrones(self, onoff):
         self.setFilterExpression('Loopafstand (800 m)', '"modaliteit"=\'walk\'')
@@ -304,11 +304,11 @@ class KPOExplorer:
             self.setLayerStyle(knoopunt_layer, '%s_%s' % (knoopunt_layer.lower(), field))
         # whenever there's a change at this level, update the values table
         if current_scenario == 'Huidige situatie':
-            fields = ['station_naam', field]
+            fields = ['halte_naam', field]
             headers = ['Station', header]
             self.setCurrentLayer('Knooppunten')
         else:
-            fields = ['station_naam', field, 'procentuele_verandering']
+            fields = ['halte_naam', field, 'procentuele_verandering']
             headers = ['Station', header, '% Verandering']
             self.setCurrentLayer('Knooppuntenscenarios')
         feature_values = self.getFeatureValues(knoopunt_layer, fields)
@@ -439,13 +439,17 @@ class KPOExplorer:
         style = ''
         headers = ''
         fields = ''
-        if plan_type in ('RAP 2020', 'RAP minder Plancapaciteit'):
+        if plan_type == 'RAP 2020':
             style = 'verstedelijking_RAP'
-            fields = ['gemeente', 'net_nieuwe_woningen']
+            fields = ['gemeente', 'geplande_woningen']
             headers = ['Gemeente', 'Woningen']
+        elif plan_type == 'RAP minder Plancapaciteit':
+            style = 'verstedelijking_RAP'
+            fields = ['gemeente', 'geplande_woningen', 'net_nieuwe_woningen']
+            headers = ['Gemeente', 'Woningen', 'Verschil']
         elif plan_type in ('Plancapaciteit', 'Leegstanden'):
             style = 'verstedelijking_plancapaciteit'
-            fields = ['plaatsnaam', 'net_nieuwe_woningen', 'gemiddelde_bereikbaarheidsindex']
+            fields = ['plaatsnaam', 'geplande_woningen', 'gemiddelde_bereikbaarheidsindex']
             headers = ['Plaatsnaam', 'Woningen', 'Bereikbaarheid']
         self.setFilterExpression('Ontwikkellocaties', expression)
         self.setLayerStyle('Ontwikkellocaties', style)
@@ -476,15 +480,14 @@ class KPOExplorer:
         # calculate summary
         houses_in = 0
         houses_out = 0
-        base_layer.startEditing()
         base_features = base_layer.getFeatures()
         if plan_type in ('RAP 2020', 'RAP minder Plancapaciteit'):
             # set plans that have gemeente in list to true
             for feature in base_features:
                 if feature.attribute('gemeente') in gemeente:
-                    base_layer.changeAttributeValue(feature.id(), 13, 't')
+                    houses_in += feature.attribute('geplande_woningen')
                 else:
-                    base_layer.changeAttributeValue(feature.id(), 13, 'f')
+                    houses_out += feature.attribute('geplande_woningen')
         elif plan_type in ('Plancapaciteit', 'Leegstanden'):
             # set plans that have cell id in list to true
             for feature in base_features:
@@ -492,15 +495,14 @@ class KPOExplorer:
                 if ids:
                     ids = ids.split(",")
                     if any(i in cell_ids for i in ids):
-                        base_layer.changeAttributeValue(feature.id(), 13, 't')
+                        houses_in += feature.attribute('geplande_woningen')
                     else:
-                        base_layer.changeAttributeValue(feature.id(), 13, 'f')
+                        houses_out += feature.attribute('geplande_woningen')
                 else:
-                    base_layer.changeAttributeValue(feature.id(), 13, 'f')
-        # save the changes
-        base_layer.commitChanges()
-        #
-
+                    houses_out += feature.attribute('geplande_woningen')
+        # update summary
+        total_houses = houses_in + houses_out
+        self.dlg.updatePlanSummary([total_houses, houses_in, houses_out])
 
     def zoomToPlan(self, plan_name):
         plan_type = self.dlg.getPlanType()
