@@ -158,7 +158,7 @@ class KPOExplorer:
                 maptips.setChecked(True)
             # activate pan
             self.iface.actionPan().trigger()
-            # populate the dictionary with all the payers for use throughout
+            # populate the dictionary with all the layers for use throughout
             self.data_layers = {}
             for layer in self.iface.legendInterface().layers():
                 self.data_layers[layer.name()] = layer
@@ -423,6 +423,7 @@ class KPOExplorer:
         elif self.intensity_level:
             expression = self.intensity_level
         self.setFilterExpression('Onderbenut bereikbare lokaties', expression)
+        self.calculateIntersections()
 
     # Plan location methods
     def showPlan(self, onoff):
@@ -440,8 +441,8 @@ class KPOExplorer:
         fields = ''
         if plan_type in ('RAP 2020', 'RAP minder Plancapaciteit'):
             style = 'verstedelijking_RAP'
-            fields = ['gemeente', 'net_nieuwe_woningen', 'gemiddelde_bereikbaarheidsindex']
-            headers = ['Gemeente', 'Woningen', 'Bereikbaarheid']
+            fields = ['gemeente', 'net_nieuwe_woningen']
+            headers = ['Gemeente', 'Woningen']
         elif plan_type in ('Plancapaciteit', 'Leegstanden'):
             style = 'verstedelijking_plancapaciteit'
             fields = ['plaatsnaam', 'net_nieuwe_woningen', 'gemiddelde_bereikbaarheidsindex']
@@ -456,9 +457,50 @@ class KPOExplorer:
         for feat in feature_values.itervalues():
             values.append(feat)
         self.dlg.updatePlanTable(headers, values)
+        #
+        self.calculateIntersections()
 
-    def calculatePlanSummary(self):
-        pass
+    def calculateIntersections(self):
+        # get all relevant cell attributes
+        cell_ids = []
+        gemeente = []
+        cell_attributes = self.getFeatureValues('Onderbenut bereikbare lokaties', ['cell_id','gemeente'])
+        for values in cell_attributes.itervalues():
+            cell_ids.append(values[0])
+            gemeente.append(values[1])
+        # make unique gemeente names
+        gemeente = list(set(gemeente))
+        # update intersection attribute
+        plan_type = self.dlg.getPlanType()
+        base_layer = self.data_layers['Ontwikkellocaties']
+        # calculate summary
+        houses_in = 0
+        houses_out = 0
+        base_layer.startEditing()
+        base_features = base_layer.getFeatures()
+        if plan_type in ('RAP 2020', 'RAP minder Plancapaciteit'):
+            # set plans that have gemeente in list to true
+            for feature in base_features:
+                if feature.attribute('gemeente') in gemeente:
+                    base_layer.changeAttributeValue(feature.id(), 13, 't')
+                else:
+                    base_layer.changeAttributeValue(feature.id(), 13, 'f')
+        elif plan_type in ('Plancapaciteit', 'Leegstanden'):
+            # set plans that have cell id in list to true
+            for feature in base_features:
+                ids = feature.attribute('cell_ids')
+                if ids:
+                    ids = ids.split(",")
+                    if any(i in cell_ids for i in ids):
+                        base_layer.changeAttributeValue(feature.id(), 13, 't')
+                    else:
+                        base_layer.changeAttributeValue(feature.id(), 13, 'f')
+                else:
+                    base_layer.changeAttributeValue(feature.id(), 13, 'f')
+        # save the changes
+        base_layer.commitChanges()
+        #
+
 
     def zoomToPlan(self, plan_name):
         plan_type = self.dlg.getPlanType()
