@@ -290,6 +290,16 @@ UPDATE datasysteem.ruimtelijke_kenmerken AS a
 	FROM (SELECT cell_id, SUM(fsi) fsi FROM temp_fysieke_dichtheid GROUP BY cell_id) AS b
 	WHERE a.cell_id = b.cell_id
 ;
+-- add the gemmente name where the cell's centroid is located
+UPDATE datasysteem.ruimtelijke_kenmerken AS a
+	SET gemeente = b.gemeente
+	FROM (SELECT cbs.c28992r100 AS cell_id, rap.gemeen_rap AS gemeente
+		FROM sources.vdm_vierkant_2014_pnh_lisa AS cbs,
+		sources.pnh_rap_en_plancapaciteit AS rap
+		WHERE ST_Intersects(ST_Centroid(cbs.geom), rap.geom)
+	) b
+	WHERE a.cell_id = b.cell_id
+;
 --
 CREATE INDEX ruimtelijke_kenmerken_geom_idx ON datasysteem.ruimtelijke_kenmerken USING GIST (geom);
 
@@ -328,12 +338,22 @@ INSERT INTO datasysteem.ontwikkellocaties(geom, plan_naam, plan_id, gemeente, pl
 -- Calculate dichtheid (per hectare = 10000m2)
 UPDATE datasysteem.ontwikkellocaties SET dichtheid = geplande_woningen/vlakte*10000;
 -- Calculate gemiddelde_bereikbaarheidsindex, maximale_bereikbaarheidsindex
+-- UPDATE datasysteem.ontwikkellocaties SET gemiddelde_bereikbaarheidsindex = NULL, maximale_bereikbaarheidsindex = NULL, cell_ids = NULL;
 UPDATE datasysteem.ontwikkellocaties dev SET
 	gemiddelde_bereikbaarheidsindex = acc.mean,
-	maximale_bereikbaarheidsindex = acc.max
-	FROM (SELECT loc.sid, max(spat.ov_bereikbaarheidsindex) AS max, avg(spat.ov_bereikbaarheidsindex) AS mean
-		FROM datasysteem.ontwikkellocaties loc,
-		(SELECT ST_Centroid(geom) AS geom, ov_bereikbaarheidsindex 
+	maximale_bereikbaarheidsindex = acc.max,
+	cell_ids = acc.ids
+	FROM (SELECT loc.sid, 
+			max(spat.ov_bereikbaarheidsindex) AS max, 
+			round(avg(spat.ov_bereikbaarheidsindex)::numeric,2) AS mean,
+			string_agg(spat.cell_id,',' ORDER BY spat.cell_id) ids
+		FROM (
+			SELECT * 
+			FROM datasysteem.ontwikkellocaties
+			WHERE plan_naam IN ('Plancapaciteit', 'Leegstanden')
+		) loc,
+		(
+			SELECT geom AS geom, cell_id, ov_bereikbaarheidsindex 
 			FROM datasysteem.ruimtelijke_kenmerken
 			WHERE ov_bereikbaarheidsindex > 0
 		) spat
@@ -349,7 +369,7 @@ CREATE INDEX ontwikkellocaties_gidx ON datasysteem.ontwikkellocaties USING GIST 
 -- OV routes
 -- DELETE FROM datasysteem.ov_routes;
 INSERT INTO datasysteem.ov_routes(geom, route_id, route_naam, modaliteit)
-	SELECT trips.geom, routes.route_id, min(trips.route_name), min(trips.trip_mode)
+	SELECT trips.geom, routes.route_id, trips.route_name, trips.trip_mode
 	FROM (
 		SELECT ST_MakeLine(links.geom) geom, links.trip_id, min(links.trip_mode) AS trip_mode, 
 			min(links.route_name) AS route_name, sum(links.duration_in_secs) AS trip_duration
@@ -362,7 +382,7 @@ INSERT INTO datasysteem.ov_routes(geom, route_id, route_naam, modaliteit)
 	) AS trips
 	JOIN networks.ov_trips as routes
 	USING(trip_id)
-	GROUP BY trips.geom, trips.trip_mode, routes.route_id, trips.route_name
+	GROUP BY trips.geom, routes.route_id, trips.route_name, trips.trip_mode
 ;
 -- update frequency
 UPDATE datasysteem.ov_routes AS route SET

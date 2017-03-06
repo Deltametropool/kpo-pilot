@@ -261,16 +261,16 @@ UPDATE networks.ov_stops stp SET trein = True
 ;
 UPDATE networks.ov_stops SET trein = TRUE WHERE location_type = 1;
 
--- update metro stops name
+-- update metro stops name (and a few tram stops as well)
 UPDATE networks.ov_stops SET
 	stop_name = stop_descr,
 	stop_descr = 'Amsterdam'
-	WHERE metro = TRUE and stop_name = 'Amsterdam'
+	WHERE (metro = TRUE or tram = TRUE) and stop_name = 'Amsterdam'
 ;
 UPDATE networks.ov_stops SET
 	stop_name = stop_descr,
 	stop_descr = 'Amstelveen'
-	WHERE metro = TRUE and stop_name = 'Amstelveen'
+	WHERE (metro = TRUE or tram = TRUE) and stop_name = 'Amstelveen'
 ;
 -- update train stations with VDM code from Maakplaats (for matching data)
 UPDATE networks.ov_stops AS stops SET
