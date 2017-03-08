@@ -435,22 +435,24 @@ class KPOExplorer:
     def setPlanType(self):
         plan_type = self.dlg.getPlanType()
         # update map
-        expression = '"plan_naam" = \'%s\'' % plan_type
         style = ''
         headers = ''
         fields = ''
         if plan_type == 'RAP 2020':
+            expression = '"plan_naam" = \'%s\'' % plan_type
             style = 'verstedelijking_RAP'
             fields = ['gemeente', 'geplande_woningen']
             headers = ['Gemeente', 'Woningen']
         elif plan_type == 'RAP minder Plancapaciteit':
+            expression = '"plan_naam" = \'%s\'' % plan_type
             style = 'verstedelijking_RAP'
             fields = ['gemeente', 'geplande_woningen', 'net_nieuwe_woningen']
             headers = ['Gemeente', 'Woningen', 'Verschil']
         elif plan_type in ('Plancapaciteit', 'Leegstanden'):
+            expression = '"plan_naam" = \'%s\' AND "plaatsnaam" IS NOT NULL' % plan_type
             style = 'verstedelijking_plancapaciteit'
             fields = ['plaatsnaam', 'geplande_woningen', 'gemiddelde_bereikbaarheidsindex']
-            headers = ['Plaatsnaam', 'Woningen', 'Bereikbaarheid']
+            headers = ['Plaatsnaam', 'Woningen', 'PTAL']
         self.setFilterExpression('Ontwikkellocaties', expression)
         self.setLayerStyle('Ontwikkellocaties', style)
         self.setExtentToLayer('Ontwikkellocaties')
@@ -508,9 +510,10 @@ class KPOExplorer:
         plan_type = self.dlg.getPlanType()
         if plan_type in ('RAP 2020', 'RAP minder Plancapaciteit'):
             self.setFeatureSelection('Ontwikkellocaties', 'gemeente', plan_name)
+            self.setExtentToSelection('Ontwikkellocaties')
         elif plan_type in ('Plancapaciteit', 'Leegstanden'):
             self.setFeatureSelection('Ontwikkellocaties', 'plaatsnaam', plan_name)
-        self.setExtentToSelection('Ontwikkellocaties')
+            self.setExtentToSelection('Ontwikkellocaties', 10000.0)
 
     ###
     # Verbindingen

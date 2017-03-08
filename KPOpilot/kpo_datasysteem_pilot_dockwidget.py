@@ -97,9 +97,9 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.locatiesShowCheck.setChecked(True)
         self.intensitySelectCombo.setCurrentIndex(0)
         self.intensityShowCheck.setChecked(False)
-        self.intensityValueSlider.setValue(7)
+        self.intensityValueSlider.setValue(3)
         self.accessibilityShowCheck.setChecked(False)
-        self.accessibilityValueSlider.setValue(0)
+        self.accessibilityValueSlider.setValue(3)
         self.planSelectCombo.setCurrentIndex(0)
         self.planShowCheck.setChecked(True)
 
