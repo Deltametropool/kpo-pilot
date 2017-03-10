@@ -1,5 +1,5 @@
 # kpo-pilot
-Plugin for the project Knooppunten Ontwikeling Datasysteem, developed in collaboration between the Vereiniging Deltametropool, the Provincie Noord Holland, the Ministerie van Infrastructuur en Millieu, and the College van Rijksadviseurs.
+Plugin for the project Knooppunten Ontwikeling Datasysteem, developed in collaboration between the Vereniging Deltametropool, the Provincie Noord Holland, the Ministerie van Infrastructuur en Milieu, and the College van Rijksadviseurs.
 
 The ‘KPO pilot’ plugin is an extension for QGIS, an open source GIS package available from: http://qgis.org/en/site/
 The recommended version of QGIS for installation is 2.14 LTR (Long Term Release).
