@@ -29,7 +29,7 @@
    <set>QDockWidget::AllDockWidgetFeatures</set>
   </property>
   <property name="windowTitle">
-   <string>Knooppunten Ontwikkeling - pilot</string>
+   <string>Knooppuntontwikkeling - pilot</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -61,7 +61,7 @@
       </property>
       <widget class="QWidget" name="introductionTab">
        <attribute name="title">
-        <string>Introduction</string>
+        <string>Beleidsvragen</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,8,1">
         <property name="leftMargin">
@@ -79,7 +79,7 @@
         <item>
          <widget class="QLabel" name="introductionLabel">
           <property name="text">
-           <string>Project Summary</string>
+           <string>Overzicht</string>
           </property>
          </widget>
         </item>
@@ -118,7 +118,8 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;3. “Hoe kunnen afvangstations worden ontwikkeld met als doel de druk op overbelaste stations te verminderen in het kader van de bereikbaarheid van belangrijke locaties?”&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Disclaimer: text about data and analysis limitations. this is just a demonstration of the possibilities. should not be used for real life decision making. etc.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Disclaimer:&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The data and analysis in this pilot project serve demonstration purposes of the potential use and benefits of such an integrated planning support framework. The data and maps should not be considered final or accurate, and should not be used for production of plans or decision making.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="acceptRichText">
            <bool>false</bool>
@@ -194,7 +195,7 @@ p, li { white-space: pre-wrap; }
            <item row="0" column="1">
             <widget class="QCheckBox" name="scenarioShowCheck">
              <property name="text">
-              <string>Scenario</string>
+              <string>Toon</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -249,7 +250,7 @@ p, li { white-space: pre-wrap; }
            <item row="1" column="0">
             <widget class="QLabel" name="todPolicyLabel">
              <property name="text">
-              <string>TOD beleidsniveau:</string>
+              <string>TOD factor:</string>
              </property>
             </widget>
            </item>
@@ -295,17 +296,7 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="knooppuntenAttributeCombo">
              <item>
               <property name="text">
-               <string>Passanten</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
                <string>In- en uitstappers trein</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Overstappers</string>
               </property>
              </item>
              <item>
@@ -315,7 +306,7 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Bezoekers</string>
+               <string>OV Fiets</string>
               </property>
              </item>
              <item>
@@ -426,7 +417,7 @@ p, li { white-space: pre-wrap; }
            <item row="3" column="1">
             <widget class="QCheckBox" name="accessibilityShowCheck">
              <property name="text">
-              <string>Zien</string>
+              <string>Toon</string>
              </property>
             </widget>
            </item>
@@ -535,7 +526,7 @@ p, li { white-space: pre-wrap; }
            <item row="1" column="1">
             <widget class="QCheckBox" name="intensityShowCheck">
              <property name="text">
-              <string>Zien</string>
+              <string>Toon</string>
              </property>
             </widget>
            </item>
@@ -576,7 +567,7 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>RAP minder Plancapaciteit</string>
+               <string>Restant opgave RAP</string>
               </property>
              </item>
              <item>
@@ -586,7 +577,7 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Leegstanden</string>
+               <string>Kantorenleegstand</string>
               </property>
              </item>
             </widget>
@@ -724,7 +715,7 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Bezoekers</string>
+               <string>OV Fiets</string>
               </property>
              </item>
              <item>
@@ -811,17 +802,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Overlap bestemming</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
                <string>Belangrijke locaties</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Regionale voorzieningen</string>
+               <string>Magneten</string>
               </property>
              </item>
             </widget>
@@ -829,7 +815,7 @@ p, li { white-space: pre-wrap; }
            <item row="0" column="1">
             <widget class="QCheckBox" name="locationShowCheck">
              <property name="text">
-              <string>Zien</string>
+              <string>Toon</string>
              </property>
             </widget>
            </item>
@@ -969,7 +955,7 @@ p, li { white-space: pre-wrap; }
            <item>
             <widget class="QCheckBox" name="ptalShowCheck">
              <property name="text">
-              <string>Zien</string>
+              <string>Toon</string>
              </property>
             </widget>
            </item>
@@ -1073,7 +1059,7 @@ p, li { white-space: pre-wrap; }
            <item row="1" column="1">
             <widget class="QCheckBox" name="stopFrequencyCheck">
              <property name="text">
-              <string>Zien</string>
+              <string>Toon</string>
              </property>
             </widget>
            </item>
