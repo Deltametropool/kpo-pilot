@@ -10,20 +10,22 @@
 
 -- pilot study boundary
 -- Includes Province Noord Holland and Metropolitan Region Amsterdam
--- DROP TABLE datasysteem.boundary CASCADE;
-CREATE TABLE datasysteem.boundary (
+-- DROP TABLE datasysteem.grens CASCADE;
+CREATE TABLE datasysteem.grens (
 	sid serial NOT NULL PRIMARY KEY,
-	geom geometry(Polygon,28992)
+	geom geometry(MultiPolygon,28992),
+	grens_naam character varying
 );
-INSERT INTO datasysteem.boundary (geom) 
-	SELECT ST_Union(prov.geom, mra.geom)
-	FROM (SELECT * 
-		FROM sources.cbs_bestuurlijke_grenzen_provincie 
-		WHERE provincie_naam = 'Noord-Holland'
-	) prov,
-	(SELECT * FROM sources.metropoolregio_mra) mra
+INSERT INTO datasysteem.grens (geom, grens_naam) 
+	SELECT geom, 'Noord-Holland'
+	FROM sources.cbs_bestuurlijke_grenzen_provincie 
+	WHERE provincie_naam = 'Noord-Holland'
 ;
-CREATE INDEX datasysteem_boundary_idx ON datasysteem.boundary USING GIST (geom);
+INSERT INTO datasysteem.grens (geom, grens_naam) 
+	SELECT geom, 'MRA'
+	FROM sources.metropoolregio_mra
+;
+CREATE INDEX datasysteem_grens_idx ON datasysteem.grens USING GIST (geom);
 -- rail and metro tracks
 -- DROP TABLE datasysteem.spoorwegen CASCADE;
 CREATE TABLE datasysteem.spoorwegen (
