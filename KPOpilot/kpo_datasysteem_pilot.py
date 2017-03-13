@@ -187,6 +187,12 @@ class KPOpilot:
             callback=self.run,
             parent=self.iface.mainWindow())
 
+        icon_path = self.plugin_dir + '/images/icon.png'
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Zoom Provincie'),
+            callback=self.zoomExtents,
+            parent=self.iface.mainWindow())
     #--------------------------------------------------------------------------
 
     def onClosePlugin(self):
@@ -246,3 +252,11 @@ class KPOpilot:
             self.iface.addDockWidget(Qt.RightDockWidgetArea, self.dockwidget)
             self.dockwidget.show()
 
+    def zoomExtents(self):
+        layer = None
+        for l in self.iface.legendInterface().layers():
+            if l.name() == 'Provincie grens':
+                layer = l
+        if layer:
+            self.iface.mapCanvas().setExtent(layer.extent())
+            self.iface.mapCanvas().refresh()
