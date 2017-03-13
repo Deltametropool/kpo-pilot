@@ -56,55 +56,26 @@
       <widgetv2config IsMultiline="0" fieldEditable="0" UseHtml="0" labelOnTop="0"/>
     </edittype>
   </edittypes>
-  <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
-    <rules key="{f626e152-18c6-48d6-96a1-3017342f395d}">
-      <rule filter=" &quot;procentuele_verandering&quot; >0" key="{82e82b3e-f345-4184-a8a0-70b1aeb44a45}" symbol="0"/>
-      <rule filter=" &quot;procentuele_verandering&quot; &lt;=0" key="{7c5f3602-f8c0-46f1-bb38-2795b0a9a461}" symbol="1"/>
-    </rules>
+  <renderer-v2 forceraster="0" symbollevels="0" type="singleSymbol" enableorderby="0">
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="marker" name="0">
         <layer pass="0" class="SimpleMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="51,160,44,255"/>
+          <prop k="color" v="0,0,0,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
           <prop k="name" v="circle"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
           <prop k="outline_color" v="0,0,0,255"/>
-          <prop k="outline_style" v="no"/>
+          <prop k="outline_style" v="solid"/>
           <prop k="outline_width" v="0"/>
           <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_exp(abs(procentuele_verandering), 0, 1.15, 1, 10, 1), 0)"/>
-          <prop k="size_dd_field" v=""/>
-          <prop k="size_dd_useexpr" v="1"/>
-          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="size_unit" v="MM"/>
-          <prop k="vertical_anchor_point" v="1"/>
-        </layer>
-      </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="marker" name="1">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="227,26,28,255"/>
-          <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="circle"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="0,0,0,255"/>
-          <prop k="outline_style" v="no"/>
-          <prop k="outline_width" v="0"/>
-          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="1"/>
-          <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_exp(abs(procentuele_verandering), 0, 1.15, 1, 10, 1), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;totaal_passanten&quot;, 0, 100000, 2, 15, 1), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -113,6 +84,8 @@
         </layer>
       </symbol>
     </symbols>
+    <rotation/>
+    <sizescale scalemethod="diameter"/>
   </renderer-v2>
   <labeling type="simple"/>
   <customproperties>
@@ -141,7 +114,7 @@
     <property key="labeling/distMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/drawLabels" value="true"/>
     <property key="labeling/enabled" value="true"/>
-    <property key="labeling/fieldName" value="station_naam"/>
+    <property key="labeling/fieldName" value="halte_naam"/>
     <property key="labeling/fitInPolygonOnly" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
     <property key="labeling/fontFamily" value=".Helvetica Neue DeskInterface"/>
@@ -291,7 +264,7 @@ P+R bezetting: [% "pr_bezetting" %] %&lt;br></displayfield>
     <selectedonly on=""/>
   </labelattributes>
   <SingleCategoryDiagramRenderer diagramType="Pie">
-    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
+    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
       <fontProperties description=".Helvetica Neue DeskInterface,13,-1,5,50,0,0,0,0,0" style=""/>
       <attribute field="" color="#000000" label=""/>
     </DiagramCategory>

@@ -102,7 +102,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;pr_plaatsen&quot;, 0, 601, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;pr_plaatsen&quot;, 0, 601, 2, 15, 1), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -127,7 +127,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;pr_plaatsen&quot;, 0, 601, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;pr_plaatsen&quot;, 0, 601, 2, 15, 1), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -152,7 +152,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;pr_plaatsen&quot;, 0, 601, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;pr_plaatsen&quot;, 0, 601, 2, 15, 1), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -177,7 +177,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;pr_plaatsen&quot;, 0, 601, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;pr_plaatsen&quot;, 0, 601, 2, 15, 1), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -214,7 +214,7 @@
     <property key="labeling/distMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/drawLabels" value="true"/>
     <property key="labeling/enabled" value="true"/>
-    <property key="labeling/fieldName" value="station_naam"/>
+    <property key="labeling/fieldName" value="halte_naam"/>
     <property key="labeling/fitInPolygonOnly" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
     <property key="labeling/fontFamily" value=".Helvetica Neue DeskInterface"/>

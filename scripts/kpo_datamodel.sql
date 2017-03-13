@@ -102,6 +102,7 @@ CREATE TABLE datasysteem.ruimtelijke_kenmerken(
 	woz_waarde double precision,
 	ov_bereikbaarheidsniveau character varying,
 	ov_bereikbaarheidsindex double precision,
+	gemeente character varying,
 	CONSTRAINT ruimtelijke_kenmerken_pkey PRIMARY KEY (sid)
 );
 
@@ -122,6 +123,7 @@ CREATE TABLE datasysteem.ontwikkellocaties(
 	gemiddelde_bereikbaarheidsindex double precision,
 	maximale_bereikbaarheidsindex double precision,
 	bereikbaare_locatie boolean,
+	cell_ids character varying,
 	CONSTRAINT ontwikkellocaties_pkey PRIMARY KEY (sid)
 );
 

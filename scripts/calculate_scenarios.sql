@@ -235,3 +235,4 @@ UPDATE datasysteem.knooppuntenscenarios knoop SET
 	FROM datasysteem.knooppunten AS stations
 	WHERE knoop.halte_id = stations.halte_id
 ;
+UPDATE datasysteem.knooppuntenscenarios SET procentuele_verandering = round(procentuele_verandering::numeric*100.0,2);

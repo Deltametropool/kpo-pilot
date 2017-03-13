@@ -23,7 +23,7 @@
 
 import os
 
-from PyQt4 import QtGui, uic
+from PyQt4 import QtCore, QtGui, uic
 from PyQt4.QtCore import pyqtSignal
 
 FORM_CLASS, _ = uic.loadUiType(os.path.join(
@@ -31,8 +31,44 @@ FORM_CLASS, _ = uic.loadUiType(os.path.join(
 
 
 class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
-
+    # set dialog user signals
     closingPlugin = pyqtSignal()
+    tabChanged = pyqtSignal(int)
+    # knooppunten
+    scenarioChanged = pyqtSignal(str)
+    scenarioShow = pyqtSignal(bool)
+    isochronesShow = pyqtSignal(bool)
+    todLevelChanged = pyqtSignal(int)
+    knooppuntChanged = pyqtSignal(str)
+    knooppuntShow = pyqtSignal(bool)
+    knooppuntSelected = pyqtSignal(str)
+    # verstedelijking
+    onderbenutShow = pyqtSignal(bool)
+    intensityTypeChanged = pyqtSignal(str)
+    intensityShow = pyqtSignal(bool)
+    intensityLevelChanged = pyqtSignal(int)
+    accessibilityShow = pyqtSignal(bool)
+    accessibilityLevelChanged = pyqtSignal(int)
+    planTypeChanged = pyqtSignal(str)
+    planShow = pyqtSignal(bool)
+    planSelected = pyqtSignal(str)
+    # koppelingen
+    stationAttributeChanged = pyqtSignal(str)
+    stationShow = pyqtSignal(bool)
+    stationSelected = pyqtSignal(str)
+    locationTypeChanged = pyqtSignal(str)
+    locationShow = pyqtSignal(bool)
+    locationSelected = pyqtSignal(str)
+    # mobiliteit
+    isochroneWalkShow = pyqtSignal(bool)
+    isochroneBikeShow = pyqtSignal(bool)
+    isochroneOVShow = pyqtSignal(bool)
+    ptalChanged = pyqtSignal(str)
+    ptalShow = pyqtSignal(bool)
+    frequencyChanged = pyqtSignal(str)
+    stopsChanged = pyqtSignal(str)
+    stopsShow = pyqtSignal(bool)
+    stopsSelected = pyqtSignal(str)
 
     def __init__(self, parent=None):
         """Constructor."""
@@ -47,177 +83,446 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.plugin_dir = os.path.dirname(__file__)
         self.logosLabel.setPixmap(QtGui.QPixmap(self.plugin_dir + '/images/partner_logos.png'))
 
-        # Dictionary containing all language in type/element/naming structure
-        self.language = 'dutch'
-        self.gui_name_dutch = {
-            'vragenTabWidget' : ['Introductie',
-                                 'Knooppunten',
-                                 'Verstedelijking',
-                                 'Koppelingen',
-                                 'Bereikbaarheid'],
-            'introductionLabel' : 'Samenvatting',
-            'introductionSummaryText' : '',
-            'housingDemandBox': 'Huisaanbod',
-            'knooppuntenStatusBox': 'Knooppunten status',
-            'scenarioSelectBox': ['Huidig scenario',
-                                  'WLO Laag 2040',
-                                  'WLO Hoog 2040',
-                                  'Primus'],
-            'knooppuntenAttributeCombo': ['In- en uitstappers',
-                                          'fietsstallingen',
-                                          'perrons',
-                                          'stijgpunten',
-                                          'loopstromen']
-        }
-        # let's not do this for now
-        self.gui_naming_english = {}
+        # set-up dialog defaults
+        #  Knooppunten
+        self.scenarioSelectCombo.setCurrentIndex(0)
+        self.scenarioShowCheck.setChecked(True)
+        self.isochronesShowCheck.setChecked(False)
+        self.__activateTODLevel__(False)
+        self.todPolicySlider.setValue(0)
+        self.knooppuntenAttributeCombo.setCurrentIndex(0)
+        self.knooppuntenShowCheck.setChecked(True)
 
+        # Verstedelijking
+        self.locatiesShowCheck.setChecked(True)
+        self.intensitySelectCombo.setCurrentIndex(0)
+        self.intensityShowCheck.setChecked(False)
+        self.intensityValueSlider.setValue(3)
+        self.accessibilityShowCheck.setChecked(False)
+        self.accessibilityValueSlider.setValue(3)
+        self.planSelectCombo.setCurrentIndex(0)
+        self.planShowCheck.setChecked(True)
 
-    '''General'''
-    # Updating GUI elements
-    def setLanguage(self):
-        for widget in self.children():
-            name = widget.objectName()
-            if name in self.gui_name_dutch.keys():
-                # Labels
-                if isinstance(widget, QtGui.QLabel):
-                    widget.setText(self.gui_name_dutch[name])
-                # GroupBox
-                elif isinstance(widget, QtGui.QGroupBox):
-                    widget.setTitle(self.gui_name_dutch[name])
-                # Tabs
-                elif isinstance(widget, QtGui.QTabWidget):
-                    for index, name in enumerate(self.gui_name_dutch[name]):
-                        widget.setTabText(index, name)
-                # ComboBox
-                elif isinstance(widget, QtGui.QComboBox):
-                    widget.addItems(self.gui_name_dutch[name])
-                # CheckBox
-                elif isinstance(widget, QtGui.QCheckBox):
-                    widget.setText(self.gui_name_dutch[name])
-                # Button
-                elif isinstance(widget, QtGui.QPushButton):
-                    widget.setText(self.gui_name_dutch[name])
-                # Table
-                elif isinstance(widget, QtGui.QTabWidget):
-                    widget.setHorizontalHeaderLabels(self.gui_name_dutch[name])
+        # Verbindingen
+        self.overbelastAttributeCombo.setCurrentIndex(0)
+        self.overbelastShowCheck.setChecked(True)
+        self.locationSelectCombo.setCurrentIndex(0)
+        self.locationShowCheck.setChecked(False)
 
+        # Mobiliteit
+        self.isochroneWalkCheck.setChecked(True)
+        self.isochroneBikeCheck.setChecked(False)
+        self.isochroneOvCheck.setChecked(True)
+        self.ptalSelectCombo.setCurrentIndex(0)
+        self.ptalShowCheck.setChecked(False)
+        self.frequencyTimeCombo.setCurrentIndex(0)
+        self.stopSelectCombo.setCurrentIndex(0)
+        self.stopFrequencyCheck.setChecked(False)
 
-    '''General'''
-    def setTextField(self, gui_name, text_list):
-        # Cant we just one type of TextEdit??????
-        field = self.findChild(QtGui.QPlainTextEdit, gui_name)
-        if not field:
-            field2 = self.findChild(QtGui.QTextEdit, gui_name)
-            field2  .clear()
-            for line in text_list:
-                field2.append(line)
-        else:
-            field.clear()
-            for line in text_list:
-                field.appendPlainText(line)
+        # set-up UI interaction signals
+        self.vragenTabWidget.currentChanged.connect(self.__changeQuestionTab__)
 
+        #  Knooppunten
+        self.scenarioSelectCombo.currentIndexChanged.connect(self.__setScenario__)
+        self.scenarioShowCheck.stateChanged.connect(self.__showScenario__)
+        self.isochronesShowCheck.stateChanged.connect(self.__showIsochrones__)
+        self.todPolicySlider.valueChanged.connect(self.__updateTODLevel__)
+        self.knooppuntenAttributeCombo.currentIndexChanged.connect(self.__setKnooppuntKenmerk__)
+        self.knooppuntenShowCheck.stateChanged.connect(self.__showKnooppunt__)
+        self.knooppuntenSummaryTable.itemClicked.connect(self.__setKnooppunt__)
+        # Verstedelijking
+        self.locatiesShowCheck.stateChanged.connect(self.__showOnderbenutLocaties__)
+        self.intensitySelectCombo.currentIndexChanged.connect(self.__setIntensity__)
+        self.intensityShowCheck.stateChanged.connect(self.__showIntensity__)
+        self.intensityValueSlider.valueChanged.connect(self.__updateIntensityLevel__)
+        self.accessibilityShowCheck.stateChanged.connect(self.__showAccessibility__)
+        self.accessibilityValueSlider.valueChanged.connect(self.__updateAccessibilityLevel__)
+        self.planSelectCombo.currentIndexChanged.connect(self.__setPlan__)
+        self.planShowCheck.stateChanged.connect(self.__showPlan__)
+        self.planAttributeTable.itemClicked.connect(self.__setPlanLocation__)
+        # Verbindingen
+        self.overbelastAttributeCombo.currentIndexChanged.connect(self.__setStationKenmerk__)
+        self.overbelastShowCheck.stateChanged.connect(self.__showStations__)
+        self.overbelastAttributeTable.itemClicked.connect(self.__setStation__)
+        self.locationSelectCombo.currentIndexChanged.connect(self.__setLocationType__)
+        self.locationShowCheck.stateChanged.connect(self.__showLocations__)
+        self.locationAttributeTable.itemClicked.connect(self.__setLocation__)
+        # Mobiliteit
+        self.isochroneWalkCheck.stateChanged.connect(self.__showWalk__)
+        self.isochroneBikeCheck.stateChanged.connect(self.__showBike__)
+        self.isochroneOvCheck.stateChanged.connect(self.__showOV__)
+        self.ptalSelectCombo.activated.connect(self.__setPTAL__)
+        self.ptalShowCheck.stateChanged.connect(self.__showPTAL__)
+        self.frequencyTimeCombo.currentIndexChanged.connect(self.__setTimePeriod__)
+        self.stopSelectCombo.currentIndexChanged.connect(self.__setStopType__)
+        self.stopFrequencyCheck.stateChanged.connect(self.__showStops__)
+        self.stopSummaryTable.itemClicked.connect(self.__setStops__)
 
-    def setLabelValue(self, gui_name, value):
-        label = self.findChild(QtGui.QLabel, gui_name)
-        label.clear()
-        label.setText(value)
+        # some globals
+        self.current_tab = 0
+        self.locatiesShowCheck.hide()
 
-
-    def getDataTableHeaders(self, gui_name):
-        table = self.findChild(QtGui.QTableWidget, gui_name)
-        column_count = table.columnCount()
-        columns = [table.horizontalHeaderItem(index).text() for index in range(column_count)]
-        return columns
-
-
-    def setDataTableSize(self, gui_name, rows):
-        table = self.findChild(QtGui.QTableWidget, gui_name)
-        table.setRowCount(rows)
-
-
-    def setDataTableField(self, gui_name, row, column, value):
-        table = self.findChild(QtGui.QTableWidget, gui_name)
-        entry = QtGui.QTableWidgetItem(str(value))
-        table.setItem(row, column, entry)
-
-
-    def hideDataTable(self,gui_name):
-        table = self.findChild(QtGui.QTableWidget, gui_name)
-        table.clear()
-
-
-    def setSliderRange(self, gui_name, min, max, step):
-        slider = self.findChild(QtGui.QSlider, gui_name)
-        slider.setRange(min, max)
-        slider.setSingleStep(step)
-
-
-    def showChart(self):
-        pass
-
-
+    #####
+    # Main
     def closeEvent(self, event):
         self.closingPlugin.emit()
         event.accept()
 
+    def __changeQuestionTab__(self, tab_id):
+        # make changes if not visiting the introduction
+        # and if not returning to the same tab as before
+        if tab_id > 0 and tab_id != self.current_tab:
+            self.current_tab = tab_id
+            self.tabChanged.emit(self.current_tab)
 
-    '''Knooppunten'''
+    def resetQuestionTab(self):
+        self.vragenTabWidget.setCurrentIndex(0)
+        self.current_tab = 0
+
+    #####
+    # Knooppunten
+    # Methods for Woonscenario
+    def __setScenario__(self):
+        scenario_name = self.scenarioSelectCombo.currentText()
+        self.scenarioChanged.emit(scenario_name)
+        if scenario_name == 'Huidige situatie':
+            self.__activateTODLevel__(False)
+        else:
+            self.__activateTODLevel__(True)
+
     def getScenario(self):
         return self.scenarioSelectCombo.currentText()
 
+    def isScenarioVisible(self):
+        return self.scenarioShowCheck.isChecked()
 
-    def clearScenarioSummary(self):
-        self.scenarioSummaryText.clear()
+    def __showScenario__(self, state):
+        self.scenarioShow.emit(state)
 
+    def isIsochronesVisible(self):
+        return self.isochronesShowCheck.isChecked()
 
-    def getKnooppunt(self):
+    def __showIsochrones__(self, state):
+        self.isochronesShow.emit(state)
+
+    # Methods for TOD level
+    def __activateTODLevel__(self, onoff):
+        self.todPolicyLabel.setEnabled(onoff)
+        self.todPolicySlider.setEnabled(onoff)
+        self.todPolicyValueLabel.setEnabled(onoff)
+        if not onoff:
+            self.todPolicySlider.setValue(0)
+
+    def getTODLevel(self):
+        value = self.todPolicySlider.value()
+        if value == 1:
+            tod_level = 50
+        elif value == 2:
+            tod_level = 100
+        else:
+            tod_level = 0
+        return tod_level
+
+    def __updateTODLevel__(self, value):
+        tod_level = 0
+        if value == 1:
+            tod_level = 50
+        elif value == 2:
+            tod_level = 100
+        self.todPolicyValueLabel.setText('%d%%' % tod_level)
+        self.todLevelChanged.emit(tod_level)
+
+    def updateScenarioSummary(self, data_values):
+        text_list = []
+        if len(data_values) == 4:
+            text_list.append('%d totaal huishouden' % data_values[0])
+            text_list.append('%d op loopafstand van knooppunten' % data_values[1])
+            text_list.append('%d op fietsafstand van knooppunten' % data_values[2])
+            text_list.append('%d buiten invloedsgebied van knooppunten' % data_values[3])
+            self.__setTextField__('scenarioSummaryText', text_list)
+
+    # Methods for Knooppunten
+    def __setKnooppuntKenmerk__(self):
+        attribute = self.knooppuntenAttributeCombo.currentText()
+        self.knooppuntChanged.emit(attribute)
+
+    def getKnooppuntKenmerk(self):
         return self.knooppuntenAttributeCombo.currentText()
 
+    def isKnooppuntVisible(self):
+        return self.knooppuntenShowCheck.isChecked()
 
-    '''Verstedelijking'''
-    def getIntensity(self):
+    def __showKnooppunt__(self, state):
+        self.knooppuntShow.emit(state)
+
+    def updateKnooppuntenTable(self, headers, data_values):
+        self.__populateDataTable__('knooppuntenSummaryTable', headers, data_values)
+
+    def __setKnooppunt__(self):
+        current_row = self.knooppuntenSummaryTable.currentRow()
+        current_item = self.knooppuntenSummaryTable.item(current_row, 0)
+        station_name = current_item.text()
+        self.knooppuntSelected.emit(station_name)
+
+    def isKnooppuntSelected(self):
+        row = self.knooppuntenSummaryTable.currentRow()
+        if row >= 0:
+            return True
+        else:
+            return False
+    #####
+    # Verstedelijking
+    # Methods for opportunities
+    def __showOnderbenutLocaties__(self, state):
+        self.onderbenutShow.emit(state)
+
+    def isLocatiesVisible(self):
+        return self.locatiesShowCheck.isChecked()
+
+    def __showIntensity__(self, state):
+        self.intensityShow.emit(state)
+
+    def isIntensityVisible(self):
+        return self.intensityShowCheck.isChecked()
+
+    def __setIntensity__(self):
+        attribute = self.intensitySelectCombo.currentText()
+        self.intensityTypeChanged.emit(attribute)
+
+    def getIntensityType(self):
         return self.intensitySelectCombo.currentText()
 
+    def getIntensityLevel(self):
+        value = self.intensityValueSlider.value()
+        return value
 
-    def updateIntensityValue(self):
-        value = str(self.intensityValueSlider.value())
-        self.setLabelValue('intensityValueLabel', value)
+    def __updateIntensityLevel__(self, value):
+        self.intensityLevelChanged.emit(value)
 
+    def updateIntensityLabel(self, intensity_label):
+        self.intensityValueLabel.setText('%s' % intensity_label)
 
-    def updateAccessibilityValue(self):
-        value = str(self.accessibilityValueSlider.value())
-        self.setLabelValue('accessibilityValueLabel', value)
+    def __showAccessibility__(self, state):
+        self.accessibilityShow.emit(state)
 
-    def getDevelopment(self):
-        return self.locationSelectCombo.currentText()
+    def isAccessibilityVisible(self):
+        return self.accessibilityShowCheck.isChecked()
 
+    def getAccessibilityLevel(self):
+        value = self.accessibilityValueSlider.value()
+        return value
 
-    def clearLocationSummary(self):
-        self.locationSummaryText.clear()
+    def __updateAccessibilityLevel__(self, value):
+        self.accessibilityLevelChanged.emit(value)
 
+    def updateAccessibilityLabel(self, ptal_label):
+        self.accessibilityValueLabel.setText('%s' % ptal_label)
 
-    '''Koppelingen'''
-    def getOverbelast(self):
+    # Methods for plans
+    def __showPlan__(self, state):
+        self.planShow.emit(state)
+
+    def isPlanVisible(self):
+        return self.planShowCheck.isChecked()
+
+    def __setPlan__(self):
+        attribute = self.planSelectCombo.currentText()
+        self.planTypeChanged.emit(attribute)
+
+    def getPlanType(self):
+        return self.planSelectCombo.currentText()
+
+    def updatePlanSummary(self, data_values):
+        text_list = []
+        if len(data_values) == 3:
+            text_list.append('%d totaal woningen' % data_values[0])
+            text_list.append('%d in onderbenut bereikbaare locaties' % data_values[1])
+            text_list.append('%d buiten onderbenut bereikbaare locaties' % data_values[2])
+            self.__setTextField__('planSummaryText', text_list)
+
+    def updatePlanTable(self, headers, data_values):
+        self.__populateDataTable__('planAttributeTable', headers, data_values)
+
+    def __setPlanLocation__(self):
+        current_row = self.planAttributeTable.currentRow()
+        current_item = self.planAttributeTable.item(current_row, 0)
+        location_name = current_item.text()
+        self.planSelected.emit(location_name)
+
+    def isPlanLocationSelected(self):
+        row = self.planAttributeTable.currentRow()
+        if row >= 0:
+            return True
+        else:
+            return False
+
+    #####
+    # Verbindingen
+    # Methods for Overbelast stations
+    def __showStations__(self, state):
+        self.stationShow.emit(state)
+
+    def isStationVisible(self):
+        return self.overbelastShowCheck.isChecked()
+
+    def __setStationKenmerk__(self):
+        attribute = self.overbelastAttributeCombo.currentText()
+        self.stationAttributeChanged.emit(attribute)
+
+    def getSationAttribute(self):
         return self.overbelastAttributeCombo.currentText()
 
+    def updateStationsTable(self, headers, data_values):
+        self.__populateDataTable__('overbelastAttributeTable', headers, data_values)
 
-    def getLocations(self):
-        return self.importantSelectCombo.currentText()
+    def __setStation__(self):
+        current_row = self.overbelastAttributeTable.currentRow()
+        current_item = self.overbelastAttributeTable.item(current_row, 0)
+        station_name = current_item.text()
+        self.stationSelected.emit(station_name)
 
+    def isStationSelected(self):
+        row = self.overbelastAttributeTable.currentRow()
+        if row >= 0:
+            return True
+        else:
+            return False
 
-    '''Mobiliteit'''
+    # Methods for Locaties
+    def __showLocations__(self, state):
+        self.locationShow.emit(state)
+
+    def isLocationVisible(self):
+        return self.locationShowCheck.isChecked()
+
+    def __setLocationType__(self):
+        attribute = self.locationSelectCombo.currentText()
+        self.locationTypeChanged.emit(attribute)
+
+    def getLocationType(self):
+        return self.locationSelectCombo.currentText()
+
+    def updateLocationsTable(self, headers, data_values):
+        self.__populateDataTable__('locationAttributeTable', headers, data_values)
+
+    def __setLocation__(self):
+        current_row = self.locationAttributeTable.currentRow()
+        current_item = self.locationAttributeTable.item(current_row, 0)
+        location_name = current_item.text()
+        self.locationSelected.emit(location_name)
+
+    def isLocationSelected(self):
+        row = self.locationAttributeTable.currentRow()
+        if row >= 0:
+            return True
+        else:
+            return False
+
+    #####
+    # Mobiliteit
+    # Methods for Isochronen
+    def __showWalk__(self, state):
+        self.isochroneWalkShow.emit(state)
+
+    def isWalkVisible(self):
+        return self.isochroneWalkCheck.isChecked()
+
+    def __showBike__(self, state):
+        self.isochroneBikeShow.emit(state)
+
+    def isBikeVisible(self):
+        return self.isochroneBikeCheck.isChecked()
+
+    def __showOV__(self, state):
+        self.isochroneOVShow.emit(state)
+
+    def isOvVisible(self):
+        return self.isochroneOvCheck.isChecked()
+
+    # Methods for Bereikbaarheid
+    def __showPTAL__(self, state):
+        self.ptalShow.emit(state)
+
+    def isPTALVisible(self):
+        return self.ptalShowCheck.isChecked()
+
+    def __setPTAL__(self):
+        attribute = self.ptalSelectCombo.currentText()
+        self.ptalChanged.emit(attribute)
+
     def getPTAL(self):
         return self.ptalSelectCombo.currentText()
 
+    # Methods for stops frequency
+    def __showStops__(self, state):
+        self.stopsShow.emit(state)
 
-    def getLinks(self):
-        return self.linkSelectCombo.currentText()
+    def __setStopType__(self):
+        attribute = self.stopSelectCombo.currentText()
+        self.stopsChanged.emit(attribute)
 
+    def isStopsVisible(self):
+        return self.stopFrequencyCheck.isChecked()
 
     def getStops(self):
         return self.stopSelectCombo.currentText()
 
+    def __setTimePeriod__(self):
+        attribute = self.frequencyTimeCombo.currentText()
+        self.frequencyChanged.emit(attribute)
 
-    def getTime(self):
+    def getTimePeriod(self):
         return self.frequencyTimeCombo.currentText()
+
+    def updateStopsTable(self, headers, data_values):
+        self.__populateDataTable__('stopSummaryTable', headers, data_values)
+
+    def __setStops__(self):
+        current_row = self.stopSummaryTable.currentRow()
+        current_item = self.stopSummaryTable.item(current_row, 0)
+        stop_name = current_item.text()
+        self.stopsSelected.emit(stop_name)
+
+    def isStopSelected(self):
+        row = self.stopSummaryTable.currentRow()
+        if row >= 0:
+            return True
+        else:
+            return False
+
+    #####
+    # General functions
+    def __setTextField__(self, gui_name, text_list):
+        field2 = self.findChild(QtGui.QTextEdit, gui_name)
+        field2.clear()
+        for line in text_list:
+            field2.append(line)
+
+    def __populateDataTable__(self, gui_name, headers, values):
+        table = self.findChild(QtGui.QTableWidget, gui_name)
+        table.clear()
+        columns = len(headers)
+        table.setColumnCount(columns)
+        table.setHorizontalHeaderLabels(headers)
+        table.setSortingEnabled(False)
+        rows = len(values)
+        table.setRowCount(rows)
+        for i, feature in enumerate(values):
+            for j in range(columns):
+                entry = QtGui.QTableWidgetItem()
+                # the first column is a string
+                if j == 0:
+                    entry.setText(str(feature[j]))
+                else:
+                    entry.setData(QtCore.Qt.EditRole, feature[j])
+                table.setItem(i, j, entry)
+        table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
+        for m in range(1,columns):
+            table.horizontalHeader().setResizeMode(m, QtGui.QHeaderView.ResizeToContents)
+        table.resizeRowsToContents()
+        table.setSortingEnabled(True)
+
+    def __setSliderRange__(self, gui_name, minimum, maximum, step):
+        slider = self.findChild(QtGui.QSlider, gui_name)
+        slider.setRange(minimum, maximum)
+        slider.setSingleStep(step)

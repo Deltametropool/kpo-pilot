@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>411</width>
+    <width>416</width>
     <height>600</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>411</width>
+    <width>416</width>
     <height>600</height>
    </size>
   </property>
@@ -29,7 +29,7 @@
    <set>QDockWidget::AllDockWidgetFeatures</set>
   </property>
   <property name="windowTitle">
-   <string>Knooppunten Ontwikkeling - pilot</string>
+   <string>Knooppuntontwikkeling - pilot</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -61,7 +61,7 @@
       </property>
       <widget class="QWidget" name="introductionTab">
        <attribute name="title">
-        <string>Introduction</string>
+        <string>Beleidsvragen</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0,8,1">
         <property name="leftMargin">
@@ -79,7 +79,7 @@
         <item>
          <widget class="QLabel" name="introductionLabel">
           <property name="text">
-           <string>Project Summary</string>
+           <string>Overzicht</string>
           </property>
          </widget>
         </item>
@@ -118,7 +118,8 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;3. “Hoe kunnen afvangstations worden ontwikkeld met als doel de druk op overbelaste stations te verminderen in het kader van de bereikbaarheid van belangrijke locaties?”&lt;/p&gt;
 &lt;p align=&quot;justify&quot; style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Disclaimer: text about data and analysis limitations. this is just a demonstration of the possibilities. should not be used for real life decision making. etc.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Disclaimer:&lt;/p&gt;
+&lt;p align=&quot;justify&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;The data and analysis in this pilot project serve demonstration purposes of the potential use and benefits of such an integrated planning support framework. The data and maps should not be considered final or accurate, and should not be used for production of plans or decision making.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
           <property name="acceptRichText">
            <bool>false</bool>
@@ -181,17 +182,12 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>WLO Laag 2040</string>
+               <string>WLO 2040 Laag</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>WLO Hoog 2040</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Primos</string>
+               <string>WLO 2040 Hoog</string>
               </property>
              </item>
             </widget>
@@ -199,7 +195,10 @@ p, li { white-space: pre-wrap; }
            <item row="0" column="1">
             <widget class="QCheckBox" name="scenarioShowCheck">
              <property name="text">
-              <string>Scenario</string>
+              <string>Toon</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -219,7 +218,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.Helvetica Neue DeskInterface'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxxx totaal huishuiden&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxxx totaal huishouden&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxx op loopafstand van knooppunten&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxx op fietsafstand van knooppunten&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxx buiten invloedsgebied van knooppunten&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -251,7 +250,7 @@ p, li { white-space: pre-wrap; }
            <item row="1" column="0">
             <widget class="QLabel" name="todPolicyLabel">
              <property name="text">
-              <string>TOD beleidsniveau:</string>
+              <string>TOD factor:</string>
              </property>
             </widget>
            </item>
@@ -259,6 +258,9 @@ p, li { white-space: pre-wrap; }
             <widget class="QCheckBox" name="isochronesShowCheck">
              <property name="text">
               <string>Isochronen</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
@@ -294,27 +296,27 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="knooppuntenAttributeCombo">
              <item>
               <property name="text">
-               <string>in- en uitstappers</string>
+               <string>In- en uitstappers trein</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>fietsparkeerplaatsen</string>
+               <string>In- en uitstappers BTM</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>capaciteit van de perrons</string>
+               <string>OV Fiets</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>capaciteit van stijgpunten</string>
+               <string>Fiets bezetting %</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>capaciteit van loopstromen</string>
+               <string>P+R bezetting %</string>
               </property>
              </item>
             </widget>
@@ -328,6 +330,21 @@ p, li { white-space: pre-wrap; }
            </item>
            <item row="1" column="0" colspan="2">
             <widget class="QTableWidget" name="knooppuntenSummaryTable">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
              <property name="sortingEnabled">
               <bool>true</bool>
              </property>
@@ -382,7 +399,7 @@ p, li { white-space: pre-wrap; }
            </sizepolicy>
           </property>
           <property name="title">
-           <string>Onderbenut bereikbare locaties</string>
+           <string>Onderbenut bereikbaare locaties</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3" columnstretch="2,0">
            <property name="leftMargin">
@@ -400,14 +417,7 @@ p, li { white-space: pre-wrap; }
            <item row="3" column="1">
             <widget class="QCheckBox" name="accessibilityShowCheck">
              <property name="text">
-              <string>PTAL</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QCheckBox" name="intensityShowCheck">
-             <property name="text">
-              <string>Dichtheid</string>
+              <string>Toon</string>
              </property>
             </widget>
            </item>
@@ -423,14 +433,20 @@ p, li { white-space: pre-wrap; }
            </item>
            <item row="3" column="0">
             <widget class="QSlider" name="accessibilityValueSlider">
+             <property name="minimum">
+              <number>0</number>
+             </property>
              <property name="maximum">
-              <number>8</number>
+              <number>7</number>
              </property>
              <property name="singleStep">
               <number>1</number>
              </property>
              <property name="pageStep">
               <number>1</number>
+             </property>
+             <property name="value">
+              <number>0</number>
              </property>
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -452,6 +468,9 @@ p, li { white-space: pre-wrap; }
            </item>
            <item row="1" column="0">
             <widget class="QSlider" name="intensityValueSlider">
+             <property name="minimum">
+              <number>0</number>
+             </property>
              <property name="maximum">
               <number>6</number>
              </property>
@@ -484,6 +503,11 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
+               <string>Huishouden</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>Intensiteit (werknemer, studenten)</string>
               </property>
              </item>
@@ -499,11 +523,25 @@ p, li { white-space: pre-wrap; }
              </item>
             </widget>
            </item>
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="intensityShowCheck">
+             <property name="text">
+              <string>Toon</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="locatiesShowCheck">
+             <property name="text">
+              <string>Locaties</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="locationsBox">
+         <widget class="QGroupBox" name="plansBox">
           <property name="title">
            <string>Ontwikkellocaties</string>
           </property>
@@ -521,15 +559,15 @@ p, li { white-space: pre-wrap; }
             <number>5</number>
            </property>
            <item row="0" column="0">
-            <widget class="QComboBox" name="locationSelectCombo">
+            <widget class="QComboBox" name="planSelectCombo">
              <item>
               <property name="text">
-               <string>RAP</string>
+               <string>RAP 2020</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>RAP minder Plancapaciteit</string>
+               <string>Restant opgave RAP</string>
               </property>
              </item>
              <item>
@@ -539,13 +577,13 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Leegstanden</string>
+               <string>Kantorenleegstand</string>
               </property>
              </item>
             </widget>
            </item>
            <item row="1" column="0" colspan="2">
-            <widget class="QTextEdit" name="locationSummaryText">
+            <widget class="QTextEdit" name="planSummaryText">
              <property name="frameShape">
               <enum>QFrame::NoFrame</enum>
              </property>
@@ -561,13 +599,28 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.Helvetica Neue DeskInterface'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxxx totaal woningen&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxxx in onderbenut bereikbare locaties&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxxx buiten onderbenut bereikbare locaties&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxxx in onderbenut bereikbaare locaties&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;xxxx buiten onderbenut bereikbaare locaties&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
             </widget>
            </item>
            <item row="2" column="0" colspan="2">
-            <widget class="QTableWidget" name="locationAttributeTable">
+            <widget class="QTableWidget" name="planAttributeTable">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>100</number>
              </attribute>
@@ -592,7 +645,7 @@ p, li { white-space: pre-wrap; }
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QCheckBox" name="locationShowCheck">
+            <widget class="QCheckBox" name="planShowCheck">
              <property name="text">
               <string>Plan</string>
              </property>
@@ -605,7 +658,7 @@ p, li { white-space: pre-wrap; }
       </widget>
       <widget class="QWidget" name="koppelingenTab">
        <attribute name="title">
-        <string>3. Koppelingen</string>
+        <string>3. Verbindingen</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_3" stretch="3,4">
         <property name="leftMargin">
@@ -642,27 +695,37 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="overbelastAttributeCombo">
              <item>
               <property name="text">
-               <string>in- en uitstappers</string>
+               <string>Passanten</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>fietsenstallingen</string>
+               <string>In- en uitstappers trein</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>perrons</string>
+               <string>Overstappers</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>stijgpunten</string>
+               <string>In- en uitstappers BTM</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>loopstromen</string>
+               <string>OV Fiets</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Fiets bezetting %</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>P+R bezetting %</string>
               </property>
              </item>
             </widget>
@@ -670,12 +733,30 @@ p, li { white-space: pre-wrap; }
            <item row="0" column="1">
             <widget class="QCheckBox" name="overbelastShowCheck">
              <property name="text">
-              <string>Stations</string>
+              <string>Treinstations</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
            <item row="1" column="0" colspan="2">
             <widget class="QTableWidget" name="overbelastAttributeTable">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>80</number>
              </attribute>
@@ -713,15 +794,10 @@ p, li { white-space: pre-wrap; }
             <number>5</number>
            </property>
            <item row="0" column="0">
-            <widget class="QComboBox" name="importantSelectCombo">
+            <widget class="QComboBox" name="locationSelectCombo">
              <item>
               <property name="text">
                <string>Overlap herkomst</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Overlap bestemming</string>
               </property>
              </item>
              <item>
@@ -731,20 +807,35 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Voorzieningen</string>
+               <string>Magneten</string>
               </property>
              </item>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QCheckBox" name="importantShowCheck">
+            <widget class="QCheckBox" name="locationShowCheck">
              <property name="text">
-              <string>Locations</string>
+              <string>Toon</string>
              </property>
             </widget>
            </item>
            <item row="1" column="0" colspan="2">
-            <widget class="QTableWidget" name="importantAttributeTable">
+            <widget class="QTableWidget" name="locationAttributeTable">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>100</number>
              </attribute>
@@ -864,7 +955,7 @@ p, li { white-space: pre-wrap; }
            <item>
             <widget class="QCheckBox" name="ptalShowCheck">
              <property name="text">
-              <string>PTAL</string>
+              <string>Toon</string>
              </property>
             </widget>
            </item>
@@ -891,6 +982,21 @@ p, li { white-space: pre-wrap; }
            </property>
            <item row="3" column="0" colspan="2">
             <widget class="QTableWidget" name="stopSummaryTable">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>50</number>
              </attribute>
@@ -930,27 +1036,22 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Trein stations</string>
+               <string>Treinstations</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Metro stations</string>
+               <string>Metrostations</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Tram haltes</string>
+               <string>Tramhaltes</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Bus haltes</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Ferry terminals</string>
+               <string>Bushaltes</string>
               </property>
              </item>
             </widget>
@@ -958,7 +1059,7 @@ p, li { white-space: pre-wrap; }
            <item row="1" column="1">
             <widget class="QCheckBox" name="stopFrequencyCheck">
              <property name="text">
-              <string>Haltes</string>
+              <string>Toon</string>
              </property>
             </widget>
            </item>
@@ -966,7 +1067,7 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="frequencyTimeCombo">
              <item>
               <property name="text">
-               <string>Ochtend spits</string>
+               <string>Ochtendspits</string>
               </property>
              </item>
              <item>
@@ -976,7 +1077,7 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Avond spits</string>
+               <string>Avondspits</string>
               </property>
              </item>
             </widget>

@@ -43,11 +43,14 @@
     <edittype widgetv2type="TextEdit" name="bereikbaare_locatie">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="cell_ids">
+      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    </edittype>
   </edittypes>
-  <renderer-v2 attr="net_nieuwe_woningen" forceraster="0" symbollevels="0" type="graduatedSymbol" graduatedMethod="GraduatedColor" enableorderby="0">
+  <renderer-v2 attr="geplande_woningen" forceraster="0" symbollevels="0" type="graduatedSymbol" graduatedMethod="GraduatedColor" enableorderby="0">
     <ranges>
-      <range render="true" symbol="0" lower="-693.000000000000000" upper="0.000000000000000" label=" -693 - 0 "/>
-      <range render="true" symbol="1" lower="0.000000000000000" upper="500.000000000000000" label=" 0 - 500 "/>
+      <range render="true" symbol="0" lower="0.000000000000000" upper="100.000000000000000" label=" 0 - 100 "/>
+      <range render="true" symbol="1" lower="100.000000000000000" upper="500.000000000000000" label=" 100 - 500 "/>
       <range render="true" symbol="2" lower="500.000000000000000" upper="1000.000000000000000" label=" 500 - 1000 "/>
       <range render="true" symbol="3" lower="1000.000000000000000" upper="3000.000000000000000" label=" 1000 - 3000 "/>
       <range render="true" symbol="4" lower="3000.000000000000000" upper="5000.000000000000000" label=" 3000 - 5000 "/>
@@ -302,7 +305,8 @@
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerTransparency>0</layerTransparency>
-  <displayfield>&lt;b>[% "gemeente" %]&lt;/b>&lt;br>
+  <displayfield>&lt;b>[% "gemeente" %]&lt;br>
+[% "plaatsnaam" %]&lt;/b>&lt;br>
 &lt;br>
 Bestaande woningen: [% "bestaande_woningen" %]&lt;br>
 Geplande woningen: [% "geplande_woningen" %]&lt;br>

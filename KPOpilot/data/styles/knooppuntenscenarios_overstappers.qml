@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.14.7-Essen" minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.14.7-Essen" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
     <edittype widgetv2type="TextEdit" name="sid">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
@@ -16,7 +16,16 @@
     <edittype widgetv2type="TextEdit" name="halte_naam">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="scenario_naam">
+      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="tod_beleidsniveau">
+      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    </edittype>
     <edittype widgetv2type="TextEdit" name="huishoudens">
+      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="procentuele_verandering">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="totaal_passanten">
@@ -34,150 +43,39 @@
     <edittype widgetv2type="TextEdit" name="bezoekers">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="btm_voortransport">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="btm_natransport">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="lopen_voortransport">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="lopen_natransport">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="fiets_voortransport">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="fiets_natransport">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="pr_voortransport">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="pr_natransport">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="fiets_plaatsen">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
     <edittype widgetv2type="TextEdit" name="fiets_bezetting">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="ov_fietsen">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="pr_plaatsen">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="pr_bezetting">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="ov_routes">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    <edittype widgetv2type="TextEdit" name="huidig_fiets_plaatsen">
+      <widgetv2config IsMultiline="0" fieldEditable="0" UseHtml="0" labelOnTop="0"/>
+    </edittype>
+    <edittype widgetv2type="TextEdit" name="huidig_pr_plaatsen">
+      <widgetv2config IsMultiline="0" fieldEditable="0" UseHtml="0" labelOnTop="0"/>
     </edittype>
   </edittypes>
-  <renderer-v2 forceraster="0" symbollevels="0" type="RuleRenderer" enableorderby="0">
-    <rules key="{a8a94b77-2789-4633-b535-71d150bd6a79}">
-      <rule filter=" &quot;fiets_bezetting&quot; >100" key="{edcb160c-1dd1-48be-961a-364fd07b2b18}" symbol="0" label="fiets bezetting > 100 %"/>
-      <rule filter=" &quot;fiets_bezetting&quot; > 80 AND  &quot;fiets_bezetting&quot; &lt;= 100" key="{edcb160c-1dd1-48be-961a-364fd07b2b18}" symbol="1" label="fiets bezetting 80 - 100 %"/>
-      <rule filter=" &quot;fiets_bezetting&quot; > 50 AND  &quot;fiets_bezetting&quot; &lt;= 80" key="{c5d22ce2-eee5-426d-80c9-e8330228eedd}" symbol="2" label="fiets bezetting 50 - 80 %"/>
-      <rule filter=" &quot;fiets_bezetting&quot; &lt;= 50" key="{08d1a81f-ddd3-480e-8623-3987df7abbf7}" symbol="3" label="fiets bezetting &lt; 50 %"/>
-    </rules>
+  <renderer-v2 forceraster="0" symbollevels="0" type="singleSymbol" enableorderby="0">
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="marker" name="0">
         <layer pass="0" class="SimpleMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="227,26,28,255"/>
+          <prop k="color" v="0,0,0,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
           <prop k="name" v="circle"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
           <prop k="outline_color" v="0,0,0,255"/>
-          <prop k="outline_style" v="no"/>
+          <prop k="outline_style" v="solid"/>
           <prop k="outline_width" v="0"/>
           <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
-          <prop k="size_dd_field" v=""/>
-          <prop k="size_dd_useexpr" v="1"/>
-          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="size_unit" v="MM"/>
-          <prop k="vertical_anchor_point" v="1"/>
-        </layer>
-      </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="marker" name="1">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="253,191,111,255"/>
-          <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="circle"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="0,0,0,255"/>
-          <prop k="outline_style" v="no"/>
-          <prop k="outline_width" v="0"/>
-          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="1"/>
-          <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
-          <prop k="size_dd_field" v=""/>
-          <prop k="size_dd_useexpr" v="1"/>
-          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="size_unit" v="MM"/>
-          <prop k="vertical_anchor_point" v="1"/>
-        </layer>
-      </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="marker" name="2">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="178,223,138,255"/>
-          <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="circle"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="0,0,0,255"/>
-          <prop k="outline_style" v="no"/>
-          <prop k="outline_width" v="0"/>
-          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="1"/>
-          <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
-          <prop k="size_dd_field" v=""/>
-          <prop k="size_dd_useexpr" v="1"/>
-          <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="size_unit" v="MM"/>
-          <prop k="vertical_anchor_point" v="1"/>
-        </layer>
-      </symbol>
-      <symbol alpha="1" clip_to_extent="1" type="marker" name="3">
-        <layer pass="0" class="SimpleMarker" locked="0">
-          <prop k="angle" v="0"/>
-          <prop k="color" v="51,160,44,255"/>
-          <prop k="horizontal_anchor_point" v="1"/>
-          <prop k="name" v="circle"/>
-          <prop k="offset" v="0,0"/>
-          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="0,0,0,255"/>
-          <prop k="outline_style" v="no"/>
-          <prop k="outline_width" v="0"/>
-          <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="outline_width_unit" v="MM"/>
-          <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="1"/>
-          <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;fiets_plaatsen&quot;, 0, 8316, 1, 10), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_linear(&quot;overstappers&quot;, 0, 15000, 2, 15), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -186,6 +84,8 @@
         </layer>
       </symbol>
     </symbols>
+    <rotation/>
+    <sizescale scalemethod="diameter"/>
   </renderer-v2>
   <labeling type="simple"/>
   <customproperties>
@@ -214,7 +114,7 @@
     <property key="labeling/distMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/drawLabels" value="true"/>
     <property key="labeling/enabled" value="true"/>
-    <property key="labeling/fieldName" value="station_naam"/>
+    <property key="labeling/fieldName" value="halte_naam"/>
     <property key="labeling/fitInPolygonOnly" value="false"/>
     <property key="labeling/fontCapitals" value="0"/>
     <property key="labeling/fontFamily" value=".Helvetica Neue DeskInterface"/>
@@ -332,21 +232,16 @@
   <featureBlendMode>0</featureBlendMode>
   <layerTransparency>0</layerTransparency>
   <displayfield>&lt;b>[% "station_naam" %]&lt;/b>&lt;br>
+Verandering: [% round("procentuele_verandering"*100,0) %] %&lt;br>
+&lt;br>
 Passanten: [% "totaal_passanten" %]&lt;br>
 Trein in- uitstappers: [% "in_uit_trein" %]&lt;br>
 Trein overstappers: [% "overstappers" %]&lt;br>
 BTM in- uitstappers: [% "in_uit_btm" %]&lt;br>
 Bezoekers: [% "bezoekers" %]&lt;br>
 &lt;br>
-Voortransport:&lt;br>
-BTM: [% "btm_voortransport" %] %&lt;br>
-Fiets: [% "fiets_voortransport" %] %&lt;br>
-P+R: [% "pr_voortransport" %] %&lt;br>
-&lt;br>
-Natransport:&lt;br>
-BTM: [% "btm_natransport" %] %&lt;br>
-Fiets: [% "fiets_natransport" %] %&lt;br>
-P+R: [% "pr_natransport" %] %&lt;br></displayfield>
+Fiets bezetting: [% "fiets_bezetting" %] %&lt;br>
+P+R bezetting: [% "pr_bezetting" %] %&lt;br></displayfield>
   <label>0</label>
   <labelattributes>
     <label fieldname="" text="Label"/>
@@ -369,7 +264,7 @@ P+R: [% "pr_natransport" %] %&lt;br></displayfield>
     <selectedonly on=""/>
   </labelattributes>
   <SingleCategoryDiagramRenderer diagramType="Pie">
-    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
+    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
       <fontProperties description=".Helvetica Neue DeskInterface,13,-1,5,50,0,0,0,0,0" style=""/>
       <attribute field="" color="#000000" label=""/>
     </DiagramCategory>
