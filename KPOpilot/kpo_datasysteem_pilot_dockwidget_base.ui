@@ -306,7 +306,7 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>OV Fiets</string>
+               <string>OV fietsen</string>
               </property>
              </item>
              <item>
@@ -498,17 +498,12 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="intensitySelectCombo">
              <item>
               <property name="text">
-               <string>Inwoners</string>
+               <string>Huishoudens</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Huishouden</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Intensiteit (werknemer, studenten)</string>
+               <string>Intensiteit (inwoners, werknemer, studenten)</string>
               </property>
              </item>
              <item>
@@ -701,11 +696,6 @@ p, li { white-space: pre-wrap; }
              <item>
               <property name="text">
                <string>In- en uitstappers trein</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Overstappers</string>
               </property>
              </item>
              <item>

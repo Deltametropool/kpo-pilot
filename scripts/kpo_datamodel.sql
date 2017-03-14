@@ -160,12 +160,11 @@ CREATE TABLE datasysteem.belangrijke_locaties(
 	CONSTRAINT belangrijke_locaties_pkey PRIMARY KEY (sid)
 );
 
--- DROP TABLE IF EXISTS datasysteem.regionale_voorzieningen CASCADE;
-CREATE TABLE datasysteem.regionale_voorzieningen(
+-- DROP TABLE IF EXISTS datasysteem.magneten CASCADE;
+CREATE TABLE datasysteem.magneten(
 	sid serial NOT NULL,
 	geom geometry(MultiPoint,28992),
-	locatie_id character varying,
-	type_locatie character varying,
+	locatie_kwaliteit integer,
 	locatie_naam character varying,
 	op_loopafstand boolean,
 	ov_routes_ids character varying,

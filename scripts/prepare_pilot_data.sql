@@ -40,7 +40,7 @@ INSERT INTO datasysteem.spoorwegen (geom, fid, type_spoorbaan)
 		WHERE "vervoerfunctie" in ('personenvervoer','gemengd gebruik') 
 		AND "status" = 'in gebruik'
 	) spoor,
-	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.boundary LIMIT 1) pilot
+	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') pilot
 	WHERE ST_Intersects(spoor.wkb_geometry, pilot.geom)
 ;
 -- water
@@ -52,7 +52,7 @@ CREATE TABLE datasysteem.water (
 INSERT INTO datasysteem.water (geom)
 	SELECT ST_MakeValid(water.geom)
 	FROM sources.nl_water_simpel water,
-	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.boundary LIMIT 1) pilot
+	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') pilot
 	WHERE ST_Intersects(ST_MakeValid(water.geom),pilot.geom)
 ;
 -- municipal borders
@@ -76,7 +76,7 @@ CREATE TABLE datasysteem.bebouwdgebieden (
 INSERT INTO datasysteem.bebouwdgebieden (geom)
 	SELECT bbg.geom
 	FROM sources.sv_ag_huisv_bbg_detail bbg,
-	(SELECT geom FROM datasysteem.boundary LIMIT 1) pilot
+	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') pilot
 	WHERE ST_Intersects(bbg.geom, pilot.geom)
 ;
 
@@ -91,7 +91,7 @@ INSERT INTO datasysteem.woonscenarios(
 	SELECT huidig.geom, huidig.zone_id, huidig.woonplaats, 'Huidige situatie',
 		huidig.huish, FALSE, FALSE, ST_Area(huidig.geom), 0, 0
 	FROM sources.w_2010_versie_17_feb_2014 huidig,
-	(SELECT geom FROM datasysteem.boundary LIMIT 1) pilot
+	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') pilot
 	WHERE ST_Intersects(huidig.geom, pilot.geom)
 ;
 INSERT INTO datasysteem.woonscenarios(
@@ -329,7 +329,7 @@ INSERT INTO datasysteem.ontwikkellocaties(geom, plan_naam, plan_id, gemeente, pl
 		te_slopen, (wtypapp + wtypggb), (wtypapp + wtypggb - te_slopen), ST_Area(geom)
 	FROM sources.vdm_plancapaciteit_2016_update
 ;
--- Insert Leegstanden data
+-- Insert Kantorenleegstand data
 -- DELETE FROM datasysteem.ontwikkellocaties WHERE plan_naam = 'Leegstanden';
 INSERT INTO datasysteem.ontwikkellocaties(geom, plan_naam, plan_id, gemeente, plaatsnaam, adres,
 		bestaande_woningen, geplande_woningen, net_nieuwe_woningen, vlakte)
@@ -466,7 +466,7 @@ UPDATE datasysteem.invloedsgebied_overlap AS overlap SET
 INSERT INTO datasysteem.belangrijke_locaties(geom, locatie_id, locatie_naam)
 	SELECT locatie.geom, locatie.objectid, locatie.naam
 	FROM sources."economische_kerngebieden_DEF" locatie,
-	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.boundary LIMIT 1) pilot
+	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') pilot
 	WHERE ST_Intersects(locatie.geom, pilot.geom)
 ;
 -- update op_loopafstand
@@ -502,37 +502,37 @@ UPDATE datasysteem.belangrijke_locaties AS locatie SET
 
 
 ----
--- Calculate location of important services
--- DELETE FROM datasysteem.regionale_voorzieningen;
-INSERT INTO datasysteem.regionale_voorzieningen(geom, locatie_id, type_locatie, locatie_naam)
-	SELECT locatie.geom, locatie.lisanr, locatie.vdm_type_v, locatie.naam
-	FROM sources.pnh_lisa_2016_selectie_voorzieningen locatie,
-	(SELECT ST_Buffer(geom,5000) geom FROM datasysteem.boundary LIMIT 1) pilot
+-- Calculate location of magneten
+-- DELETE FROM datasysteem.magneten;
+INSERT INTO datasysteem.magneten(geom, locatie_kwaliteit, locatie_naam)
+	SELECT locatie.geom, locatie."kwal cat", locatie.naam
+	FROM sources.pnh_magneten locatie,
+	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') pilot
 	WHERE ST_Intersects(locatie.geom, pilot.geom)
 ;
 -- update op_loopafstand
-UPDATE datasysteem.regionale_voorzieningen AS locatie SET 
+UPDATE datasysteem.magneten AS locatie SET 
 	op_loopafstand = TRUE
 	FROM (
 		SELECT a.sid
-		FROM datasysteem.regionale_voorzieningen a,
+		FROM datasysteem.magneten a,
 		(SELECT * FROM datasysteem.isochronen
 		WHERE halte_modaliteit = 'trein' AND modaliteit = 'walk') b
 		WHERE ST_Intersects(a.geom, b.geom) 
 	) isochrone
 	WHERE locatie.sid = isochrone.sid
 ;
-UPDATE datasysteem.regionale_voorzieningen SET op_loopafstand = FALSE WHERE op_loopafstand IS NULL;
+UPDATE datasysteem.magneten SET op_loopafstand = FALSE WHERE op_loopafstand IS NULL;
 -- update ov routes crossing the regionale voorzieningen
--- UPDATE datasysteem.regionale_voorzieningen SET ov_routes_ids = NULL;
-UPDATE datasysteem.regionale_voorzieningen AS locatie SET 
+-- UPDATE datasysteem.magneten SET ov_routes_ids = NULL;
+UPDATE datasysteem.magneten AS locatie SET 
 	ov_routes_ids = routes.ids
 	FROM (SELECT c.sid, string_agg(c.route_id,',' ORDER BY c.route_id) ids
 		FROM (SELECT a.sid, b.route_id
 			FROM (
 				SELECT route_id, ST_Multi((ST_DumpPoints(geom)).geom) geom
 				FROM datasysteem.ov_routes
-			) AS b, datasysteem.regionale_voorzieningen a
+			) AS b, datasysteem.magneten a
 			WHERE ST_DWithin(a.geom,b.geom,400)
 			GROUP BY a.sid, b.route_id
 		) c

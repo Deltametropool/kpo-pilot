@@ -235,10 +235,10 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def updateScenarioSummary(self, data_values):
         text_list = []
         if len(data_values) == 4:
-            text_list.append('%d totaal huishouden' % data_values[0])
-            text_list.append('%d op loopafstand van knooppunten' % data_values[1])
-            text_list.append('%d op fietsafstand van knooppunten' % data_values[2])
-            text_list.append('%d buiten invloedsgebied van knooppunten' % data_values[3])
+            text_list.append('%s  totaal huishoudens' % '{0:,}'.format(data_values[0]))
+            text_list.append('%s  op loopafstand van knooppunten' % '{0:,}'.format(data_values[1]))
+            text_list.append('%s  op fietsafstand van knooppunten' % '{0:,}'.format(data_values[2]))
+            text_list.append('%s  buiten invloedsgebied van knooppunten' % '{0:,}'.format(data_values[3]))
             self.__setTextField__('scenarioSummaryText', text_list)
 
     # Methods for Knooppunten
@@ -335,9 +335,9 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def updatePlanSummary(self, data_values):
         text_list = []
         if len(data_values) == 3:
-            text_list.append('%d totaal woningen' % data_values[0])
-            text_list.append('%d in onderbenut bereikbaare locaties' % data_values[1])
-            text_list.append('%d buiten onderbenut bereikbaare locaties' % data_values[2])
+            text_list.append('%s  totaal woningen' % '{0:,}'.format(data_values[0]))
+            text_list.append('%s  in onderbenut bereikbaare locaties' % '{0:,}'.format(data_values[1]))
+            text_list.append('%s  buiten onderbenut bereikbaare locaties' % '{0:,}'.format(data_values[2]))
             self.__setTextField__('planSummaryText', text_list)
 
     def updatePlanTable(self, headers, data_values):
@@ -516,9 +516,9 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 else:
                     entry.setData(QtCore.Qt.EditRole, feature[j])
                 table.setItem(i, j, entry)
-        table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-        for m in range(1,columns):
+        for m in range(0,columns-1):
             table.horizontalHeader().setResizeMode(m, QtGui.QHeaderView.ResizeToContents)
+        table.horizontalHeader().setResizeMode(columns-1, QtGui.QHeaderView.Stretch)
         table.resizeRowsToContents()
         table.setSortingEnabled(True)
 
