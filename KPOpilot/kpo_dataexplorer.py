@@ -90,34 +90,30 @@ class KPOExplorer:
                      'Minimaal PTAL: 5 - Very Good (20 tot 25)',
                      'Minimaal PTAL: 6a - Excellent (25 tot 40)',
                      'Minimaal PTAL: 6b - Excellent (40 of meer)'],
-            'huishoudens': ['Maximum: 10 huishoudens per hectare',
-                            'Maximum: 20 huishoudens per hectare',
-                            'Maximum: 40 huishoudens per hectare',
-                            'Maximum: 60 huishoudens per hectare',
-                            'Maximum: 80 huishoudens per hectare',
-                            'Maximum: 100 huishoudens per hectare',
-                            'Maximum: 100 of meer huishoudens per hectare'],
-            'intensiteit': ['Maximum: 10 personen per hectare',
-                            'Maximum: 25 personen per hectare',
-                            'Maximum: 50 personen per hectare',
-                            'Maximum: 100 personen per hectare',
-                            'Maximum: 200 personen per hectare',
-                            'Maximum: 300 personen per hectare',
-                            'Maximum: 300 of meer personen per hectare'],
-            'fysieke_dichtheid': ['Maximum: 0.1 FSI',
-                                  'Maximum: 0.4 FSI',
-                                  'Maximum: 0.7 FSI',
-                                  'Maximum: 1.0 FSI',
-                                  'Maximum: 1.5 FSI',
-                                  'Maximum: 2.0 FSI',
-                                  'Maximum: 2.0 of meer FSI'],
-            'woz_waarde': ['Maximum: 150k WOZ',
-                           'Maximum: 200k WOZ',
-                           'Maximum: 300k WOZ',
-                           'Maximum: 500k WOZ',
-                           'Maximum: 750k WOZ',
-                           'Maximum: 1000k WOZ',
-                           'Maximum: 1000k of meer WOZ']
+            'huishoudens': ['Minder dan 10 huishoudens per hectare',
+                            'Minder dan 20 huishoudens per hectare',
+                            'Minder dan 40 huishoudens per hectare',
+                            'Minder dan 60 huishoudens per hectare',
+                            'Minder dan 80 huishoudens per hectare',
+                            'Minder dan 100 huishoudens per hectare'],
+            'intensiteit': ['Minder dan 10 personen per hectare',
+                            'Minder dan 25 personen per hectare',
+                            'Minder dan 50 personen per hectare',
+                            'Minder dan 100 personen per hectare',
+                            'Minder dan 200 personen per hectare',
+                            'Minder dan 300 personen per hectare'],
+            'fysieke_dichtheid': ['Minder dan 0.1 FSI',
+                                  'Minder dan 0.4 FSI',
+                                  'Minder dan 0.7 FSI',
+                                  'Minder dan 1.0 FSI',
+                                  'Minder dan 1.5 FSI',
+                                  'Minder dan 2.0 FSI'],
+            'woz_waarde': ['Minder dan 150k WOZ',
+                           'Minder dan 200k WOZ',
+                           'Minder dan 300k WOZ',
+                           'Minder dan 500k WOZ',
+                           'Minder dan 750k WOZ',
+                           'Minder dan 1000k WOZ']
         }
         self.onderbenutLevels = {
             'ptal': ['(\'1a\', \'1b\', \'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')',
@@ -330,11 +326,11 @@ class KPOExplorer:
         self.showPlan(self.dlg.isPlanVisible())
 
     def showOnderbenutLocaties(self, onoff):
-        self.setLayerVisible('Onderbenut bereikbare lokaties', False)
+        self.setLayerVisible('Onderbenut bereikbare locaties', False)
         if onoff:
             if not self.dlg.isIntensityVisible() and not self.dlg.isAccessibilityVisible():
-                self.setLayerVisible('Onderbenut bereikbare locaties', onoff)
-                self.setCurrentLayer('Onderbenut bereikbare locaties')
+                self.setLayerVisible('Onderbenute bereikbare locaties', onoff)
+                self.setCurrentLayer('Onderbenute bereikbare locaties')
 
     # Intensity methods
     def showIntensity(self, onoff):
@@ -351,12 +347,12 @@ class KPOExplorer:
         expression = ''
         style = ''
         # get relevant level values
-        if intensity_type == 'Huishouden':
+        if intensity_type == 'Huishoudens':
             label = self.onderbenutLabels['huishoudens'][intensity_level]
             if intensity_level < 6:
                 expression = '"huishoudens" < %s' % self.onderbenutLevels['huishoudens'][intensity_level]
             style = 'verstedelijking_huishoudens'
-        elif intensity_type == 'Intensiteit (werknemer, studenten)':
+        elif intensity_type == 'Intensiteit (inwoners, werknemer, studenten)':
             label = self.onderbenutLabels['intensiteit'][intensity_level]
             if intensity_level < 6:
                 expression = '"intensiteit" < %s' % self.onderbenutLevels['intensiteit'][intensity_level]
@@ -407,7 +403,7 @@ class KPOExplorer:
             expression = self.ptal_level
         elif self.intensity_level:
             expression = self.intensity_level
-        self.setFilterExpression('Onderbenut bereikbare lokaties', expression)
+        self.setFilterExpression('Onderbenute bereikbare locaties', expression)
         self.calculateIntersections()
 
     # Plan location methods
@@ -429,8 +425,8 @@ class KPOExplorer:
             style = 'verstedelijking_RAP'
             fields = ['gemeente', 'geplande_woningen']
             headers = ['Gemeente', 'Woningen']
-        elif plan_type == 'RAP minder Plancapaciteit':
-            expression = '"plan_naam" = \'%s\'' % plan_type
+        elif plan_type == 'Restant opgave RAP':
+            expression = '"plan_naam" = \'%s\'' % 'RAP minder Plancapaciteit'
             style = 'verstedelijking_RAP'
             fields = ['gemeente', 'geplande_woningen', 'bestaande_woningen', 'net_nieuwe_woningen']
             headers = ['Gemeente', 'RAP', 'Plancapaciteit', 'Verschil']
@@ -439,7 +435,7 @@ class KPOExplorer:
             style = 'verstedelijking_plancapaciteit'
             fields = ['plaatsnaam', 'geplande_woningen', 'gemiddelde_bereikbaarheidsindex']
             headers = ['Plaatsnaam', 'Woningen', 'PTAL']
-        elif plan_type == 'Leegstanden':
+        elif plan_type == 'Kantorenleegstand':
             expression = '"plan_naam" = \'%s\' AND "plaatsnaam" IS NOT NULL' % plan_type
             style = 'verstedelijking_plancapaciteit'
             fields = ['plaatsnaam', 'vlakte', 'geplande_woningen', 'gemiddelde_bereikbaarheidsindex']
@@ -461,7 +457,7 @@ class KPOExplorer:
         # get all relevant cell attributes
         cell_ids = []
         gemeente = []
-        cell_attributes = self.getFeatureValues('Onderbenut bereikbare lokaties', ['cell_id', 'gemeente'])
+        cell_attributes = self.getFeatureValues('Onderbenute bereikbare locaties', ['cell_id', 'gemeente'])
         for values in cell_attributes.itervalues():
             cell_ids.append(values[0])
             gemeente.append(values[1])

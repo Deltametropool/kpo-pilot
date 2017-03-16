@@ -187,7 +187,7 @@ class KPOpilot:
             callback=self.run,
             parent=self.iface.mainWindow())
 
-        icon_path = self.plugin_dir + '/images/icon.png'
+        icon_path = self.plugin_dir + '/images/zoom_icon.png'
         self.add_action(
             icon_path,
             text=self.tr(u'Zoom Provincie'),

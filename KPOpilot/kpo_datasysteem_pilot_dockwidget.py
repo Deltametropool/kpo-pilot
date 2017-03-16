@@ -85,10 +85,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # set-up dialog defaults
         #  Knooppunten
-        self.scenarioSelectCombo.setCurrentIndex(0)
+        self.scenarioSelectCombo.setCurrentIndex(1)
         self.scenarioShowCheck.setChecked(True)
-        self.isochronesShowCheck.setChecked(False)
-        self.__activateTODLevel__(False)
+        self.isochronesShowCheck.setChecked(True)
+        self.__activateTODLevel__(True)
+        self.todPolicyValueLabel.hide()
         self.todPolicySlider.setValue(0)
         self.knooppuntenAttributeCombo.setCurrentIndex(0)
         self.knooppuntenShowCheck.setChecked(True)
@@ -336,8 +337,8 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         text_list = []
         if len(data_values) == 3:
             text_list.append('%s  totaal woningen' % '{0:,}'.format(data_values[0]))
-            text_list.append('%s  in onderbenut bereikbaare locaties' % '{0:,}'.format(data_values[1]))
-            text_list.append('%s  buiten onderbenut bereikbaare locaties' % '{0:,}'.format(data_values[2]))
+            text_list.append('%s  in onderbenute bereikbaare locaties' % '{0:,}'.format(data_values[1]))
+            text_list.append('%s  buiten onderbenute bereikbaare locaties' % '{0:,}'.format(data_values[2]))
             self.__setTextField__('planSummaryText', text_list)
 
     def updatePlanTable(self, headers, data_values):
