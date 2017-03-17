@@ -14,10 +14,7 @@ version=0.1
 author=Jorge Gil
 email=gil.jorge@gmail.com
 
-about=Het datasysteem brengt bestaande informatie van verschillende partijen over het functioneren van knooppunten,
-mobiliteitsnetwerk, beschikbare ruimte en plannen voor verstedelijking in Nederland samen om inzichten te verwerven
-in het optimaal benutten van de bestaande ruimte en netwerken. Het doel van het systeem is beleidsmedewerkers te
-ondersteunen bij het beantwoorden van belangrijke beleidsvragen met hulp van beschikbare data.
+about=Het datasysteem brengt bestaande informatie van verschillende partijen over het functioneren van knooppunten, mobiliteitsnetwerk, beschikbare ruimte en plannen voor verstedelijking in Nederland samen om inzichten te verwerven in het optimaal benutten van de bestaande ruimte en netwerken. Het doel van het systeem is beleidsmedewerkers te ondersteunen bij het beantwoorden van belangrijke beleidsvragen met hulp van beschikbare data.
 
 tracker=https://github.com/jorgegil/kpo-pilot/issues
 repository=https://github.com/jorgegil/kpo-pilot

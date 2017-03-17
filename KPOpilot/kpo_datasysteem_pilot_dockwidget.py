@@ -511,11 +511,10 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         for i, feature in enumerate(values):
             for j in range(columns):
                 entry = QtGui.QTableWidgetItem()
-                # the first column is a string
-                if j == 0:
-                    entry.setText(str(feature[j]))
+                if self.isNumeric(feature[j]):
+                    entry.setData(QtCore.Qt.EditRole, '{0:,}'.format(feature[j]))
                 else:
-                    entry.setData(QtCore.Qt.EditRole, feature[j])
+                    entry.setText(str(feature[j]))
                 table.setItem(i, j, entry)
         for m in range(0,columns-1):
             table.horizontalHeader().setResizeMode(m, QtGui.QHeaderView.ResizeToContents)
@@ -527,3 +526,19 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         slider = self.findChild(QtGui.QSlider, gui_name)
         slider.setRange(minimum, maximum)
         slider.setSingleStep(step)
+
+    # check if a text string is of numeric type
+    def isNumeric(self, txt):
+        try:
+            int(txt)
+            return True
+        except ValueError:
+            try:
+                long(txt)
+                return True
+            except ValueError:
+                try:
+                    float(txt)
+                    return True
+                except ValueError:
+                    return False
