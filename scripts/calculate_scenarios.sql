@@ -145,12 +145,13 @@ UPDATE datasysteem.overzicht_woonscenarios
 -- TOD 0
 -- insert knooppunten scenario values for TOD scenario 0, only stations within walking or cycling distance
 INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_naam, halte_id, halte_naam,
-		scenario_naam, tod_beleidsniveau, huishoudens, procentuele_verandering)
+		scenario_naam, tod_beleidsniveau, huishoudens, nieuwe_huishoudens, procentuele_verandering)
 	SELECT areas.geom, stops.stop_code, areas.alt_name, stops.stop_id, stops.stop_name, 
-		woon.scenario_naam, 0, SUM(woon.huishoudens),
+		woon.scenario_naam, 0, SUM(woon.huishoudens), SUM(woon.nieuwe_huishoudens),
 		CASE
-			WHEN SUM(woon.huishoudens-woon.nieuwe_huishoudens) = 0 THEN SUM(woon.nieuwe_huishoudens)
-			ELSE SUM(woon.nieuwe_huishoudens)::numeric/SUM(woon.huishoudens-woon.nieuwe_huishoudens)::numeric
+			WHEN SUM(woon.huishoudens)-SUM(woon.nieuwe_huishoudens) = 0 
+				THEN SUM(woon.nieuwe_huishoudens)
+			ELSE SUM(woon.nieuwe_huishoudens)::numeric/(SUM(woon.huishoudens)-SUM(woon.nieuwe_huishoudens))::numeric
 		END
 	FROM networks.ov_stop_areas AS areas
 	JOIN (
@@ -168,14 +169,50 @@ INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_na
 	GROUP BY areas.geom, stops.stop_code, areas.alt_name, stops.stop_id, stops.stop_name, woon.scenario_naam
 ;
 -- TOD 50
--- insert knooppunten values for TOD scenario 0, only stations within walking or cycling distance
+-- insert knooppunten values for TOD scenario 50, 50% new households to nearest stations
 INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_naam, halte_id, halte_naam,
-		scenario_naam, tod_beleidsniveau, huishoudens, procentuele_verandering)
+		scenario_naam, tod_beleidsniveau, huishoudens, nieuwe_huishoudens, procentuele_verandering)
 	SELECT areas.geom, stops.stop_code, areas.alt_name, stops.stop_id, stops.stop_name, 
-		woon.scenario_naam, 50, SUM(woon.huishoudens),
+		woon.scenario_naam, 50, SUM(woon.huishoudens), SUM(woon.nieuwe_huishoudens),
 		CASE
-			WHEN SUM(woon.huishoudens-woon.nieuwe_huishoudens) = 0 THEN SUM(woon.nieuwe_huishoudens)
-			ELSE SUM(woon.nieuwe_huishoudens)::numeric/SUM(woon.huishoudens-woon.nieuwe_huishoudens)::numeric
+			WHEN SUM(woon.huishoudens)-SUM(woon.nieuwe_huishoudens) = 0 THEN SUM(woon.nieuwe_huishoudens)
+			ELSE SUM(woon.nieuwe_huishoudens)::numeric/(SUM(woon.huishoudens)-SUM(woon.nieuwe_huishoudens))::numeric
+		END
+	FROM networks.ov_stop_areas AS areas
+	JOIN (
+		SELECT stop_id, stop_name, stop_code, stop_area FROM networks.ov_stops
+		WHERE trein = True AND location_type = 1
+	) AS stops
+	ON(areas.sid = stops.stop_area)
+	JOIN (
+		SELECT scenario_naam, dichtstbijzijnde_station, 
+			CASE
+				WHEN op_loopafstand = TRUE OR op_fietsafstand = TRUE 
+					THEN huishoudens
+				WHEN op_loopafstand = FALSE AND op_fietsafstand = FALSE AND nieuwe_huishoudens <= 0 
+					THEN 0
+				ELSE nieuwe_huishoudens * 0.5
+			END AS huishoudens,
+			CASE
+				WHEN op_loopafstand = TRUE OR op_fietsafstand = TRUE THEN nieuwe_huishoudens
+				WHEN op_loopafstand = FALSE AND op_fietsafstand = FALSE AND nieuwe_huishoudens <= 0 THEN 0
+				ELSE nieuwe_huishoudens * 0.5
+			END AS nieuwe_huishoudens
+		FROM datasysteem.woonscenarios
+		WHERE scenario_naam <> 'Huidige situatie'
+	) AS woon
+	ON (stops.stop_name = woon.dichtstbijzijnde_station)
+	GROUP BY areas.geom, stops.stop_code, areas.alt_name, stops.stop_id, stops.stop_name, woon.scenario_naam
+;
+-- TOD 100
+-- insert knooppunten values for TOD scenario 100, 100% new households to nearest stations
+INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_naam, halte_id, halte_naam,
+		scenario_naam, tod_beleidsniveau, huishoudens, nieuwe_huishoudens, procentuele_verandering)
+	SELECT areas.geom, stops.stop_code, areas.alt_name, stops.stop_id, stops.stop_name, 
+		woon.scenario_naam, 100, SUM(woon.huishoudens), SUM(woon.nieuwe_huishoudens),
+		CASE
+			WHEN SUM(woon.huishoudens)-SUM(woon.nieuwe_huishoudens) = 0 THEN SUM(woon.nieuwe_huishoudens)
+			ELSE SUM(woon.nieuwe_huishoudens)::numeric/(SUM(woon.huishoudens)-SUM(woon.nieuwe_huishoudens))::numeric
 		END
 	FROM networks.ov_stop_areas AS areas
 	JOIN (
@@ -187,36 +224,14 @@ INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_na
 		SELECT scenario_naam, dichtstbijzijnde_station, 
 			CASE
 				WHEN op_loopafstand = TRUE OR op_fietsafstand = TRUE THEN huishoudens
-				ELSE huishoudens * 0.5
+				WHEN op_loopafstand = FALSE AND op_fietsafstand = FALSE AND nieuwe_huishoudens <= 0 
+					THEN 0
+				ELSE nieuwe_huishoudens
 			END AS huishoudens,
 			CASE
-				WHEN op_loopafstand = TRUE OR op_fietsafstand = TRUE THEN nieuwe_huishoudens
-				ELSE nieuwe_huishoudens * 0.5
+				WHEN op_loopafstand = FALSE AND op_fietsafstand = FALSE AND nieuwe_huishoudens <= 0 THEN 0
+				ELSE nieuwe_huishoudens
 			END AS nieuwe_huishoudens
-		FROM datasysteem.woonscenarios
-		WHERE scenario_naam <> 'Huidige situatie'
-	) AS woon
-	ON (stops.stop_name = woon.dichtstbijzijnde_station)
-	GROUP BY areas.geom, stops.stop_code, areas.alt_name, stops.stop_id, stops.stop_name, woon.scenario_naam
-;
--- TOD 100
--- insert knooppunten values for TOD scenario 0, only stations within walking or cycling distance
-INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_naam, halte_id, halte_naam,
-		scenario_naam, tod_beleidsniveau, huishoudens, procentuele_verandering)
-	SELECT areas.geom, stops.stop_code, areas.alt_name, stops.stop_id, stops.stop_name, 
-		woon.scenario_naam, 100, SUM(woon.huishoudens),
-		CASE
-			WHEN SUM(woon.huishoudens-woon.nieuwe_huishoudens) = 0 THEN SUM(woon.nieuwe_huishoudens)
-			ELSE SUM(woon.nieuwe_huishoudens)::numeric/SUM(woon.huishoudens-woon.nieuwe_huishoudens)::numeric
-		END
-	FROM networks.ov_stop_areas AS areas
-	JOIN (
-		SELECT stop_id, stop_name, stop_code, stop_area FROM networks.ov_stops
-		WHERE trein = True AND location_type = 1
-	) AS stops
-	ON(areas.sid = stops.stop_area)
-	JOIN (
-		SELECT scenario_naam, dichtstbijzijnde_station, huishoudens, nieuwe_huishoudens
 		FROM datasysteem.woonscenarios
 		WHERE scenario_naam <> 'Huidige situatie'
 	) AS woon
@@ -225,11 +240,10 @@ INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_na
 ;
 -- update knooppunt scenario characteristics
 UPDATE datasysteem.knooppuntenscenarios knoop SET
-	totaal_passanten = (knoop.procentuele_verandering * stations.totaal_passanten) + stations.totaal_passanten,
+	fiets_plaatsen = stations.fiets_plaatsen,
+	pr_plaatsen = stations.pr_plaatsen,
 	in_uit_trein = (knoop.procentuele_verandering * stations.in_uit_trein) + stations.in_uit_trein,
-	overstappers = (knoop.procentuele_verandering * stations.overstappers) + stations.overstappers,
 	in_uit_btm = (knoop.procentuele_verandering * stations.in_uit_btm) + stations.in_uit_btm,
-	bezoekers = (knoop.procentuele_verandering * stations.bezoekers) + stations.bezoekers,
 	fiets_bezetting = (knoop.procentuele_verandering * stations.fiets_bezetting) + stations.fiets_bezetting,
 	pr_bezetting = (knoop.procentuele_verandering * stations.pr_bezetting) + stations.pr_bezetting
 	FROM datasysteem.knooppunten AS stations
