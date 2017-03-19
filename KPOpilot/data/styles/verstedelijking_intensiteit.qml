@@ -10,9 +10,6 @@
     <edittype widgetv2type="TextEdit" name="huishoudens">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="inwoners">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
     <edittype widgetv2type="TextEdit" name="intensiteit">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
@@ -28,16 +25,19 @@
     <edittype widgetv2type="TextEdit" name="ov_bereikbaarheidsindex">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
+    <edittype widgetv2type="TextEdit" name="gemeente">
+      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+    </edittype>
   </edittypes>
   <renderer-v2 attr="intensiteit" forceraster="0" symbollevels="0" type="graduatedSymbol" graduatedMethod="GraduatedColor" enableorderby="0">
     <ranges>
-      <range render="true" symbol="0" lower="0.000000000000000" upper="10.000000000000000" label=" Minder 10 "/>
-      <range render="true" symbol="1" lower="10.000000000000000" upper="25.000000000000000" label=" 10 - 25 "/>
-      <range render="true" symbol="2" lower="25.000000000000000" upper="50.000000000000000" label=" 25 - 50 "/>
-      <range render="true" symbol="3" lower="50.000000000000000" upper="100.000000000000000" label=" 50 - 100 "/>
-      <range render="true" symbol="4" lower="100.000000000000000" upper="200.000000000000000" label=" 100 - 200 "/>
-      <range render="true" symbol="5" lower="200.000000000000000" upper="300.000000000000000" label=" 200 - 300 "/>
-      <range render="true" symbol="6" lower="300.000000000000000" upper="33697.000000000000000" label=" 300 of meer"/>
+      <range render="true" symbol="0" lower="0.000000000000000" upper="50.000000000000000" label=" 0 - 50 "/>
+      <range render="true" symbol="1" lower="50.000000000000000" upper="100.000000000000000" label=" 50 - 100 "/>
+      <range render="true" symbol="2" lower="100.000000000000000" upper="200.000000000000000" label=" 100 - 200 "/>
+      <range render="true" symbol="3" lower="200.000000000000000" upper="400.000000000000000" label=" 200 - 400 "/>
+      <range render="true" symbol="4" lower="400.000000000000000" upper="600.000000000000000" label=" 400 - 600 "/>
+      <range render="true" symbol="5" lower="600.000000000000000" upper="800.000000000000000" label=" 600 - 800 "/>
+      <range render="true" symbol="6" lower="800.000000000000000" upper="7000.000000000000000" label="800 of meer"/>
     </ranges>
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
@@ -318,7 +318,7 @@
   </customproperties>
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
-  <layerTransparency>0</layerTransparency>
+  <layerTransparency>25</layerTransparency>
   <displayfield>Huihoudens: [% "huishoudens" %]
 Inwoners: [% "inwoners" %]
 Intensiteit: [% "intensiteit" %]
@@ -346,7 +346,7 @@ WOZ waarde: [% "woz_waarde" %]</displayfield>
     <selectedonly on=""/>
   </labelattributes>
   <SingleCategoryDiagramRenderer diagramType="Pie">
-    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
+    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
       <fontProperties description=".Helvetica Neue DeskInterface,13,-1,5,50,0,0,0,0,0" style=""/>
       <attribute field="" color="#000000" label=""/>
     </DiagramCategory>

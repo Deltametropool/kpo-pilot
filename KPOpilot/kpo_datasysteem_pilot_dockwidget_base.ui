@@ -339,11 +339,6 @@ p, li { white-space: pre-wrap; }
                <string>P+R bezetting %</string>
               </property>
              </item>
-             <item>
-              <property name="text">
-               <string>OV fietsen</string>
-              </property>
-             </item>
             </widget>
            </item>
            <item row="0" column="1">
@@ -528,7 +523,7 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Intensiteit (inwoners, werknemer, studenten)</string>
+               <string>Intensiteit (inwoners,werknemer,studenten)</string>
               </property>
              </item>
              <item>
@@ -722,11 +717,6 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="overbelastAttributeCombo">
              <item>
               <property name="text">
-               <string>Passanten</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
                <string>In- en uitstappers trein</string>
               </property>
              </item>
@@ -737,17 +727,22 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>OV Fiets</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
                <string>Fiets bezetting %</string>
               </property>
              </item>
              <item>
               <property name="text">
                <string>P+R bezetting %</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Passanten</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>OV Fiets</string>
               </property>
              </item>
             </widget>

@@ -29,21 +29,22 @@
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
   </edittypes>
-  <renderer-v2 attr="huishoudens" forceraster="0" symbollevels="0" type="graduatedSymbol" graduatedMethod="GraduatedColor" enableorderby="0">
-    <ranges>
-      <range render="true" symbol="0" lower="0.000000000000000" upper="10.000000000000000" label="Minder 10"/>
-      <range render="true" symbol="1" lower="10.000000000000000" upper="20.000000000000000" label=" 10 - 20"/>
-      <range render="true" symbol="2" lower="20.000000000000000" upper="40.000000000000000" label="20 - 40"/>
-      <range render="true" symbol="3" lower="40.000000000000000" upper="60.000000000000000" label="40 - 60 "/>
-      <range render="true" symbol="4" lower="60.000000000000000" upper="80.000000000000000" label="60 - 80"/>
-      <range render="true" symbol="5" lower="80.000000000000000" upper="100.000000000000000" label="80 - 100"/>
-      <range render="true" symbol="6" lower="100.000000000000000" upper="405.000000000000000" label="100 of meer"/>
-    </ranges>
+  <renderer-v2 attr="ov_bereikbaarheidsniveau" forceraster="0" symbollevels="0" type="categorizedSymbol" enableorderby="0">
+    <categories>
+      <category render="true" symbol="0" value="1a" label="1a"/>
+      <category render="true" symbol="1" value="1b" label="1b"/>
+      <category render="true" symbol="2" value="2" label="2"/>
+      <category render="true" symbol="3" value="3" label="3"/>
+      <category render="true" symbol="4" value="4" label="4"/>
+      <category render="true" symbol="5" value="5" label="5"/>
+      <category render="true" symbol="6" value="6a" label="6a"/>
+      <category render="true" symbol="7" value="6b" label="6b"/>
+    </categories>
     <symbols>
       <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="255,255,178,255"/>
+          <prop k="color" v="31,3,140,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -58,7 +59,7 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="1">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="254,221,120,255"/>
+          <prop k="color" v="29,89,211,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -73,7 +74,7 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="2">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="253,183,81,255"/>
+          <prop k="color" v="0,218,218,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -88,7 +89,7 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="3">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="253,141,60,255"/>
+          <prop k="color" v="150,236,98,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -103,7 +104,7 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="4">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="244,86,41,255"/>
+          <prop k="color" v="251,235,0,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -118,7 +119,7 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="5">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="223,39,34,255"/>
+          <prop k="color" v="253,202,46,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -133,7 +134,22 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="6">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="189,0,38,255"/>
+          <prop k="color" v="255,51,0,255"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_style" v="no"/>
+          <prop k="outline_width" v="0.26"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="style" v="solid"/>
+        </layer>
+      </symbol>
+      <symbol alpha="1" clip_to_extent="1" type="fill" name="7">
+        <layer pass="0" class="SimpleFill" locked="0">
+          <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
+          <prop k="color" v="189,9,0,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -150,7 +166,7 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="255,255,178,255"/>
+          <prop k="color" v="157,111,89,179"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -164,16 +180,14 @@
       </symbol>
     </source-symbol>
     <colorramp type="gradient" name="[source]">
-      <prop k="color1" v="255,255,178,255"/>
-      <prop k="color2" v="189,0,38,255"/>
+      <prop k="color1" v="15,31,134,255"/>
+      <prop k="color2" v="255,0,0,255"/>
       <prop k="discrete" v="0"/>
-      <prop k="stops" v="0.25;254,204,92,255:0.5;253,141,60,255:0.75;240,59,32,255"/>
+      <prop k="stops" v="0.25;0,255,255,255:0.5;0,255,0,255:0.75;255,255,0,255"/>
     </colorramp>
     <invertedcolorramp value="0"/>
-    <mode name="equal"/>
     <rotation/>
     <sizescale scalemethod="diameter"/>
-    <labelformat format=" %1 - %2 " trimtrailingzeroes="false" decimalplaces="0"/>
   </renderer-v2>
   <labeling type="simple"/>
   <customproperties>
@@ -318,12 +332,8 @@
   </customproperties>
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
-  <layerTransparency>25</layerTransparency>
-  <displayfield>Huihoudens: [% "huishoudens" %]
-Inwoners: [% "inwoners" %]
-Intensiteit: [% "intensiteit" %]
-Dichtheid: [% round("fysieke_dichtheid",3) %]
-WOZ waarde: [% "woz_waarde" %]</displayfield>
+  <layerTransparency>30</layerTransparency>
+  <displayfield>ov_bereikbaarheidsniveau</displayfield>
   <label>0</label>
   <labelattributes>
     <label fieldname="" text="Label"/>
@@ -346,7 +356,7 @@ WOZ waarde: [% "woz_waarde" %]</displayfield>
     <selectedonly on=""/>
   </labelattributes>
   <SingleCategoryDiagramRenderer diagramType="Pie">
-    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
+    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
       <fontProperties description=".Helvetica Neue DeskInterface,13,-1,5,50,0,0,0,0,0" style=""/>
       <attribute field="" color="#000000" label=""/>
     </DiagramCategory>
