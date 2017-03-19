@@ -132,6 +132,8 @@ class KPOExplorer:
         # globals
         self.intensity_level = '"huishoudens" < 100'
         self.ptal_level = '"ov_bereikbaarheidsniveau" in (\'1a\', \'1b\', \'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')'
+        self.binen_regios = []
+        self.buiten_regios = []
         self.station_ov_routes = ''
         self.afvangstation = ''
 
@@ -182,6 +184,7 @@ class KPOExplorer:
     # Knooppunten
     def loadKnooppuntenLayers(self):
         self.loadForegroundLayers(True)
+        self.setLayerVisible('Treinstations (achtergrond)', True)
         # scenario layers
         self.setScenarioLayers()
         self.showScenario(self.dlg.isScenarioVisible())
@@ -230,9 +233,9 @@ class KPOExplorer:
         self.setKnooppuntenAttribute()
 
     def showIsochrones(self, onoff):
-        self.setFilterExpression('Loopafstand (800 m)', '"modaliteit"=\'walk\'')
+        #self.setFilterExpression('Loopafstand (800 m)', '"modaliteit"=\'walk\'')
         self.setLayerVisible('Loopafstand (800 m)', onoff)
-        self.setFilterExpression('Fietsafstand (3000 m)', '"modaliteit"=\'fiets\'')
+        #self.setFilterExpression('Fietsafstand (3000 m)', '"modaliteit"=\'fiets\'')
         self.setLayerVisible('Fietsafstand (3000 m)', onoff)
 
     # Knooppunten methods
@@ -303,6 +306,9 @@ class KPOExplorer:
         for feat in feature_values.itervalues():
             values.append(feat)
         self.dlg.updateKnooppuntenTable(headers, values)
+        # clear isochrone filters
+        self.setFilterExpression('Loopafstand (800 m)', '"modaliteit"=\'walk\'')
+        self.setFilterExpression('Fietsafstand (3000 m)', '"modaliteit"=\'fiets\'')
 
     def zoomToKnooppunt(self, node_name):
         expression = ' AND "halte_naam"=\'%s\'' % node_name
@@ -315,6 +321,7 @@ class KPOExplorer:
     ###
     # Verstedelijking
     def loadVerstedelijkingLayers(self):
+        self.setLayerVisible('Treinstations (achtergrond)', False)
         self.showOnderbenutLocaties(self.dlg.isLocatiesVisible())
         # Intensity
         self.setIntensityLevel()
@@ -437,10 +444,10 @@ class KPOExplorer:
         self.setFilterExpression('Ontwikkellocaties', expression)
         self.setLayerStyle('Ontwikkellocaties', style)
         # self.setExtentToLayer('Ontwikkellocaties')
-        # update table
-        self.updatePlanTable()
         # calculate households
         self.calculateIntersections()
+        # update table
+        self.updatePlanTable()
 
     def updatePlanTable(self):
         plan_type = self.dlg.getPlanType()
@@ -504,13 +511,17 @@ class KPOExplorer:
         houses_in = 0
         houses_out = 0
         base_features = base_layer.getFeatures()
+        self.binen_regios = []
+        self.buiten_regios = []
         if plan_type in ('Woningbouwafspraken 2020', 'Tekort aan plannen 2020'):
             # set plans that have gemeente in list to true
             for feature in base_features:
                 if feature.attribute('gemeente') in gemeente:
                     houses_in += feature.attribute('geplande_woningen')
+                    self.binen_regios.append(feature.attribute('gemeente'))
                 else:
                     houses_out += feature.attribute('geplande_woningen')
+                    self.buiten_regios.append(feature.attribute('gemeente'))
         elif plan_type in ('Plancapaciteit', 'Kantorenleegstand'):
             # set plans that have cell id in list to true
             for feature in base_features:
@@ -519,10 +530,13 @@ class KPOExplorer:
                     ids = ids.split(",")
                     if any(i in cell_ids for i in ids):
                         houses_in += feature.attribute('geplande_woningen')
+                        self.binen_regios.append(feature.attribute('plaatsnaam'))
                     else:
                         houses_out += feature.attribute('geplande_woningen')
+                        self.buiten_regios.append(feature.attribute('plaatsnaam'))
                 else:
                     houses_out += feature.attribute('geplande_woningen')
+                    self.buiten_regios.append(feature.attribute('plaatsnaam'))
         # update summary
         total_houses = houses_in + houses_out
         self.dlg.updatePlanSummary([total_houses, houses_in, houses_out])
@@ -539,6 +553,7 @@ class KPOExplorer:
     ###
     # Verbindingen
     def loadVerbindingenLayers(self):
+        self.setLayerVisible('Treinstations (achtergrond)', True)
         # stations
         self.setStationAttribute()
         self.showStation(self.dlg.isStationVisible())
@@ -550,9 +565,9 @@ class KPOExplorer:
     def showStation(self, onoff):
         self.setLayerVisible('Afvangstations', onoff)
         self.setLayerExpanded('Afvangstations', onoff)
-        if not onoff:
-            self.setLayerVisible('Invloedsgebied', False)
-            self.setLayerExpanded('Invloedsgebied', False)
+        if self.dlg.isStationSelected():
+            self.setLayerVisible('Invloedsgebied', onoff)
+            self.setLayerExpanded('Invloedsgebied', onoff)
 
     def setStationAttribute(self):
         current_attribute = self.dlg.getSationAttribute().lower()
@@ -638,7 +653,6 @@ class KPOExplorer:
         # filter BTM isochrones and show layer
         expression = '"halte_naam" = \'%s\'' % self.afvangstation
         self.setFilterExpression('Invloedsgebied', expression)
-        self.setLayerVisible('Invloedsgebied', True)
         self.setLayerExpanded('Invloedsgebied', True)
         # filter isochrone overlap
         self.setFilterExpression('Fiets invloedsgebied overlap', '')
@@ -801,7 +815,9 @@ class KPOExplorer:
     # Mobiliteit
     # Isochrone methods
     def loadMobiliteitLayers(self):
+        self.setLayerVisible('Treinstations (achtergrond)', True)
         self.loadForegroundLayers(True)
+        self.setLayerVisible('Treinstations (voorgrond)', True)
         # isochrones
         self.showWalkIsochrones(self.dlg.isWalkVisible())
         self.showBikeIsochrones(self.dlg.isBikeVisible())

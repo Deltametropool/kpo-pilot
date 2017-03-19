@@ -516,7 +516,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 table.setItem(i, j, entry)
         for m in range(0,columns):
             table.horizontalHeader().setResizeMode(m, QtGui.QHeaderView.ResizeToContents)
-        #table.horizontalHeader().setResizeMode(columns-1, QtGui.QHeaderView.Stretch)
+        table.horizontalHeader().setResizeMode(columns-1, QtGui.QHeaderView.Stretch)
         table.resizeRowsToContents()
         table.setSortingEnabled(True)
 
