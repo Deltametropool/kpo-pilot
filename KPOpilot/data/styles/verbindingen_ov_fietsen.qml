@@ -19,7 +19,7 @@
     <edittype widgetv2type="TextEdit" name="huishoudens">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
-    <edittype widgetv2type="TextEdit" name="totaal_passanten">
+    <edittype widgetv2type="TextEdit" name="passanten">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="in_uit_trein">
@@ -29,9 +29,6 @@
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="in_uit_btm">
-      <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
-    </edittype>
-    <edittype widgetv2type="TextEdit" name="bezoekers">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
     </edittype>
     <edittype widgetv2type="TextEdit" name="btm_voortransport">
@@ -88,15 +85,15 @@
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="0,0,0,255"/>
+          <prop k="outline_color" v="255,255,255,255"/>
           <prop k="outline_style" v="solid"/>
-          <prop k="outline_width" v="0"/>
+          <prop k="outline_width" v="0.2"/>
           <prop k="outline_width_map_unit_scale" v="0,0,0,0,0,0"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="1"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;totaal_passanten&quot;, 0, 100000, 2, 15, 1), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;ov_fietsen&quot;, 0, 200, 2, 15, 1), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -259,11 +256,15 @@ Trein overstappers: [% "overstappers" %]&lt;br>
 BTM in- uitstappers: [% "in_uit_btm" %]&lt;br>
 Bezoekers: [% "bezoekers" %]&lt;br>
 &lt;br>
-Fiets plaatsen: [% "fiets_plaatsen" %]&lt;br>
-Fiets bezetting: [% "fiets_bezetting" %] %&lt;br>
-OV fietsen: [% "ov_fietsen" %]&lt;br>
-P+R plaatsen: [% "pr_plaatsen" %]&lt;br>
-P+R bezetting: [% "pr_bezetting" %] %&lt;br></displayfield>
+Voortransport:&lt;br>
+BTM: [% "btm_voortransport" %] %&lt;br>
+Fiets: [% "fiets_voortransport" %] %&lt;br>
+P+R: [% "pr_voortransport" %] %&lt;br>
+&lt;br>
+Natransport:&lt;br>
+BTM: [% "btm_natransport" %] %&lt;br>
+Fiets: [% "fiets_natransport" %] %&lt;br>
+P+R: [% "pr_natransport" %] %&lt;br></displayfield>
   <label>0</label>
   <labelattributes>
     <label fieldname="" text="Label"/>

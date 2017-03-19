@@ -83,67 +83,59 @@ class KPOExplorer:
         # constants
         self.onderbenutLabels = {
             'ptal': ['Minimaal PTAL: 1a - Very poor (0.01 tot 2.5)',
-                              'Minimaal PTAL: 1b - Very poor (2.5 tot 5)',
-                              'Minimaal PTAL: 2 - Poor (5 tot 10)',
-                              'Minimaal PTAL: 3 - Moderate (10 tot 15)',
-                              'Minimaal PTAL: 4 - Good (15 tot 20)',
-                              'Minimaal PTAL: 5 - Very Good (20 tot 25)',
-                              'Minimaal PTAL: 6a - Excellent (25 tot 40)',
-                              'Minimaal PTAL: 6b - Excellent (40 of meer)'],
-            'inwoners': ['Maximum: 25 inwoners',
-                         'Maximum: 50 inwoners',
-                         'Maximum: 100 inwoners',
-                         'Maximum: 150 inwoners',
-                         'Maximum: 200 inwoners',
-                         'Maximum: 250 inwoners',
-                         'Maximum: 250 of meer inwoners'],
-            'huishoudens': ['Maximum: 10 huishoudens',
-                            'Maximum: 20 huishoudens',
-                            'Maximum: 40 huishoudens',
-                            'Maximum: 60 huishoudens',
-                            'Maximum: 80 huishoudens',
-                            'Maximum: 100 huishoudens',
-                            'Maximum: 100 of meer huishoudens'],
-            'intensiteit': ['Maximum: 10 werknemers/studenten',
-                            'Maximum: 25 werknemers/studenten',
-                            'Maximum: 50 werknemers/studenten',
-                            'Maximum: 100 werknemers/studenten',
-                            'Maximum: 200 werknemers/studenten',
-                            'Maximum: 300 werknemers/studenten',
-                            'Maximum: 300 of meer werknemers/studenten'],
-            'fysieke_dichtheid': ['Maximum: 0.1 FSI',
-                                  'Maximum: 0.4 FSI',
-                                  'Maximum: 0.7 FSI',
-                                  'Maximum: 1.0 FSI',
-                                  'Maximum: 1.5 FSI',
-                                  'Maximum: 2.0 FSI',
-                                  'Maximum: 2.0 of meer FSI'],
-            'woz_waarde': ['Maximum: 150k WOZ',
-                           'Maximum: 200k WOZ',
-                           'Maximum: 300k WOZ',
-                           'Maximum: 500k WOZ',
-                           'Maximum: 750k WOZ',
-                           'Maximum: 1000k WOZ',
-                           'Maximum: 1000k of meer WOZ']
+                     'Minimaal PTAL: 1b - Very poor (2.5 tot 5)',
+                     'Minimaal PTAL: 2 - Poor (5 tot 10)',
+                     'Minimaal PTAL: 3 - Moderate (10 tot 15)',
+                     'Minimaal PTAL: 4 - Good (15 tot 20)',
+                     'Minimaal PTAL: 5 - Very Good (20 tot 25)',
+                     'Minimaal PTAL: 6a - Excellent (25 tot 40)',
+                     'Minimaal PTAL: 6b - Excellent (40 of meer)'],
+            'huishoudens': ['Minder dan 10 huishoudens per hectare',
+                            'Minder dan 20 huishoudens per hectare',
+                            'Minder dan 40 huishoudens per hectare',
+                            'Minder dan 60 huishoudens per hectare',
+                            'Minder dan 80 huishoudens per hectare',
+                            'Minder dan 100 huishoudens per hectare'],
+            'intensiteit': ['Minder dan 10 personen per hectare',
+                            'Minder dan 25 personen per hectare',
+                            'Minder dan 50 personen per hectare',
+                            'Minder dan 100 personen per hectare',
+                            'Minder dan 200 personen per hectare',
+                            'Minder dan 300 personen per hectare'],
+            'fysieke_dichtheid': ['Minder dan 0.1 FSI',
+                                  'Minder dan 0.4 FSI',
+                                  'Minder dan 0.7 FSI',
+                                  'Minder dan 1.0 FSI',
+                                  'Minder dan 1.5 FSI',
+                                  'Minder dan 2.0 FSI'],
+            'woz_waarde': ['Minder dan 150k WOZ',
+                           'Minder dan 200k WOZ',
+                           'Minder dan 300k WOZ',
+                           'Minder dan 500k WOZ',
+                           'Minder dan 750k WOZ',
+                           'Minder dan 1000k WOZ']
         }
         self.onderbenutLevels = {
             'ptal': ['(\'1a\', \'1b\', \'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')',
-                              '(\'1b\', \'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')',
-                              '(\'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')',
-                              '(\'3\', \'4\', \'5\', \'6a\', \'6b\')',
-                              '(\'4\', \'5\', \'6a\', \'6b\')',
-                              '(\'5\', \'6a\', \'6b\')',
-                              '(\'6a\', \'6b\')',
-                              '(\'6b\')'],
-            'inwoners': [25, 50, 100, 150, 200, 250],
+                     '(\'1b\', \'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')',
+                     '(\'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')',
+                     '(\'3\', \'4\', \'5\', \'6a\', \'6b\')',
+                     '(\'4\', \'5\', \'6a\', \'6b\')',
+                     '(\'5\', \'6a\', \'6b\')',
+                     '(\'6a\', \'6b\')',
+                     '(\'6b\')'],
             'huishoudens': [10, 20, 40, 60, 80, 100],
             'intensiteit': [10, 25, 50, 100, 200, 300],
             'fysieke_dichtheid': [0.1, 0.4, 0.7, 1.0, 1.5, 2.0],
             'woz_waarde': [150, 200, 300, 500, 750, 1000]
         }
         # globals
-        self.intensity_level = '"inwoners" < 250'
+        self.intensity_level = '"huishoudens" < 100'
         self.ptal_level = '"ov_bereikbaarheidsniveau" in (\'1a\', \'1b\', \'2\', \'3\', \'4\', \'5\', \'6a\', \'6b\')'
+        self.binen_regios = []
+        self.buiten_regios = []
+        self.station_ov_routes = ''
+        self.afvangstation = ''
 
     ###
     # General
@@ -192,13 +184,13 @@ class KPOExplorer:
     # Knooppunten
     def loadKnooppuntenLayers(self):
         self.loadForegroundLayers(True)
+        self.setLayerVisible('Treinstations (achtergrond)', True)
         # scenario layers
         self.setScenarioLayers()
         self.showScenario(self.dlg.isScenarioVisible())
         # isochrone layers
         self.showIsochrones(self.dlg.isIsochronesVisible())
         # knooppunten layers
-        self.setKnooppuntenAttribute()
         self.showKnooppunten(self.dlg.isKnooppuntVisible())
 
     # Scenario methods
@@ -224,26 +216,26 @@ class KPOExplorer:
         # update knooppunten scenarios layer
         expression = '"scenario_naam" = \'%s\' AND "tod_beleidsniveau" = %d' % (current_scenario, current_tod)
         if current_scenario != 'Huidige situatie':
-            self.setFilterExpression('Knooppuntenscenarios', expression)
+            self.setFilterExpression('Treinstations scenarios', expression)
         # update scenario summary
-        self.setFilterExpression('Overzicht_woonscenarios', expression)
+        self.setFilterExpression('Overzicht woonscenarios', expression)
         summary_values = []
         fields = ('verwachte_huishoudens', 'op_loopafstand', 'op_fietsafstand', 'buiten_invloedsgebied')
-        feature_values = self.getFeatureValues('Overzicht_woonscenarios', fields)
+        feature_values = self.getFeatureValues('Overzicht woonscenarios', fields)
         # get first result, should be only one
         for values in feature_values.itervalues():
             summary_values = values
             break
         self.dlg.updateScenarioSummary(summary_values)
         # update knooppunten
-        self.setKnooppuntenAttribute()
         if self.dlg.isKnooppuntVisible():
             self.showKnooppunten(True)
+        self.setKnooppuntenAttribute()
 
     def showIsochrones(self, onoff):
-        self.setFilterExpression('Loopafstand (800 m)', '"modaliteit"=\'walk\'')
+        #self.setFilterExpression('Loopafstand (800 m)', '"modaliteit"=\'walk\'')
         self.setLayerVisible('Loopafstand (800 m)', onoff)
-        self.setFilterExpression('Fietsafstand (3000 m)', '"modaliteit"=\'fiets\'')
+        #self.setFilterExpression('Fietsafstand (3000 m)', '"modaliteit"=\'fiets\'')
         self.setLayerVisible('Fietsafstand (3000 m)', onoff)
 
     # Knooppunten methods
@@ -252,23 +244,23 @@ class KPOExplorer:
         if onoff:
             self.setLayerVisible('Treinstations (voorgrond)', False)
             if current_scenario == 'Huidige situatie':
-                self.setLayerVisible('Knooppunten', True)
-                self.setLayerExpanded('Knooppunten', True)
-                self.setLayerVisible('Knooppuntenscenarios', False)
-                self.setLayerExpanded('Knooppuntenscenarios', False)
-                self.setCurrentLayer('Knooppunten')
+                self.setLayerVisible('Treinstations', True)
+                self.setLayerExpanded('Treinstations', True)
+                self.setLayerVisible('Treinstations scenarios', False)
+                self.setLayerExpanded('Treinstations scenarios', False)
+                self.setCurrentLayer('Treinstations')
             else:
-                self.setLayerVisible('Knooppunten', False)
-                self.setLayerExpanded('Knooppunten', False)
-                self.setLayerVisible('Knooppuntenscenarios', True)
-                self.setLayerExpanded('Knooppuntenscenarios', True)
-                self.setCurrentLayer('Knooppuntenscenarios')
+                self.setLayerVisible('Treinstations', False)
+                self.setLayerExpanded('Treinstations', False)
+                self.setLayerVisible('Treinstations scenarios', True)
+                self.setLayerExpanded('Treinstations scenarios', True)
+                self.setCurrentLayer('Treinstations scenarios')
         else:
             self.setLayerVisible('Treinstations (voorgrond)', True)
-            self.setLayerVisible('Knooppunten', False)
-            self.setLayerExpanded('Knooppunten', False)
-            self.setLayerVisible('Knooppuntenscenarios', False)
-            self.setLayerExpanded('Knooppuntenscenarios', False)
+            self.setLayerVisible('Treinstations', False)
+            self.setLayerExpanded('Treinstations', False)
+            self.setLayerVisible('Treinstations scenarios', False)
+            self.setLayerExpanded('Treinstations scenarios', False)
             self.setCurrentLayer('Woonscenarios')
 
     def setKnooppuntenAttribute(self):
@@ -276,46 +268,47 @@ class KPOExplorer:
         current_scenario = self.dlg.getScenario()
         current_attribute = self.dlg.getKnooppuntKenmerk()
         if current_scenario == 'Huidige situatie':
-            knoopunt_layer = 'Knooppunten'
+            knooppunt_layer = 'Treinstations'
         else:
-            knoopunt_layer = 'Knooppuntenscenarios'
-        # apply relevant style
-        field = ''
-        header = 'Totaal'
-        if current_attribute.lower() in ('passanten', 'bezoekers', 'overstappers'):
-            self.setLayerStyle(knoopunt_layer, '%s_%s' % (knoopunt_layer.lower(), current_attribute.lower()))
-            if current_attribute == 'Passanten':
-                field = 'totaal_passanten'
-            else:
-                field = current_attribute.lower()
-        elif current_attribute == 'In- en uitstappers trein':
-            field = 'in_uit_trein'
-            self.setLayerStyle(knoopunt_layer, '%s_%s' % (knoopunt_layer.lower(), field))
+            knooppunt_layer = 'Treinstations scenarios'
+        self.setCurrentLayer(knooppunt_layer)
+        # apply relevant style and prepare table
+        fields = ['halte_naam']
+        headers = ['Station']
+        if current_attribute == 'In- en uitstappers trein':
+            fields.append('in_uit_trein')
+            headers.append('Totaal')
+            self.setLayerStyle(knooppunt_layer, '%s_%s' % (knooppunt_layer.lower(), 'in_uit_trein'))
         elif current_attribute == 'In- en uitstappers BTM':
-            field = 'in_uit_btm'
-            self.setLayerStyle(knoopunt_layer, '%s_%s' % (knoopunt_layer.lower(), field))
+            fields.append('in_uit_btm')
+            headers.append('Totaal')
+            self.setLayerStyle(knooppunt_layer, '%s_%s' % (knooppunt_layer.lower(), 'in_uit_btm'))
+        elif current_scenario == 'Huidige situatie' and current_attribute == 'OV fietsen':
+            fields.append('ov_fietsen')
+            headers.append('Totaal')
+            self.setLayerStyle(knooppunt_layer, '%s_%s' % (knooppunt_layer.lower(), 'ov_fietsen'))
         elif current_attribute == 'Fiets bezetting %':
-            field = 'fiets_bezetting'
-            self.setLayerStyle(knoopunt_layer, '%s_%s' % (knoopunt_layer.lower(), field))
-            header = 'Bezetting %'
+            fields.extend(['fiets_plaatsen', 'fiets_bezetting'])
+            headers.extend(['Bezetting %', 'Plaatsen'])
+            self.setLayerStyle(knooppunt_layer, '%s_%s' % (knooppunt_layer.lower(), 'fiets_bezetting'))
         elif current_attribute == 'P+R bezetting %':
-            field = 'pr_bezetting'
-            header = 'Bezetting %'
-            self.setLayerStyle(knoopunt_layer, '%s_%s' % (knoopunt_layer.lower(), field))
+            fields.extend(['pr_plaatsen', 'pr_bezetting'])
+            headers.extend(['Bezetting %', 'Plaatsen'])
+            self.setLayerStyle(knooppunt_layer, '%s_%s' % (knooppunt_layer.lower(), 'pr_bezetting'))
+        fields.append('huishoudens')
+        headers.append('Huish.')
         # whenever there's a change at this level, update the values table
-        if current_scenario == 'Huidige situatie':
-            fields = ['halte_naam', field]
-            headers = ['Station', header]
-            self.setCurrentLayer('Knooppunten')
-        else:
-            fields = ['halte_naam', field, 'procentuele_verandering']
-            headers = ['Station', header, '% Verandering']
-            self.setCurrentLayer('Knooppuntenscenarios')
-        feature_values = self.getFeatureValues(knoopunt_layer, fields)
+        if knooppunt_layer == 'Treinstations scenarios':
+            fields.append('procentuele_verandering')
+            headers.append(' %')
+        feature_values = self.getFeatureValues(knooppunt_layer, fields)
         values = []
         for feat in feature_values.itervalues():
             values.append(feat)
         self.dlg.updateKnooppuntenTable(headers, values)
+        # clear isochrone filters
+        self.setFilterExpression('Loopafstand (800 m)', '"modaliteit"=\'walk\'')
+        self.setFilterExpression('Fietsafstand (3000 m)', '"modaliteit"=\'fiets\'')
 
     def zoomToKnooppunt(self, node_name):
         expression = ' AND "halte_naam"=\'%s\'' % node_name
@@ -328,6 +321,7 @@ class KPOExplorer:
     ###
     # Verstedelijking
     def loadVerstedelijkingLayers(self):
+        self.setLayerVisible('Treinstations (achtergrond)', False)
         self.showOnderbenutLocaties(self.dlg.isLocatiesVisible())
         # Intensity
         self.setIntensityLevel()
@@ -340,11 +334,11 @@ class KPOExplorer:
         self.showPlan(self.dlg.isPlanVisible())
 
     def showOnderbenutLocaties(self, onoff):
-        self.setLayerVisible('Onderbenut bereikbare lokaties', False)
+        self.setLayerVisible('Onderbenute bereikbare locaties', False)
         if onoff:
             if not self.dlg.isIntensityVisible() and not self.dlg.isAccessibilityVisible():
-                self.setLayerVisible('Onderbenut bereikbare lokaties', onoff)
-                self.setCurrentLayer('Onderbenut bereikbare lokaties')
+                self.setLayerVisible('Onderbenute bereikbare locaties', onoff)
+                self.setCurrentLayer('Onderbenute bereikbare locaties')
 
     # Intensity methods
     def showIntensity(self, onoff):
@@ -361,17 +355,12 @@ class KPOExplorer:
         expression = ''
         style = ''
         # get relevant level values
-        if intensity_type == 'Inwoners':
-            label = self.onderbenutLabels['inwoners'][intensity_level]
-            if intensity_level < 6:
-                expression = '"inwoners" < %s' % self.onderbenutLevels['inwoners'][intensity_level]
-            style = 'verstedelijking_inwoners'
-        elif intensity_type == 'Huishouden':
+        if intensity_type == 'Huishoudens':
             label = self.onderbenutLabels['huishoudens'][intensity_level]
             if intensity_level < 6:
                 expression = '"huishoudens" < %s' % self.onderbenutLevels['huishoudens'][intensity_level]
             style = 'verstedelijking_huishoudens'
-        elif intensity_type == 'Intensiteit (werknemer, studenten)':
+        elif intensity_type == 'Intensiteit (inwoners, werknemer, studenten)':
             label = self.onderbenutLabels['intensiteit'][intensity_level]
             if intensity_level < 6:
                 expression = '"intensiteit" < %s' % self.onderbenutLevels['intensiteit'][intensity_level]
@@ -384,7 +373,7 @@ class KPOExplorer:
         elif intensity_type == 'WOZ waarde':
             label = self.onderbenutLabels['woz_waarde'][intensity_level]
             if intensity_level < 6:
-                expression = '"woz_waarde" < %s' % self.onderbenutLevels['woz_waarde'][intensity_level]
+                expression = '"woz_waarde" > 0 AND "woz_waarde" < %s' % self.onderbenutLevels['woz_waarde'][intensity_level]
             style = 'verstedelijking_woz'
         # update dialog label
         self.dlg.updateIntensityLabel(label)
@@ -393,6 +382,7 @@ class KPOExplorer:
         self.setLayerStyle('Ruimtelijke kenmerken', style)
         self.intensity_level = expression
         self.identifySpatialPotential()
+        self.updatePlanTable()
 
     # Accessibility methods
     def showPTAL(self, onoff):
@@ -415,14 +405,14 @@ class KPOExplorer:
         self.identifySpatialPotential()
 
     def identifySpatialPotential(self):
-        expression  = ''
+        expression = ''
         if self.ptal_level and self.intensity_level:
             expression = '%s AND %s' % (self.ptal_level, self.intensity_level)
         elif self.ptal_level:
             expression = self.ptal_level
         elif self.intensity_level:
             expression = self.intensity_level
-        self.setFilterExpression('Onderbenut bereikbare lokaties', expression)
+        self.setFilterExpression('Onderbenute bereikbare locaties', expression)
         self.calculateIntersections()
 
     # Plan location methods
@@ -436,26 +426,66 @@ class KPOExplorer:
         plan_type = self.dlg.getPlanType()
         # update map
         style = ''
-        headers = ''
-        fields = ''
-        if plan_type == 'RAP 2020':
+        expression = ''
+        # get main columns
+        if plan_type == 'Woningbouwafspraken 2020':
             expression = '"plan_naam" = \'%s\'' % plan_type
             style = 'verstedelijking_RAP'
-            fields = ['gemeente', 'geplande_woningen']
-            headers = ['Gemeente', 'Woningen']
-        elif plan_type == 'RAP minder Plancapaciteit':
+        elif plan_type == 'Tekort aan plannen 2020':
             expression = '"plan_naam" = \'%s\'' % plan_type
             style = 'verstedelijking_RAP'
-            fields = ['gemeente', 'geplande_woningen', 'net_nieuwe_woningen']
-            headers = ['Gemeente', 'Woningen', 'Verschil']
-        elif plan_type in ('Plancapaciteit', 'Leegstanden'):
+        elif plan_type == 'Plancapaciteit':
             expression = '"plan_naam" = \'%s\' AND "plaatsnaam" IS NOT NULL' % plan_type
             style = 'verstedelijking_plancapaciteit'
-            fields = ['plaatsnaam', 'geplande_woningen', 'gemiddelde_bereikbaarheidsindex']
-            headers = ['Plaatsnaam', 'Woningen', 'PTAL']
+        elif plan_type == 'Kantorenleegstand':
+            expression = '"plan_naam" = \'%s\' AND "plaatsnaam" IS NOT NULL' % 'Leegstanden'
+            style = 'verstedelijking_plancapaciteit'
+        # update the map layer
         self.setFilterExpression('Ontwikkellocaties', expression)
         self.setLayerStyle('Ontwikkellocaties', style)
-        self.setExtentToLayer('Ontwikkellocaties')
+        # self.setExtentToLayer('Ontwikkellocaties')
+        # calculate households
+        self.calculateIntersections()
+        # update table
+        self.updatePlanTable()
+
+    def updatePlanTable(self):
+        plan_type = self.dlg.getPlanType()
+        intensity_type = self.dlg.getIntensityType()
+        # update map
+        headers = []
+        fields = []
+        # get main columns
+        if plan_type == 'Woningbouwafspraken 2020':
+            fields = ['gemeente', 'geplande_woningen']
+            headers = ['Gemeente/Regio', 'Woningen']
+        elif plan_type == 'Tekort aan plannen 2020':
+            fields = ['gemeente', 'geplande_woningen', 'bestaande_woningen', 'net_nieuwe_woningen']
+            headers = ['Gemeente/Regio', 'Afspraken', 'Plancapaciteit', 'Verschil']
+        elif plan_type == 'Plancapaciteit':
+            fields = ['plaatsnaam', 'geplande_woningen']
+            headers = ['Plaatsnaam', 'Won.']
+        elif plan_type == 'Kantorenleegstand':
+            fields = ['plaatsnaam', 'vlakte', 'geplande_woningen']
+            headers = ['Plaatsnaam', 'm2', 'Won.']
+        # get extra columns
+        if plan_type in ('Plancapaciteit', 'Kantorenleegstand'):
+            # get column depending on benutting type
+            if intensity_type == 'Huishoudens':
+                fields.append('gemiddelde_huishoudens')
+                headers.append('Huish.')
+            elif intensity_type == 'Intensiteit (inwoners, werknemer, studenten)':
+                fields.append('gemiddelde_intensiteit')
+                headers.append('Intens.')
+            elif intensity_type == 'Fysieke dichtheid (FSI)':
+                fields.append('gemiddelde_dichtheid')
+                headers.append('FSI')
+            elif intensity_type == 'WOZ waarde':
+                fields.append('gemiddelde_woz')
+                headers.append('WOZ')
+            # always include PTAL
+            fields.append('gemiddelde_bereikbaarheidsindex')
+            headers.append('PTAL')
         # update table
         self.setCurrentLayer('Ontwikkellocaties')
         feature_values = self.getFeatureValues('Ontwikkellocaties', fields)
@@ -463,14 +493,12 @@ class KPOExplorer:
         for feat in feature_values.itervalues():
             values.append(feat)
         self.dlg.updatePlanTable(headers, values)
-        #
-        self.calculateIntersections()
 
     def calculateIntersections(self):
         # get all relevant cell attributes
         cell_ids = []
         gemeente = []
-        cell_attributes = self.getFeatureValues('Onderbenut bereikbare lokaties', ['cell_id','gemeente'])
+        cell_attributes = self.getFeatureValues('Onderbenute bereikbare locaties', ['cell_id', 'gemeente'])
         for values in cell_attributes.itervalues():
             cell_ids.append(values[0])
             gemeente.append(values[1])
@@ -483,14 +511,18 @@ class KPOExplorer:
         houses_in = 0
         houses_out = 0
         base_features = base_layer.getFeatures()
-        if plan_type in ('RAP 2020', 'RAP minder Plancapaciteit'):
+        self.binen_regios = []
+        self.buiten_regios = []
+        if plan_type in ('Woningbouwafspraken 2020', 'Tekort aan plannen 2020'):
             # set plans that have gemeente in list to true
             for feature in base_features:
                 if feature.attribute('gemeente') in gemeente:
                     houses_in += feature.attribute('geplande_woningen')
+                    self.binen_regios.append(feature.attribute('gemeente'))
                 else:
                     houses_out += feature.attribute('geplande_woningen')
-        elif plan_type in ('Plancapaciteit', 'Leegstanden'):
+                    self.buiten_regios.append(feature.attribute('gemeente'))
+        elif plan_type in ('Plancapaciteit', 'Kantorenleegstand'):
             # set plans that have cell id in list to true
             for feature in base_features:
                 ids = feature.attribute('cell_ids')
@@ -498,26 +530,30 @@ class KPOExplorer:
                     ids = ids.split(",")
                     if any(i in cell_ids for i in ids):
                         houses_in += feature.attribute('geplande_woningen')
+                        self.binen_regios.append(feature.attribute('plaatsnaam'))
                     else:
                         houses_out += feature.attribute('geplande_woningen')
+                        self.buiten_regios.append(feature.attribute('plaatsnaam'))
                 else:
                     houses_out += feature.attribute('geplande_woningen')
+                    self.buiten_regios.append(feature.attribute('plaatsnaam'))
         # update summary
         total_houses = houses_in + houses_out
         self.dlg.updatePlanSummary([total_houses, houses_in, houses_out])
 
     def zoomToPlan(self, plan_name):
         plan_type = self.dlg.getPlanType()
-        if plan_type in ('RAP 2020', 'RAP minder Plancapaciteit'):
+        if plan_type in ('Woningbouwafspraken 2020', 'Tekort aan plannen 2020'):
             self.setFeatureSelection('Ontwikkellocaties', 'gemeente', plan_name)
             self.setExtentToSelection('Ontwikkellocaties')
-        elif plan_type in ('Plancapaciteit', 'Leegstanden'):
+        elif plan_type in ('Plancapaciteit', 'Kantorenleegstand'):
             self.setFeatureSelection('Ontwikkellocaties', 'plaatsnaam', plan_name)
             self.setExtentToSelection('Ontwikkellocaties', 10000.0)
 
     ###
     # Verbindingen
     def loadVerbindingenLayers(self):
+        self.setLayerVisible('Treinstations (achtergrond)', True)
         # stations
         self.setStationAttribute()
         self.showStation(self.dlg.isStationVisible())
@@ -527,82 +563,113 @@ class KPOExplorer:
 
     # Station methods
     def showStation(self, onoff):
-        self.setLayerVisible('Overbelast stations', onoff)
-        self.setLayerExpanded('Overbelast stations', onoff)
-        if onoff:
-            self.setCurrentLayer('Overbelast stations')
-            self.setExtentToLayer('Overbelast stations')
-            # self.setLayerVisible('Treinstations', False)
-        else:
-            self.setLayerVisible('Isochronen BTM', False)
-            # self.setLayerVisible('Treinstations', True)
+        self.setLayerVisible('Afvangstations', onoff)
+        self.setLayerExpanded('Afvangstations', onoff)
+        if self.dlg.isStationSelected():
+            self.setLayerVisible('Invloedsgebied', onoff)
+            self.setLayerExpanded('Invloedsgebied', onoff)
 
     def setStationAttribute(self):
         current_attribute = self.dlg.getSationAttribute().lower()
+        self.afvangstation = ''
+        self.station_ov_routes = ''
         # apply relevant style
-        field = ''
-        header = 'Totaal'
-        if current_attribute in ('passanten', 'bezoekers', 'overstappers'):
-            self.setLayerStyle('Overbelast stations', 'verbindingen_%s' % current_attribute)
-            if current_attribute == 'passanten':
-                field = 'totaal_passanten'
-            else:
-                field = current_attribute
+        fields = ['halte_naam']
+        new_fields = []
+        headers = ['Station']
+        new_headers = []
+        style = ''
+        if current_attribute == 'passanten':
+            new_fields = [current_attribute,
+                          'lopen_voortransport', 'lopen_natransport',
+                          'fiets_voortransport', 'fiets_natransport',
+                          'btm_voortransport', 'btm_natransport',
+                          'pr_voortransport', 'pr_natransport']
+            new_headers = ['Totaal',
+                           'Lopen voor %', 'Lopen na %',
+                           'Fiets voor %', 'Fiets na %',
+                           'BTM voor %', 'BTM na %',
+                           'P+R voor %', 'P+R na %']
+            style = current_attribute
         elif current_attribute == 'in- en uitstappers trein':
-            field = 'in_uit_trein'
-            self.setLayerStyle('Overbelast stations', 'verbindingen_%s' % field)
+            new_fields = ['in_uit_trein',
+                          'lopen_voortransport', 'lopen_natransport',
+                          'fiets_voortransport', 'fiets_natransport',
+                          'btm_voortransport', 'btm_natransport',
+                          'pr_voortransport', 'pr_natransport']
+            new_headers = ['Totaal',
+                           'Lopen voor %', 'Lopen na %',
+                           'Fiets voor %', 'Fiets na %',
+                           'BTM voor %', 'BTM na %',
+                           'P+R voor %', 'P+R na %']
+            style = 'in_uit_trein'
         elif current_attribute == 'in- en uitstappers btm':
-            field = 'in_uit_btm'
-            self.setLayerStyle('Overbelast stations', 'verbindingen_%s' % field)
+            new_fields = ['in_uit_btm', 'btm_voortransport', 'btm_natransport']
+            new_headers = ['Totaal', 'BTM voor %', 'BTM na %']
+            style = 'in_uit_btm'
         elif current_attribute == 'fiets bezetting %':
-            field = 'fiets_bezetting'
-            self.setLayerStyle('Overbelast stations', 'verbindingen_%s' % field)
-            header = 'Bezetting %'
+            new_fields = ['fiets_plaatsen', 'fiets_bezetting', 'fiets_voortransport', 'fiets_natransport']
+            new_headers = ['Plaatsen', 'Bezetting %', 'Fiets voor %', 'Fiets na %']
+            style = 'fiets_bezetting'
         elif current_attribute == 'p+r bezetting %':
-            field = 'pr_bezetting'
-            header = 'Bezetting %'
-            self.setLayerStyle('Overbelast stations', 'verbindingen_%s' % field)
+            new_fields = ['pr_plaatsen', 'pr_bezetting', 'pr_voortransport', 'pr_natransport']
+            new_headers = ['Plaatsen', 'Bezetting %', 'P+R voor %', 'P+R na %']
+            style = 'pr_bezetting'
+        elif current_attribute == 'ov fiets':
+            new_fields = ['ov_fietsen', 'lopen_voortransport', 'lopen_natransport', 'btm_voortransport', 'btm_natransport']
+            new_headers = ['Totaal', 'Lopen voor %', 'Lopen na %', 'BTM voor %', 'BTM na %']
+            style = 'ov_fietsen'
+        self.setLayerStyle('Afvangstations', 'verbindingen_%s' % style)
         # whenever there's a change at this level, update the values table
-        fields = ['halte_naam', field]
-        headers = ['Station', header]
-        self.setCurrentLayer('Overbelast stations')
-        feature_values = self.getFeatureValues('Overbelast stations', fields)
+        fields.extend(new_fields)
+        headers.extend(new_headers)
+        self.setCurrentLayer('Afvangstations')
+        feature_values = self.getFeatureValues('Afvangstations', fields)
         values = []
         for feat in feature_values.itervalues():
             values.append(feat)
         self.dlg.updateStationsTable(headers, values)
         # remove station filters
-        self.setFilterExpression('Isochronen BTM', '')
-        self.setFilterExpression('Invloedsgebied overlap', '')
+        self.setFilterExpression('Invloedsgebied', '')
+        self.setFilterExpression('Fiets invloedsgebied overlap', '')
         self.setFilterExpression('Fietsroutes', '')
         # hide isochrones layer
-        self.setLayerVisible('Isochronen BTM', False)
+        self.setLayerVisible('Invloedsgebied', False)
+        self.setLayerExpanded('Invloedsgebied', False)
         # reset locations
         self.setLocationType()
 
     def zoomToStation(self, station_name):
+        self.afvangstation = station_name
         # select station
-        self.setFeatureSelection('Overbelast stations', 'halte_naam', station_name)
+        self.setFeatureSelection('Afvangstations', 'halte_naam', self.afvangstation)
+        self.setCurrentLayer('Afvangstations')
+        # identify station ov routes
+        self.station_ov_routes = ''
+        feature_values = self.getFeatureValues('Afvangstations', ['halte_naam', 'ov_routes'])
+        for feat in feature_values.itervalues():
+            if feat[0] == self.afvangstation:
+                self.station_ov_routes = feat[1]
         # filter BTM isochrones and show layer
-        expression = '"modaliteit" != \'fiets\' AND "halte_naam" = \'%s\'' % station_name
-        self.setFilterExpression('Isochronen BTM', expression)
-        self.setLayerVisible('Isochronen BTM', True)
+        expression = '"halte_naam" = \'%s\'' % self.afvangstation
+        self.setFilterExpression('Invloedsgebied', expression)
+        self.setLayerExpanded('Invloedsgebied', True)
         # filter isochrone overlap
-        self.setFilterExpression('Invloedsgebied overlap', '')
-        feature_values = self.getFeatureValues('Invloedsgebied overlap', ['sid', 'station_namen'])
+        self.setFilterExpression('Fiets invloedsgebied overlap', '')
+        feature_values = self.getFeatureValues('Fiets invloedsgebied overlap', ['sid', 'station_namen'])
         overlap_ids = []
         for feat in feature_values.itervalues():
             station_names = feat[1].split(',')
-            if station_name in station_names:
+            if self.afvangstation in station_names:
                 overlap_ids.append(str(feat[0]))
         expression = 'sid IN (%s)' % ','.join(overlap_ids)
-        self.setFilterExpression('Invloedsgebied overlap', expression)
+        self.setFilterExpression('Fiets invloedsgebied overlap', expression)
         self.setLocationType()
         # filter bike routes
-        expression = '"station_naam" = \'%s\'' % station_name
+        expression = '"station_naam" = \'%s\'' % self.afvangstation
         self.setFilterExpression('Fietsroutes', expression)
         # zoom to isochrones layer
-        self.setExtentToLayer('Isochronen BTM')
+        self.setExtentToLayer('Invloedsgebied')
 
     # Location methods
     def showLocation(self, onoff):
@@ -611,23 +678,22 @@ class KPOExplorer:
         self.hideLocation()
         if onoff:
             # show selected location type
-            if location_type in ('Overlap herkomst', 'Overlap bestemming'):
-                location_layer = 'Invloedsgebied overlap'
+            if location_type == 'Invloedsgebied overlap':
+                location_layer = 'Fiets invloedsgebied overlap'
             elif location_type == 'Belangrijke locaties':
                 location_layer = 'Belangrijke locaties'
-            elif location_type == 'Regionale voorzieningen':
-                location_layer = 'Regionale voorzieningen'
+            elif location_type == 'Magneten':
+                location_layer = 'Magneten'
             # show location layer
             self.setLayerVisible(location_layer, True)
             self.setLayerExpanded(location_layer, True)
-            self.setCurrentLayer(location_layer)
 
     def hideLocation(self):
         # hide all locations and related layers
-        self.setLayerVisible('Invloedsgebied overlap', False)
-        self.setLayerExpanded('Invloedsgebied overlap', False)
-        self.setLayerVisible('Regionale voorzieningen', False)
-        self.setLayerExpanded('Regionale voorzieningen', False)
+        self.setLayerVisible('Fiets invloedsgebied overlap', False)
+        self.setLayerExpanded('Fiets invloedsgebied overlap', False)
+        self.setLayerVisible('Magneten', False)
+        self.setLayerExpanded('Magneten', False)
         self.setLayerVisible('Belangrijke locaties', False)
         self.setLayerExpanded('Belangrijke locaties', False)
         self.setLayerVisible('Fietsroutes', False)
@@ -645,22 +711,18 @@ class KPOExplorer:
         fields = []
         headers = []
         # prepare table
-        if location_type == 'Overlap herkomst':
-            fields = ['sid', 'inwoner_dichtheid', 'station_aantal']
-            headers = ['Id', 'Inwoners', 'Aantal stations']
-            location_layer = 'Invloedsgebied overlap'
-        elif location_type == 'Overlap bestemming':
+        if location_type == 'Invloedsgebied overlap':
             fields = ['sid', 'intensiteit', 'station_aantal']
             headers = ['Id', 'Intensiteit', 'Aantal stations']
-            location_layer = 'Invloedsgebied overlap'
+            location_layer = 'Fiets invloedsgebied overlap'
         elif location_type == 'Belangrijke locaties':
             fields = ['sid', 'locatie_naam']
             headers = ['Id', 'Naam']
             location_layer = 'Belangrijke locaties'
-        elif location_type == 'Regionale voorzieningen':
-            fields = ['sid', 'type_locatie', 'locatie_naam']
-            headers = ['Id', 'Type locatie', 'Naam']
-            location_layer = 'Regionale voorzieningen'
+        elif location_type == 'Magneten':
+            fields = ['sid', 'locatie_naam']
+            headers = ['Id', 'Naam']
+            location_layer = 'Magneten'
         # get values
         feature_values = self.getFeatureValues(location_layer, fields)
         values = []
@@ -672,18 +734,13 @@ class KPOExplorer:
 
     def zoomToLocation(self, location_id):
         location_type = self.dlg.getLocationType()
-        if location_type in ('Overlap bestemming', 'Belangrijke locaties', 'Regionale voorzieningen'):
+        if location_type in ('Belangrijke locaties', 'Magneten'):
+            self.setCurrentLayer(location_type)
             # select location
             route_ids = ''
-            if location_type == 'Overlap bestemming':
-                layer_name = 'Invloedsgebied overlap'
-            else:
-                layer_name = location_type
+            layer_name = location_type
             self.setFeatureSelection(layer_name, 'sid', int(location_id))
-            if location_type == 'Overlap bestemming' and self.dlg.isStationSelected():
-                self.setExtentToLayer('Isochronen BTM')
-            else:
-                self.setExtentToSelection(layer_name, 60000.0)
+            self.setExtentToSelection(layer_name, 30000.0)
             # get route ids
             feature_values = self.getFeatureValues(layer_name, ['sid', 'ov_routes_ids'])
             for feat in feature_values.itervalues():
@@ -691,36 +748,76 @@ class KPOExplorer:
                     route_ids = feat[1]
             if route_ids:
                 # filter BTM lines
-                expression = '"route_id" IN (%s)' % route_ids
-                print expression
+                if self.station_ov_routes:
+                    station_routes = self.station_ov_routes.split(",")
+                    routes = []
+                    for route in route_ids.split(","):
+                        if route in station_routes:
+                            routes.append(route)
+                    expression = '"route_id" IN (%s)' % ','.join(routes)
+                else:
+                    expression = '"route_id" IN (%s)' % route_ids
                 self.setFilterExpression('Buslijnen', '"modaliteit" = \'bus\' AND %s' % expression)
                 self.setFilterExpression('Tramlijnen', '"modaliteit" = \'tram\' AND %s' % expression)
                 self.setFilterExpression('Metrolijnen', '"modaliteit" = \'metro\' AND %s' % expression)
                 # show BTM lines layers
-                # self.setLayerVisible('OV haltes', True)
-                # self.setLayerExpanded('OV haltes', True)
-                self.setLayerVisible('Buslijnen', True)
-                self.setLayerExpanded('Buslijnen', True)
-                self.setLayerVisible('Tramlijnen', True)
-                self.setLayerExpanded('Tramlijnen', True)
-                self.setLayerVisible('Metrolijnen', True)
-                self.setLayerExpanded('Metrolijnen', True)
+                self.showOVRoutes(True)
+            else:
+                self.setFilterExpression('Buslijnen', '"modaliteit" = \'bus\'')
+                self.setFilterExpression('Tramlijnen', '"modaliteit" = \'tram\'')
+                self.setFilterExpression('Metrolijnen', '"modaliteit" = \'metro\'')
+                self.showOVRoutes(False)
         else:
             # select location
-            self.setFeatureSelection('Invloedsgebied overlap', 'sid', int(location_id))
+            self.setFeatureSelection('Fiets invloedsgebied overlap', 'sid', int(location_id))
+            self.setCurrentLayer('Fiets invloedsgebied overlap')
             # zoom to relevant layer
             if self.dlg.isStationSelected():
-                self.setExtentToLayer('Isochronen BTM')
+                self.setExtentToLayer('Invloedsgebied')
             else:
-                self.setExtentToSelection('Invloedsgebied overlap', 60000.0)
-            # show bike routes layer
-            self.setLayerVisible('Fietsroutes', True)
-            self.setLayerExpanded('Fietsroutes', True)
+                self.setExtentToSelection('Fiets invloedsgebied overlap', 30000.0)
+            # get fiets route ids
+            fiets_route_ids = []
+            feature_values = self.getFeatureValues('Fietsroutes', ['sid', 'invloedsgebied_ids', 'station_naam'])
+            for feat in feature_values.itervalues():
+                if feat[1]:
+                    if self.afvangstation:
+                            if location_id in feat[1].split(",") and self.afvangstation == feat[2]:
+                                fiets_route_ids.append(str(feat[0]))
+                    else:
+                        if location_id in feat[1].split(","):
+                            fiets_route_ids.append(str(feat[0]))
+            # filter fiets routes
+            if fiets_route_ids:
+                expression = 'sid IN (%s)' % ','.join(fiets_route_ids)
+                self.setFilterExpression('Fietsroutes', expression)
+                # show bike routes layer
+                self.showFietsRoutes(True)
+            else:
+                self.setFilterExpression('Fietsroutes', '')
+                self.showFietsRoutes(False)
+
+    def showFietsRoutes(self, onoff):
+        self.setLayerVisible('Fietsroutes', onoff)
+        self.setLayerExpanded('Fietsroutes', onoff)
+
+    def showOVRoutes(self, onoff):
+        # self.setLayerVisible('OV haltes', onoff)
+        # self.setLayerExpanded('OV haltes', onoff)
+        self.setLayerVisible('Buslijnen', onoff)
+        self.setLayerExpanded('Buslijnen', onoff)
+        self.setLayerVisible('Tramlijnen', onoff)
+        self.setLayerExpanded('Tramlijnen', onoff)
+        self.setLayerVisible('Metrolijnen', onoff)
+        self.setLayerExpanded('Metrolijnen', onoff)
 
     ###
     # Mobiliteit
     # Isochrone methods
     def loadMobiliteitLayers(self):
+        self.setLayerVisible('Treinstations (achtergrond)', True)
+        self.loadForegroundLayers(True)
+        self.setLayerVisible('Treinstations (voorgrond)', True)
         # isochrones
         self.showWalkIsochrones(self.dlg.isWalkVisible())
         self.showBikeIsochrones(self.dlg.isBikeVisible())
@@ -732,21 +829,21 @@ class KPOExplorer:
         self.showStopFrequency(self.dlg.isStopsVisible())
 
     def showWalkIsochrones(self, onoff):
-        self.setLayerVisible('Isochronen lopen', onoff)
+        self.setLayerVisible('Invloedsgebied lopen', onoff)
         if onoff:
-            self.setCurrentLayer('Isochronen lopen')
+            self.setCurrentLayer('Invloedsgebied lopen')
 
     def showBikeIsochrones(self, onoff):
-        self.setLayerVisible('Isochronen fiets', onoff)
+        self.setLayerVisible('Invloedsgebied fiets', onoff)
         if onoff:
-            self.setCurrentLayer('Isochronen fiets')
+            self.setCurrentLayer('Invloedsgebied fiets')
 
     def showOVIsochrones(self, onoff):
-        self.setLayerVisible('Isochronen tram', onoff)
-        self.setLayerVisible('Isochronen metro', onoff)
-        self.setLayerVisible('Isochronen bus', onoff)
+        self.setLayerVisible('Invloedsgebied tram', onoff)
+        self.setLayerVisible('Invloedsgebied metro', onoff)
+        self.setLayerVisible('Invloedsgebied bus', onoff)
         if onoff:
-            self.setCurrentLayer('Isochronen bus')
+            self.setCurrentLayer('Invloedsgebied bus')
 
     # PTAL methods
     def setAccessibility(self):
@@ -790,6 +887,7 @@ class KPOExplorer:
     def showStopFrequency(self, onoff):
         current_type = self.dlg.getStops()
         if current_type == 'Alle OV haltes':
+            self.setLayerVisible('Treinstations (voorgrond)', False)
             self.setLayerVisible('Trein frequentie', onoff)
             self.setLayerExpanded('Trein frequentie', onoff)
             self.setCurrentLayer('Trein frequentie')
@@ -801,7 +899,9 @@ class KPOExplorer:
             self.setLayerExpanded('Bus frequentie', onoff)
         else:
             self.hideStopFrequency()
+            self.setLayerVisible('Treinstations (voorgrond)', True)
             if current_type == 'Treinstations':
+                self.setLayerVisible('Treinstations (voorgrond)', False)
                 self.setLayerVisible('Trein frequentie', onoff)
                 self.setLayerExpanded('Trein frequentie', onoff)
                 self.setCurrentLayer('Trein frequentie')

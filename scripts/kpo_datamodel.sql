@@ -46,11 +46,10 @@ CREATE TABLE datasysteem.knooppunten(
 	halte_id character varying,
 	halte_naam character varying,
 	huishoudens integer,
-	totaal_passanten integer,
+	passanten integer,
 	in_uit_trein integer,
 	overstappers integer,
 	in_uit_btm integer,
-	bezoekers integer,
 	btm_voortransport double precision,
 	btm_natransport double precision,
 	lopen_voortransport double precision,
@@ -79,13 +78,14 @@ CREATE TABLE datasysteem.knooppuntenscenarios(
 	scenario_naam character varying,
 	tod_beleidsniveau smallint,
 	huishoudens integer,
+	nieuwe_huishoudens integer,
 	procentuele_verandering double precision,
-	totaal_passanten integer,
+	procent_locale_reizigers double precision,
 	in_uit_trein integer,
-	overstappers integer,
 	in_uit_btm integer,
-	bezoekers integer,
+	fiets_plaatsen integer,
 	fiets_bezetting integer,
+	pr_plaatsen integer,
 	pr_bezetting integer,
 	CONSTRAINT knooppuntenscenarios_pkey PRIMARY KEY (sid)
 );
@@ -96,7 +96,6 @@ CREATE TABLE datasysteem.ruimtelijke_kenmerken(
 	geom geometry(MultiPolygon,28992),
 	cell_id character varying,
 	huishoudens integer,
-	inwoners integer,
 	intensiteit integer,
 	fysieke_dichtheid double precision,
 	woz_waarde double precision,
@@ -120,28 +119,21 @@ CREATE TABLE datasysteem.ontwikkellocaties(
 	net_nieuwe_woningen integer,
 	vlakte double precision,
 	dichtheid double precision,
+	gemiddelde_huishoudens double precision,
+	gemiddelde_intensiteit double precision,
+	gemiddelde_dichtheid double precision,
+	gemiddelde_woz double precision,
 	gemiddelde_bereikbaarheidsindex double precision,
-	maximale_bereikbaarheidsindex double precision,
 	bereikbaare_locatie boolean,
 	cell_ids character varying,
 	CONSTRAINT ontwikkellocaties_pkey PRIMARY KEY (sid)
-);
-
--- DROP TABLE IF EXISTS datasysteem.overzicht_ontwikkellocaties CASCADE;
-CREATE TABLE datasysteem.overzicht_ontwikkellocaties(
-	sid serial NOT NULL,
-	plan_naam character varying,
-	geplande_woningen integer,
-	in_onderbenut_bereikbaar integer,
-	buiten_onderbenut_bereikbaar integer,
-	CONSTRAINT overzicht_ontwikkellocaties_pkey PRIMARY KEY (sid)
 );
 
 -- DROP TABLE IF EXISTS datasysteem.invloedsgebied_overlap CASCADE;
 CREATE TABLE datasysteem.invloedsgebied_overlap(
 	sid serial NOT NULL,
 	geom geometry(MultiPolygon,28992),
-	inwoner_dichtheid integer,
+	huishoudens integer,
 	intensiteit integer,
 	station_namen character varying,
 	station_aantal smallint,
@@ -156,18 +148,21 @@ CREATE TABLE datasysteem.belangrijke_locaties(
 	locatie_id character varying,
 	locatie_naam character varying,
 	op_loopafstand boolean,
+	station_namen character varying,
 	ov_routes_ids character varying,
 	CONSTRAINT belangrijke_locaties_pkey PRIMARY KEY (sid)
 );
 
--- DROP TABLE IF EXISTS datasysteem.regionale_voorzieningen CASCADE;
-CREATE TABLE datasysteem.regionale_voorzieningen(
+-- DROP TABLE IF EXISTS datasysteem.magneten CASCADE;
+CREATE TABLE datasysteem.magneten(
 	sid serial NOT NULL,
 	geom geometry(MultiPoint,28992),
-	locatie_id character varying,
-	type_locatie character varying,
+	locatie_kwaliteit integer,
 	locatie_naam character varying,
 	op_loopafstand boolean,
+	op_fietsafstand boolean,
+	op_ovafstand boolean,
+	station_namen character varying,
 	ov_routes_ids character varying,
 	CONSTRAINT regionale_voorzieningen_pkey PRIMARY KEY (sid)
 );

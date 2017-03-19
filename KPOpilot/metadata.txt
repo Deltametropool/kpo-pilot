@@ -9,15 +9,15 @@
 [general]
 name=KPO datasysteem pilot
 qgisMinimumVersion=2.0
-description=Knooppunten Datasysteem
+description=Knooppuntontwikkeling Datasysteem Pilot
 version=0.1
 author=Jorge Gil
 email=gil.jorge@gmail.com
 
-about=Pilot plugin for Knooppunten datasysteem
+about=Het datasysteem brengt bestaande informatie van verschillende partijen over het functioneren van knooppunten, mobiliteitsnetwerk, beschikbare ruimte en plannen voor verstedelijking in Nederland samen om inzichten te verwerven in het optimaal benutten van de bestaande ruimte en netwerken. Het doel van het systeem is beleidsmedewerkers te ondersteunen bij het beantwoorden van belangrijke beleidsvragen met hulp van beschikbare data.
 
-tracker=none
-repository=none
+tracker=https://github.com/jorgegil/kpo-pilot/issues
+repository=https://github.com/jorgegil/kpo-pilot
 # End of mandatory metadata
 
 # Recommended items:
@@ -26,13 +26,13 @@ repository=none
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=
+tags=vector,TOD,mobility,decision support,knooppunten
 
-homepage=
+homepage=https://github.com/jorgegil/kpo-pilot
 category=Plugins
-icon=images/icon.png
+icon=images/icon_large.png
 # experimental flag
-experimental=True
+experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False

@@ -85,10 +85,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
         # set-up dialog defaults
         #  Knooppunten
-        self.scenarioSelectCombo.setCurrentIndex(0)
+        self.scenarioSelectCombo.setCurrentIndex(1)
         self.scenarioShowCheck.setChecked(True)
-        self.isochronesShowCheck.setChecked(False)
-        self.__activateTODLevel__(False)
+        self.isochronesShowCheck.setChecked(True)
+        self.__activateTODLevel__(True)
+        self.todPolicyValueLabel.hide()
         self.todPolicySlider.setValue(0)
         self.knooppuntenAttributeCombo.setCurrentIndex(0)
         self.knooppuntenShowCheck.setChecked(True)
@@ -107,7 +108,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.overbelastAttributeCombo.setCurrentIndex(0)
         self.overbelastShowCheck.setChecked(True)
         self.locationSelectCombo.setCurrentIndex(0)
-        self.locationShowCheck.setChecked(False)
+        self.locationShowCheck.setChecked(True)
 
         # Mobiliteit
         self.isochroneWalkCheck.setChecked(True)
@@ -235,10 +236,10 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def updateScenarioSummary(self, data_values):
         text_list = []
         if len(data_values) == 4:
-            text_list.append('%d totaal huishouden' % data_values[0])
-            text_list.append('%d op loopafstand van knooppunten' % data_values[1])
-            text_list.append('%d op fietsafstand van knooppunten' % data_values[2])
-            text_list.append('%d buiten invloedsgebied van knooppunten' % data_values[3])
+            text_list.append('%s  totaal huishoudens' % '{0:,}'.format(data_values[0]))
+            text_list.append('%s  op loopafstand van knooppunten' % '{0:,}'.format(data_values[1]))
+            text_list.append('%s  op fietsafstand van knooppunten' % '{0:,}'.format(data_values[2]))
+            text_list.append('%s  buiten invloedsgebied van knooppunten' % '{0:,}'.format(data_values[3]))
             self.__setTextField__('scenarioSummaryText', text_list)
 
     # Methods for Knooppunten
@@ -335,9 +336,9 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def updatePlanSummary(self, data_values):
         text_list = []
         if len(data_values) == 3:
-            text_list.append('%d totaal woningen' % data_values[0])
-            text_list.append('%d in onderbenut bereikbaare locaties' % data_values[1])
-            text_list.append('%d buiten onderbenut bereikbaare locaties' % data_values[2])
+            text_list.append('%s  totaal woningen' % '{0:,}'.format(data_values[0]))
+            text_list.append('%s  in onderbenute bereikbaare locaties' % '{0:,}'.format(data_values[1]))
+            text_list.append('%s  buiten onderbenute bereikbaare locaties' % '{0:,}'.format(data_values[2]))
             self.__setTextField__('planSummaryText', text_list)
 
     def updatePlanTable(self, headers, data_values):
@@ -510,15 +511,12 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         for i, feature in enumerate(values):
             for j in range(columns):
                 entry = QtGui.QTableWidgetItem()
-                # the first column is a string
-                if j == 0:
-                    entry.setText(str(feature[j]))
-                else:
-                    entry.setData(QtCore.Qt.EditRole, feature[j])
+                # this way of adding values allows sorting numbers numerically, not as text
+                entry.setData(QtCore.Qt.EditRole, feature[j])
                 table.setItem(i, j, entry)
-        table.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
-        for m in range(1,columns):
+        for m in range(0,columns):
             table.horizontalHeader().setResizeMode(m, QtGui.QHeaderView.ResizeToContents)
+        table.horizontalHeader().setResizeMode(columns-1, QtGui.QHeaderView.Stretch)
         table.resizeRowsToContents()
         table.setSortingEnabled(True)
 
@@ -526,3 +524,22 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         slider = self.findChild(QtGui.QSlider, gui_name)
         slider.setRange(minimum, maximum)
         slider.setSingleStep(step)
+
+    # check if a text string is of numeric type
+    def isNumeric(self, txt):
+        if txt != QtCore.QNULL:
+            try:
+                int(txt)
+                return True
+            except ValueError:
+                try:
+                    long(txt)
+                    return True
+                except ValueError:
+                    try:
+                        float(txt)
+                        return True
+                    except ValueError:
+                        return False
+        else:
+            return False
