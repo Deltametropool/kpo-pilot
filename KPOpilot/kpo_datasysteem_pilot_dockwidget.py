@@ -108,7 +108,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.overbelastAttributeCombo.setCurrentIndex(0)
         self.overbelastShowCheck.setChecked(True)
         self.locationSelectCombo.setCurrentIndex(0)
-        self.locationShowCheck.setChecked(False)
+        self.locationShowCheck.setChecked(True)
 
         # Mobiliteit
         self.isochroneWalkCheck.setChecked(True)
@@ -511,14 +511,12 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         for i, feature in enumerate(values):
             for j in range(columns):
                 entry = QtGui.QTableWidgetItem()
-                if self.isNumeric(feature[j]):
-                    entry.setData(QtCore.Qt.EditRole, '{0:,}'.format(feature[j]))
-                else:
-                    entry.setText(str(feature[j]))
+                # this way of adding values allows sorting numbers numerically, not as text
+                entry.setData(QtCore.Qt.EditRole, feature[j])
                 table.setItem(i, j, entry)
-        for m in range(0,columns-1):
+        for m in range(0,columns):
             table.horizontalHeader().setResizeMode(m, QtGui.QHeaderView.ResizeToContents)
-        table.horizontalHeader().setResizeMode(columns-1, QtGui.QHeaderView.Stretch)
+        #table.horizontalHeader().setResizeMode(columns-1, QtGui.QHeaderView.Stretch)
         table.resizeRowsToContents()
         table.setSortingEnabled(True)
 
@@ -529,16 +527,19 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     # check if a text string is of numeric type
     def isNumeric(self, txt):
-        try:
-            int(txt)
-            return True
-        except ValueError:
+        if txt != QtCore.QNULL:
             try:
-                long(txt)
+                int(txt)
                 return True
             except ValueError:
                 try:
-                    float(txt)
+                    long(txt)
                     return True
                 except ValueError:
-                    return False
+                    try:
+                        float(txt)
+                        return True
+                    except ValueError:
+                        return False
+        else:
+            return False
