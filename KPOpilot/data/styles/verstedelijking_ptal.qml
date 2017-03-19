@@ -166,7 +166,7 @@
       <symbol alpha="1" clip_to_extent="1" type="fill" name="0">
         <layer pass="0" class="SimpleFill" locked="0">
           <prop k="border_width_map_unit_scale" v="0,0,0,0,0,0"/>
-          <prop k="color" v="157,111,89,179"/>
+          <prop k="color" v="157,111,89,255"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -332,7 +332,7 @@
   </customproperties>
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
-  <layerTransparency>30</layerTransparency>
+  <layerTransparency>25</layerTransparency>
   <displayfield>ov_bereikbaarheidsniveau</displayfield>
   <label>0</label>
   <labelattributes>

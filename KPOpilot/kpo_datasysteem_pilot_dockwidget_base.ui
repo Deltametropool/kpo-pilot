@@ -514,7 +514,28 @@ p, li { white-space: pre-wrap; }
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="intensityShowCheck">
+             <property name="text">
+              <string>Aan / Uit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="accessibilityLabel">
+             <property name="text">
+              <string>Bereikbaarheidsniveau (PTAL):</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QCheckBox" name="locatiesShowCheck">
+             <property name="text">
+              <string>Aan / Uit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0" colspan="2">
             <widget class="QComboBox" name="intensitySelectCombo">
              <item>
               <property name="text">
@@ -523,7 +544,7 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <property name="text">
-               <string>Intensiteit (inwoners,werknemer,studenten)</string>
+               <string>Intensiteit (inwoners, werknemer, studenten)</string>
               </property>
              </item>
              <item>
@@ -536,27 +557,6 @@ p, li { white-space: pre-wrap; }
                <string>WOZ waarde</string>
               </property>
              </item>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QCheckBox" name="intensityShowCheck">
-             <property name="text">
-              <string>Aan / Uit</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QCheckBox" name="locatiesShowCheck">
-             <property name="text">
-              <string>Aan / Uit</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0" colspan="2">
-            <widget class="QLabel" name="accessibilityLabel">
-             <property name="text">
-              <string>Bereikbaarheidsniveau (PTAL):</string>
-             </property>
             </widget>
            </item>
           </layout>
@@ -814,12 +814,12 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="locationSelectCombo">
              <item>
               <property name="text">
-               <string>Belangrijke locaties</string>
+               <string>Magneten</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Magneten</string>
+               <string>Belangrijke locaties</string>
               </property>
              </item>
              <item>
