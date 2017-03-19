@@ -80,6 +80,7 @@ CREATE TABLE datasysteem.knooppuntenscenarios(
 	huishoudens integer,
 	nieuwe_huishoudens integer,
 	procentuele_verandering double precision,
+	procent_locale_reizigers double precision,
 	in_uit_trein integer,
 	in_uit_btm integer,
 	fiets_plaatsen integer,

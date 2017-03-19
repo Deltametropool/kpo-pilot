@@ -653,14 +653,13 @@ INSERT INTO datasysteem.fietsroutes(geom, route_id, route_intensiteit, station_n
 -- UPDATE datasysteem.fietsroutes SET invloedsgebied_ids = NULL;
 UPDATE datasysteem.fietsroutes f SET invloedsgebied_ids = r.ids
 	FROM (
-		SELECT routes.route_id, string_agg(overlap.sid::text,',' ORDER BY overlap.sid) ids 
+		SELECT routes.sid, string_agg(overlap.sid::text,',' ORDER BY overlap.sid) ids 
 		FROM datasysteem.fietsroutes AS routes, 
 		datasysteem.invloedsgebied_overlap AS overlap
 		WHERE routes.station_naam = ANY(string_to_array(overlap.station_namen,','))
-		AND (ST_Intersects(ST_PointN(routes.geom,1),overlap.geom)
-		OR ST_Intersects(ST_PointN(routes.geom,-1),overlap.geom))
-		GROUP BY routes.route_id
+		AND ST_Intersects(routes.geom,overlap.geom)
+		GROUP BY routes.sid
 	) r
-	WHERE f.route_id = r.route_id
+	WHERE f.sid = r.sid
 ;
 DELETE FROM datasysteem.fietsroutes WHERE ST_Length(geom) > 6000;
