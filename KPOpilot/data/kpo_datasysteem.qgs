@@ -15,6 +15,42 @@
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
+    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="Mobiliteit">
+      <customproperties/>
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Metro_frequentie_copy20170227120547354" name="Trein frequentie">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Tram_frequentie_copy20170227115928701" name="Metro frequentie">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="ov_haltes20170225205921926" name="Tram frequentie">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Tram_frequentie_copy20170227115647730" name="Bus frequentie">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Isochronen_metro_copy20170226102859033" name="Invloedsgebied bus">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Isochronen_copy_copy20170226102549083" name="Invloedsgebied tram">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Isochronen_tram_copy20170226102829721" name="Invloedsgebied metro">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Isochronen_fiets_copy20170226102614027" name="Invloedsgebied lopen">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Isochronen_copy20170226102544751" name="Invloedsgebied fiets">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Ruimtelijke_kenmerken_copy20170226132217656" name="Bereikbaarheidsniveau">
+        <customproperties/>
+      </layer-tree-layer>
+      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="PTAL_copy20170227082025189" name="Bereikbaarheidsindex">
+        <customproperties/>
+      </layer-tree-layer>
+    </layer-tree-group>
     <layer-tree-group expanded="0" checked="Qt::Unchecked" name="1. Knooppunten">
       <customproperties/>
       <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Knooppunten_copy20170226181536660" name="Treinstations">
@@ -83,42 +119,6 @@
         <customproperties/>
       </layer-tree-layer>
       <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Isochronen_metro_copy20170226102845931" name="Invloedsgebied">
-        <customproperties/>
-      </layer-tree-layer>
-    </layer-tree-group>
-    <layer-tree-group expanded="0" checked="Qt::Unchecked" name="Mobiliteit">
-      <customproperties/>
-      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Metro_frequentie_copy20170227120547354" name="Trein frequentie">
-        <customproperties/>
-      </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Tram_frequentie_copy20170227115928701" name="Metro frequentie">
-        <customproperties/>
-      </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="ov_haltes20170225205921926" name="Tram frequentie">
-        <customproperties/>
-      </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Tram_frequentie_copy20170227115647730" name="Bus frequentie">
-        <customproperties/>
-      </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Isochronen_metro_copy20170226102859033" name="Invloedsgebied bus">
-        <customproperties/>
-      </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Isochronen_copy_copy20170226102549083" name="Invloedsgebied tram">
-        <customproperties/>
-      </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Isochronen_tram_copy20170226102829721" name="Invloedsgebied metro">
-        <customproperties/>
-      </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Isochronen_fiets_copy20170226102614027" name="Invloedsgebied lopen">
-        <customproperties/>
-      </layer-tree-layer>
-      <layer-tree-layer expanded="1" checked="Qt::Unchecked" id="Isochronen_copy20170226102544751" name="Invloedsgebied fiets">
-        <customproperties/>
-      </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="Ruimtelijke_kenmerken_copy20170226132217656" name="Bereikbaarheidsniveau">
-        <customproperties/>
-      </layer-tree-layer>
-      <layer-tree-layer expanded="0" checked="Qt::Unchecked" id="PTAL_copy20170227082025189" name="Bereikbaarheidsindex">
         <customproperties/>
       </layer-tree-layer>
     </layer-tree-group>
@@ -316,6 +316,63 @@
         </filegroup>
       </legendlayer>
     </legendgroup>
+    <legendgroup open="false" checked="Qt::Unchecked" name="Mobiliteit">
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Trein frequentie" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Metro_frequentie_copy20170227120547354" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Metro frequentie" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Tram_frequentie_copy20170227115928701" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Tram frequentie" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="ov_haltes20170225205921926" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Bus frequentie" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Tram_frequentie_copy20170227115647730" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Invloedsgebied bus" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Isochronen_metro_copy20170226102859033" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Invloedsgebied tram" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Isochronen_copy_copy20170226102549083" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Invloedsgebied metro" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Isochronen_tram_copy20170226102829721" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Invloedsgebied lopen" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Isochronen_fiets_copy20170226102614027" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Invloedsgebied fiets" showFeatureCount="0">
+        <filegroup open="true" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Isochronen_copy20170226102544751" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Bereikbaarheidsniveau" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="Ruimtelijke_kenmerken_copy20170226132217656" visible="0"/>
+        </filegroup>
+      </legendlayer>
+      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Bereikbaarheidsindex" showFeatureCount="0">
+        <filegroup open="false" hidden="false">
+          <legendlayerfile isInOverview="0" layerid="PTAL_copy20170227082025189" visible="0"/>
+        </filegroup>
+      </legendlayer>
+    </legendgroup>
     <legendgroup open="false" checked="Qt::Unchecked" name="1. Knooppunten">
       <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Treinstations" showFeatureCount="0">
         <filegroup open="false" hidden="false">
@@ -419,63 +476,6 @@
       <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Invloedsgebied" showFeatureCount="0">
         <filegroup open="false" hidden="false">
           <legendlayerfile isInOverview="0" layerid="Isochronen_metro_copy20170226102845931" visible="0"/>
-        </filegroup>
-      </legendlayer>
-    </legendgroup>
-    <legendgroup open="false" checked="Qt::Unchecked" name="Mobiliteit">
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Trein frequentie" showFeatureCount="0">
-        <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Metro_frequentie_copy20170227120547354" visible="0"/>
-        </filegroup>
-      </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Metro frequentie" showFeatureCount="0">
-        <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Tram_frequentie_copy20170227115928701" visible="0"/>
-        </filegroup>
-      </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Tram frequentie" showFeatureCount="0">
-        <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="ov_haltes20170225205921926" visible="0"/>
-        </filegroup>
-      </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Bus frequentie" showFeatureCount="0">
-        <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Tram_frequentie_copy20170227115647730" visible="0"/>
-        </filegroup>
-      </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Invloedsgebied bus" showFeatureCount="0">
-        <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Isochronen_metro_copy20170226102859033" visible="0"/>
-        </filegroup>
-      </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Invloedsgebied tram" showFeatureCount="0">
-        <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Isochronen_copy_copy20170226102549083" visible="0"/>
-        </filegroup>
-      </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Invloedsgebied metro" showFeatureCount="0">
-        <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Isochronen_tram_copy20170226102829721" visible="0"/>
-        </filegroup>
-      </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Invloedsgebied lopen" showFeatureCount="0">
-        <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Isochronen_fiets_copy20170226102614027" visible="0"/>
-        </filegroup>
-      </legendlayer>
-      <legendlayer drawingOrder="-1" open="true" checked="Qt::Unchecked" name="Invloedsgebied fiets" showFeatureCount="0">
-        <filegroup open="true" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Isochronen_copy20170226102544751" visible="0"/>
-        </filegroup>
-      </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Bereikbaarheidsniveau" showFeatureCount="0">
-        <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="Ruimtelijke_kenmerken_copy20170226132217656" visible="0"/>
-        </filegroup>
-      </legendlayer>
-      <legendlayer drawingOrder="-1" open="false" checked="Qt::Unchecked" name="Bereikbaarheidsindex" showFeatureCount="0">
-        <filegroup open="false" hidden="false">
-          <legendlayerfile isInOverview="0" layerid="PTAL_copy20170227082025189" visible="0"/>
         </filegroup>
       </legendlayer>
     </legendgroup>
@@ -11620,6 +11620,9 @@ def my_form_open(dialog, layer, feature):
         <map-layer-style name=""/>
       </map-layer-style-manager>
       <edittypes>
+        <edittype widgetv2type="TextEdit" name="id">
+          <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
+        </edittype>
         <edittype widgetv2type="TextEdit" name="sid">
           <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
         </edittype>

@@ -388,14 +388,16 @@ INSERT INTO datasysteem.ontwikkellocaties (geom, plan_naam, plan_id, gemeente, p
 INSERT INTO datasysteem.ontwikkellocaties(geom, plan_naam, plan_id, gemeente, plaatsnaam, adres,
 		bestaande_woningen, geplande_woningen, net_nieuwe_woningen, vlakte)
 	SELECT ST_Force2D(geom), 'Plancapaciteit', planid, gemnaam, naamplan, straat, 
-		te_slopen, (wtypapp + wtypggb), (wtypapp + wtypggb - te_slopen), round(ST_Area(geom)::numeric,0)
+		te_slopen, (op2016 + op201719 + op202024 + op202550 + oplonb), 
+		(op2016 + op201719 + op202024 + op202550 + oplonb - te_slopen), 
+		round(ST_Area(geom)::numeric,0)
 	FROM sources.vdm_plancapaciteit_2016_update
 ;
 -- Insert Kantorenleegstand data
--- DELETE FROM datasysteem.ontwikkellocaties WHERE plan_naam = 'Leegstanden';
+-- DELETE FROM datasysteem.ontwikkellocaties WHERE plan_naam = 'Kantorleegstanden';
 INSERT INTO datasysteem.ontwikkellocaties(geom, plan_naam, plan_id, gemeente, plaatsnaam, adres,
 		bestaande_woningen, geplande_woningen, net_nieuwe_woningen, vlakte)
-	SELECT geom, 'Leegstanden', rinnummer, gemeente, plannaam, ookbekend,
+	SELECT geom, 'Kantorenleegstand', rinnummer, gemeente, plannaam, ookbekend,
 		0, leegstand::numeric/100.0, leegstand::numeric/100.0, round(ST_Area(geom)::numeric,0)
 	FROM sources.pnh_werklocaties_kantoren_leegstanden
 ;
@@ -420,7 +422,7 @@ UPDATE datasysteem.ontwikkellocaties dev SET
 		FROM (
 			SELECT * 
 			FROM datasysteem.ontwikkellocaties
-			WHERE plan_naam IN ('Plancapaciteit', 'Leegstanden')
+			WHERE plan_naam IN ('Plancapaciteit', 'Kantorenleegstand')
 		) loc,
 		(
 			SELECT * 

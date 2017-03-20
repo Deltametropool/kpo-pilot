@@ -133,6 +133,232 @@ p, li { white-space: pre-wrap; }
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="mobiliteitTab">
+       <attribute name="title">
+        <string>Mobiliteit</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0">
+        <property name="leftMargin">
+         <number>5</number>
+        </property>
+        <property name="topMargin">
+         <number>5</number>
+        </property>
+        <property name="rightMargin">
+         <number>5</number>
+        </property>
+        <property name="bottomMargin">
+         <number>5</number>
+        </property>
+        <item>
+         <widget class="QGroupBox" name="isochroneBox">
+          <property name="title">
+           <string>Invloedsgebied van het treinstations</string>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_7">
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item>
+            <widget class="QCheckBox" name="isochroneWalkCheck">
+             <property name="text">
+              <string>Lopen (10 min - 800 m)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="isochroneBikeCheck">
+             <property name="text">
+              <string>Fietsen (10 min - 3000 m)</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="isochroneOvCheck">
+             <property name="text">
+              <string>Bus/Tram/Metro (10 min)</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="ptalBox">
+          <property name="title">
+           <string>OV Bereikbaarheid</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1">
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item>
+            <widget class="QComboBox" name="ptalSelectCombo">
+             <item>
+              <property name="text">
+               <string>Bereikbaarheidsniveau</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Bereikbaarheidsindex</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="ptalShowCheck">
+             <property name="text">
+              <string>Aan / Uit</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="frequencyBox">
+          <property name="title">
+           <string>OV Frequentie </string>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_5" columnstretch="2,1">
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item row="3" column="0" colspan="2">
+            <widget class="QTableWidget" name="stopSummaryTable">
+             <property name="editTriggers">
+              <set>QAbstractItemView::NoEditTriggers</set>
+             </property>
+             <property name="alternatingRowColors">
+              <bool>true</bool>
+             </property>
+             <property name="selectionMode">
+              <enum>QAbstractItemView::SingleSelection</enum>
+             </property>
+             <property name="selectionBehavior">
+              <enum>QAbstractItemView::SelectRows</enum>
+             </property>
+             <property name="showGrid">
+              <bool>false</bool>
+             </property>
+             <attribute name="horizontalHeaderDefaultSectionSize">
+              <number>50</number>
+             </attribute>
+             <column>
+              <property name="text">
+               <string>Halte</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Trein</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Metro</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Tram</string>
+              </property>
+             </column>
+             <column>
+              <property name="text">
+               <string>Bus</string>
+              </property>
+             </column>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QComboBox" name="stopSelectCombo">
+             <item>
+              <property name="text">
+               <string>Alle OV haltes</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Treinstations</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Metrostations</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Tramhaltes</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Bushaltes</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="stopFrequencyCheck">
+             <property name="text">
+              <string>Aan / Uit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QComboBox" name="frequencyTimeCombo">
+             <item>
+              <property name="text">
+               <string>Ochtendspits</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Daluren</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>Avondspits</string>
+              </property>
+             </item>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="knooppuntenTab">
        <attribute name="title">
         <string>1. Knooppunten</string>
@@ -871,232 +1097,6 @@ p, li { white-space: pre-wrap; }
                <string>Bereikbaarheid</string>
               </property>
              </column>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QWidget" name="mobiliteitTab">
-       <attribute name="title">
-        <string>Mobiliteit</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0">
-        <property name="leftMargin">
-         <number>5</number>
-        </property>
-        <property name="topMargin">
-         <number>5</number>
-        </property>
-        <property name="rightMargin">
-         <number>5</number>
-        </property>
-        <property name="bottomMargin">
-         <number>5</number>
-        </property>
-        <item>
-         <widget class="QGroupBox" name="isochroneBox">
-          <property name="title">
-           <string>Invloedsgebied van het treinstations</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_7">
-           <property name="leftMargin">
-            <number>5</number>
-           </property>
-           <property name="topMargin">
-            <number>5</number>
-           </property>
-           <property name="rightMargin">
-            <number>5</number>
-           </property>
-           <property name="bottomMargin">
-            <number>5</number>
-           </property>
-           <item>
-            <widget class="QCheckBox" name="isochroneWalkCheck">
-             <property name="text">
-              <string>Lopen (10 min - 800 m)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="isochroneBikeCheck">
-             <property name="text">
-              <string>Fietsen (10 min - 3000 m)</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="isochroneOvCheck">
-             <property name="text">
-              <string>Bus/Tram/Metro (10 min)</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="ptalBox">
-          <property name="title">
-           <string>OV Bereikbaarheid</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,1">
-           <property name="leftMargin">
-            <number>5</number>
-           </property>
-           <property name="topMargin">
-            <number>5</number>
-           </property>
-           <property name="rightMargin">
-            <number>5</number>
-           </property>
-           <property name="bottomMargin">
-            <number>5</number>
-           </property>
-           <item>
-            <widget class="QComboBox" name="ptalSelectCombo">
-             <item>
-              <property name="text">
-               <string>Bereikbaarheidsniveau</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Bereikbaarheidsindex</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="ptalShowCheck">
-             <property name="text">
-              <string>Aan / Uit</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="frequencyBox">
-          <property name="title">
-           <string>OV Frequentie </string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_5" columnstretch="2,1">
-           <property name="leftMargin">
-            <number>5</number>
-           </property>
-           <property name="topMargin">
-            <number>5</number>
-           </property>
-           <property name="rightMargin">
-            <number>5</number>
-           </property>
-           <property name="bottomMargin">
-            <number>5</number>
-           </property>
-           <item row="3" column="0" colspan="2">
-            <widget class="QTableWidget" name="stopSummaryTable">
-             <property name="editTriggers">
-              <set>QAbstractItemView::NoEditTriggers</set>
-             </property>
-             <property name="alternatingRowColors">
-              <bool>true</bool>
-             </property>
-             <property name="selectionMode">
-              <enum>QAbstractItemView::SingleSelection</enum>
-             </property>
-             <property name="selectionBehavior">
-              <enum>QAbstractItemView::SelectRows</enum>
-             </property>
-             <property name="showGrid">
-              <bool>false</bool>
-             </property>
-             <attribute name="horizontalHeaderDefaultSectionSize">
-              <number>50</number>
-             </attribute>
-             <column>
-              <property name="text">
-               <string>Halte</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Trein</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Metro</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Tram</string>
-              </property>
-             </column>
-             <column>
-              <property name="text">
-               <string>Bus</string>
-              </property>
-             </column>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QComboBox" name="stopSelectCombo">
-             <item>
-              <property name="text">
-               <string>Alle OV haltes</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Treinstations</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Metrostations</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Tramhaltes</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Bushaltes</string>
-              </property>
-             </item>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QCheckBox" name="stopFrequencyCheck">
-             <property name="text">
-              <string>Aan / Uit</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QComboBox" name="frequencyTimeCombo">
-             <item>
-              <property name="text">
-               <string>Ochtendspits</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Daluren</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Avondspits</string>
-              </property>
-             </item>
             </widget>
            </item>
           </layout>
