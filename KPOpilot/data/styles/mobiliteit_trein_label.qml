@@ -1,5 +1,5 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis version="2.14.7-Essen" minimumScale="0" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
+<qgis version="2.14.7-Essen" minimumScale="-4.65661e-10" maximumScale="1e+08" simplifyDrawingHints="0" minLabelScale="0" maxLabelScale="1e+08" simplifyDrawingTol="1" simplifyMaxScale="1" hasScaleBasedVisibilityFlag="0" simplifyLocal="1" scaleBasedLabelVisibilityFlag="0">
   <edittypes>
     <edittype widgetv2type="TextEdit" name="sid">
       <widgetv2config IsMultiline="0" fieldEditable="1" UseHtml="0" labelOnTop="0"/>
@@ -109,7 +109,7 @@
       <symbol alpha="1" clip_to_extent="1" type="marker" name="0">
         <layer pass="2" class="SimpleMarker" locked="0">
           <prop k="angle" v="0"/>
-          <prop k="color" v="227,26,28,255"/>
+          <prop k="color" v="0,0,0,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
           <prop k="name" v="circle"/>
           <prop k="offset" v="0,0"/>
@@ -123,7 +123,7 @@
           <prop k="scale_method" v="diameter"/>
           <prop k="size" v="2"/>
           <prop k="size_dd_active" v="1"/>
-          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;metro_daluren&quot;, 0, 60, 1, 10, 0.57), 0)"/>
+          <prop k="size_dd_expression" v="coalesce(scale_exp(&quot;trein_ochtendspits&quot;, 2, 60, 1, 10, 0.57), 0)"/>
           <prop k="size_dd_field" v=""/>
           <prop k="size_dd_useexpr" v="1"/>
           <prop k="size_map_unit_scale" v="0,0,0,0,0,0"/>
@@ -146,10 +146,10 @@
     <property key="labeling/bufferColorB" value="255"/>
     <property key="labeling/bufferColorG" value="255"/>
     <property key="labeling/bufferColorR" value="255"/>
-    <property key="labeling/bufferDraw" value="false"/>
+    <property key="labeling/bufferDraw" value="true"/>
     <property key="labeling/bufferJoinStyle" value="64"/>
     <property key="labeling/bufferNoFill" value="false"/>
-    <property key="labeling/bufferSize" value="1"/>
+    <property key="labeling/bufferSize" value="0.6"/>
     <property key="labeling/bufferSizeInMapUnits" value="false"/>
     <property key="labeling/bufferSizeMapUnitScale" value="0,0,0,0,0,0"/>
     <property key="labeling/bufferTransp" value="0"/>
@@ -194,7 +194,7 @@
     <property key="labeling/multilineHeight" value="1"/>
     <property key="labeling/namedStyle" value="Regular"/>
     <property key="labeling/obstacle" value="true"/>
-    <property key="labeling/obstacleFactor" value="1"/>
+    <property key="labeling/obstacleFactor" value="1.8"/>
     <property key="labeling/obstacleType" value="0"/>
     <property key="labeling/offsetType" value="0"/>
     <property key="labeling/placeDirectionSymbol" value="0"/>
@@ -211,7 +211,7 @@
     <property key="labeling/repeatDistanceUnit" value="1"/>
     <property key="labeling/reverseDirectionSymbol" value="false"/>
     <property key="labeling/rightDirectionSymbol" value=">"/>
-    <property key="labeling/scaleMax" value="30000"/>
+    <property key="labeling/scaleMax" value="20000"/>
     <property key="labeling/scaleMin" value="1"/>
     <property key="labeling/scaleVisibility" value="true"/>
     <property key="labeling/shadowBlendMode" value="6"/>
@@ -264,9 +264,9 @@
     <property key="labeling/shapeTransparency" value="0"/>
     <property key="labeling/shapeType" value="0"/>
     <property key="labeling/textColorA" value="255"/>
-    <property key="labeling/textColorB" value="28"/>
-    <property key="labeling/textColorG" value="26"/>
-    <property key="labeling/textColorR" value="227"/>
+    <property key="labeling/textColorB" value="0"/>
+    <property key="labeling/textColorG" value="0"/>
+    <property key="labeling/textColorR" value="0"/>
     <property key="labeling/textTransp" value="0"/>
     <property key="labeling/upsidedownLabels" value="0"/>
     <property key="labeling/wrapChar" value=""/>
@@ -279,14 +279,19 @@
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerTransparency>0</layerTransparency>
-  <displayfield>&lt;b>Metro Station:&lt;/b>&lt;br>
+  <displayfield>&lt;b>Trein Station:&lt;/b>&lt;br>
 [% "halte_naam" %]&lt;br>
 [% "halte_gemeente" %]&lt;br>
 &lt;br>
 &lt;b>Frequentie:&lt;/b>&lt;br>
-Ochtendspits - [% "metro_ochtendspits" %] / uur&lt;br>
-Daluren - [% "metro_daluren" %] / uur&lt;br>
-Avondspits - [% "metro_avondspits" %] / uur&lt;br></displayfield>
+Ochtendspits - [% "trein_ochtendspits" %] / uur&lt;br>
+Daluren - [% "trein_daluren" %] / uur&lt;br>
+Avondspits - [% "trein_avondspits" %] / uur&lt;br>
+&lt;br>
+&lt;b>Type trein (avondspits):&lt;/b>&lt;br>
+HSL - [% "hsl_avondspits" %] / uur&lt;br>
+IC - [% "ic_avondspits" %] / uur&lt;br>
+Sprinter - [% "spr_avondspits" %] / uur&lt;br></displayfield>
   <label>0</label>
   <labelattributes>
     <label fieldname="" text="Label"/>
@@ -309,7 +314,7 @@ Avondspits - [% "metro_avondspits" %] / uur&lt;br></displayfield>
     <selectedonly on=""/>
   </labelattributes>
   <SingleCategoryDiagramRenderer diagramType="Pie">
-    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="0">
+    <DiagramCategory penColor="#000000" labelPlacementMethod="XHeight" penWidth="0" diagramOrientation="Up" minimumSize="0" barWidth="5" penAlpha="255" maxScaleDenominator="1e+08" backgroundColor="#ffffff" transparency="0" width="15" scaleDependency="Area" backgroundAlpha="255" angleOffset="1440" scaleBasedVisibility="0" enabled="0" height="15" sizeType="MM" minScaleDenominator="-4.65661e-10">
       <fontProperties description=".Helvetica Neue DeskInterface,13,-1,5,50,0,0,0,0,0" style=""/>
       <attribute field="" color="#000000" label=""/>
     </DiagramCategory>

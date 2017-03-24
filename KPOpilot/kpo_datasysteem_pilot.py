@@ -7,7 +7,7 @@
                               -------------------
         begin                : 2016-12-19
         git sha              : $Format:%H$
-        copyright            : (C) 2016 by Jorge Gil
+        copyright            : (C) 2017 by Jorge Gil
         email                : gil.jorge@gmail.com
  ***************************************************************************/
 

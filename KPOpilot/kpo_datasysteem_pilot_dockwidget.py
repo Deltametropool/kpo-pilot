@@ -7,7 +7,7 @@
                              -------------------
         begin                : 2016-12-19
         git sha              : $Format:%H$
-        copyright            : (C) 2016 by Jorge Gil
+        copyright            : (C) 2017 by Jorge Gil
         email                : gil.jorge@gmail.com
  ***************************************************************************/
 
@@ -42,6 +42,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     knooppuntChanged = pyqtSignal(str)
     knooppuntShow = pyqtSignal(bool)
     knooppuntSelected = pyqtSignal(str)
+    knooppuntDeselected = pyqtSignal(str)
     # verstedelijking
     onderbenutShow = pyqtSignal(bool)
     intensityTypeChanged = pyqtSignal(str)
@@ -52,13 +53,16 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     planTypeChanged = pyqtSignal(str)
     planShow = pyqtSignal(bool)
     planSelected = pyqtSignal(str)
-    # koppelingen
+    planDeselected = pyqtSignal(str)
+    # afvangstations
     stationAttributeChanged = pyqtSignal(str)
     stationShow = pyqtSignal(bool)
     stationSelected = pyqtSignal(str)
+    stationDeselected = pyqtSignal(str)
     locationTypeChanged = pyqtSignal(str)
     locationShow = pyqtSignal(bool)
     locationSelected = pyqtSignal(str)
+    locationDeselected = pyqtSignal(str)
     # mobiliteit
     isochroneWalkShow = pyqtSignal(bool)
     isochroneBikeShow = pyqtSignal(bool)
@@ -69,6 +73,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     stopsChanged = pyqtSignal(str)
     stopsShow = pyqtSignal(bool)
     stopsSelected = pyqtSignal(str)
+    stopsDeselected = pyqtSignal(str)
 
     def __init__(self, parent=None):
         """Constructor."""
@@ -84,41 +89,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.logosLabel.setPixmap(QtGui.QPixmap(self.plugin_dir + '/images/partner_logos.png'))
 
         # set-up dialog defaults
-        #  Knooppunten
-        self.scenarioSelectCombo.setCurrentIndex(1)
-        self.scenarioShowCheck.setChecked(True)
-        self.isochronesShowCheck.setChecked(True)
-        self.__activateTODLevel__(True)
-        self.todPolicyValueLabel.hide()
-        self.todPolicySlider.setValue(0)
-        self.knooppuntenAttributeCombo.setCurrentIndex(0)
-        self.knooppuntenShowCheck.setChecked(True)
-
-        # Verstedelijking
-        self.locatiesShowCheck.setChecked(True)
-        self.intensitySelectCombo.setCurrentIndex(0)
-        self.intensityShowCheck.setChecked(False)
-        self.intensityValueSlider.setValue(3)
-        self.accessibilityShowCheck.setChecked(False)
-        self.accessibilityValueSlider.setValue(3)
-        self.planSelectCombo.setCurrentIndex(0)
-        self.planShowCheck.setChecked(True)
-
-        # Verbindingen
-        self.overbelastAttributeCombo.setCurrentIndex(0)
-        self.overbelastShowCheck.setChecked(True)
-        self.locationSelectCombo.setCurrentIndex(0)
-        self.locationShowCheck.setChecked(True)
-
-        # Mobiliteit
-        self.isochroneWalkCheck.setChecked(True)
-        self.isochroneBikeCheck.setChecked(False)
-        self.isochroneOvCheck.setChecked(True)
-        self.ptalSelectCombo.setCurrentIndex(0)
-        self.ptalShowCheck.setChecked(False)
-        self.frequencyTimeCombo.setCurrentIndex(0)
-        self.stopSelectCombo.setCurrentIndex(0)
-        self.stopFrequencyCheck.setChecked(False)
+        self.resetDefaults()
 
         # set-up UI interaction signals
         self.vragenTabWidget.currentChanged.connect(self.__changeQuestionTab__)
@@ -162,6 +133,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         # some globals
         self.current_tab = 0
         self.locatiesShowCheck.hide()
+        self.current_knooppunt = -1
+        self.current_plan = -1
+        self.current_station = -1
+        self.current_location = -1
+        self.current_stop = -1
 
     #####
     # Main
@@ -179,6 +155,43 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def resetQuestionTab(self):
         self.vragenTabWidget.setCurrentIndex(0)
         self.current_tab = 0
+
+    def resetDefaults(self):
+        #  Knooppunten
+        self.scenarioSelectCombo.setCurrentIndex(1)
+        self.scenarioShowCheck.setChecked(True)
+        self.isochronesShowCheck.setChecked(True)
+        self.__activateTODLevel__(True)
+        self.todPolicyValueLabel.hide()
+        self.todPolicySlider.setValue(0)
+        self.knooppuntenAttributeCombo.setCurrentIndex(0)
+        self.knooppuntenShowCheck.setChecked(True)
+
+        # Verstedelijking
+        self.locatiesShowCheck.setChecked(True)
+        self.intensitySelectCombo.setCurrentIndex(0)
+        self.intensityShowCheck.setChecked(False)
+        self.intensityValueSlider.setValue(3)
+        self.accessibilityShowCheck.setChecked(False)
+        self.accessibilityValueSlider.setValue(3)
+        self.planSelectCombo.setCurrentIndex(0)
+        self.planShowCheck.setChecked(True)
+
+        # Verbindingen
+        self.overbelastAttributeCombo.setCurrentIndex(0)
+        self.overbelastShowCheck.setChecked(True)
+        self.locationSelectCombo.setCurrentIndex(0)
+        self.locationShowCheck.setChecked(True)
+
+        # Mobiliteit
+        self.isochroneWalkCheck.setChecked(True)
+        self.isochroneBikeCheck.setChecked(True)
+        self.isochroneOvCheck.setChecked(True)
+        self.ptalSelectCombo.setCurrentIndex(0)
+        self.ptalShowCheck.setChecked(False)
+        self.frequencyTimeCombo.setCurrentIndex(0)
+        self.stopSelectCombo.setCurrentIndex(0)
+        self.stopFrequencyCheck.setChecked(False)
 
     #####
     # Knooppunten
@@ -258,19 +271,29 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def updateKnooppuntenTable(self, headers, data_values):
         self.__populateDataTable__('knooppuntenSummaryTable', headers, data_values)
+        if self.current_knooppunt >= 0:
+            self.knooppuntenSummaryTable.selectRow(self.current_knooppunt)
 
     def __setKnooppunt__(self):
         current_row = self.knooppuntenSummaryTable.currentRow()
-        current_item = self.knooppuntenSummaryTable.item(current_row, 0)
-        station_name = current_item.text()
-        self.knooppuntSelected.emit(station_name)
+        if current_row >= 0:
+            current_item = self.knooppuntenSummaryTable.item(current_row, 0)
+            station_name = current_item.text()
+            if self.current_knooppunt != current_row:
+                self.current_knooppunt = current_row
+                self.knooppuntSelected.emit(station_name)
+            else:
+                self.knooppuntenSummaryTable.clearSelection()
+                self.current_knooppunt = -1
+                self.knooppuntDeselected.emit(station_name)
 
     def isKnooppuntSelected(self):
-        row = self.knooppuntenSummaryTable.currentRow()
-        if row >= 0:
+        current_row = self.knooppuntenSummaryTable.currentRow()
+        if current_row >= 0:
             return True
         else:
             return False
+
     #####
     # Verstedelijking
     # Methods for opportunities
@@ -343,12 +366,21 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def updatePlanTable(self, headers, data_values):
         self.__populateDataTable__('planAttributeTable', headers, data_values)
+        if self.current_plan >= 0:
+            self.planAttributeTable.selectRow(self.current_plan)
 
     def __setPlanLocation__(self):
         current_row = self.planAttributeTable.currentRow()
-        current_item = self.planAttributeTable.item(current_row, 0)
-        location_name = current_item.text()
-        self.planSelected.emit(location_name)
+        if current_row >=0:
+            current_item = self.planAttributeTable.item(current_row, 0)
+            location_name = current_item.text()
+            if self.current_plan != current_row:
+                self.current_plan = current_row
+                self.planSelected.emit(location_name)
+            else:
+                self.planAttributeTable.clearSelection()
+                self.current_plan = -1
+                self.planDeselected.emit(location_name)
 
     def isPlanLocationSelected(self):
         row = self.planAttributeTable.currentRow()
@@ -375,12 +407,21 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def updateStationsTable(self, headers, data_values):
         self.__populateDataTable__('overbelastAttributeTable', headers, data_values)
+        if self.current_station >= 0:
+            self.overbelastAttributeTable.selectRow(self.current_station)
 
     def __setStation__(self):
         current_row = self.overbelastAttributeTable.currentRow()
-        current_item = self.overbelastAttributeTable.item(current_row, 0)
-        station_name = current_item.text()
-        self.stationSelected.emit(station_name)
+        if current_row >=0:
+            current_item = self.overbelastAttributeTable.item(current_row, 0)
+            station_name = current_item.text()
+            if self.current_station != current_row:
+                self.current_station = current_row
+                self.stationSelected.emit(station_name)
+            else:
+                self.overbelastAttributeTable.clearSelection()
+                self.current_station = -1
+                self.stationDeselected.emit(station_name)
 
     def isStationSelected(self):
         row = self.overbelastAttributeTable.currentRow()
@@ -405,12 +446,21 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def updateLocationsTable(self, headers, data_values):
         self.__populateDataTable__('locationAttributeTable', headers, data_values)
+        if self.current_location >= 0:
+            self.locationAttributeTable.selectRow(self.current_location)
 
     def __setLocation__(self):
         current_row = self.locationAttributeTable.currentRow()
-        current_item = self.locationAttributeTable.item(current_row, 0)
-        location_name = current_item.text()
-        self.locationSelected.emit(location_name)
+        if current_row >=0:
+            current_item = self.locationAttributeTable.item(current_row, 0)
+            location_name = current_item.text()
+            if self.current_location != current_row:
+                self.current_location = current_row
+                self.locationSelected.emit(location_name)
+            else:
+                self.locationAttributeTable.clearSelection()
+                self.current_location = -1
+                self.locationDeselected.emit(location_name)
 
     def isLocationSelected(self):
         row = self.locationAttributeTable.currentRow()
@@ -461,6 +511,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
     def __setStopType__(self):
         attribute = self.stopSelectCombo.currentText()
         self.stopsChanged.emit(attribute)
+        self.stopSummaryTable.clearSelection()
 
     def isStopsVisible(self):
         return self.stopFrequencyCheck.isChecked()
@@ -477,12 +528,21 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
 
     def updateStopsTable(self, headers, data_values):
         self.__populateDataTable__('stopSummaryTable', headers, data_values)
+        if self.current_stop >= 0:
+            self.stopSummaryTable.selectRow(self.current_stop)
 
     def __setStops__(self):
         current_row = self.stopSummaryTable.currentRow()
-        current_item = self.stopSummaryTable.item(current_row, 0)
-        stop_name = current_item.text()
-        self.stopsSelected.emit(stop_name)
+        if current_row >=0:
+            current_item = self.stopSummaryTable.item(current_row, 0)
+            stop_name = current_item.text()
+            if self.current_stop != current_row:
+                self.current_stop = current_row
+                self.stopsSelected.emit(stop_name)
+            else:
+                self.stopSummaryTable.clearSelection()
+                self.current_stop = -1
+                self.stopsDeselected.emit(stop_name)
 
     def isStopSelected(self):
         row = self.stopSummaryTable.currentRow()
@@ -505,6 +565,8 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         columns = len(headers)
         table.setColumnCount(columns)
         table.setHorizontalHeaderLabels(headers)
+        table.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignLeft)
+        table.verticalHeader().setVisible(False)
         table.setSortingEnabled(False)
         rows = len(values)
         table.setRowCount(rows)
@@ -514,11 +576,11 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 # this way of adding values allows sorting numbers numerically, not as text
                 entry.setData(QtCore.Qt.EditRole, feature[j])
                 table.setItem(i, j, entry)
-        for m in range(0,columns):
-            table.horizontalHeader().setResizeMode(m, QtGui.QHeaderView.ResizeToContents)
-        table.horizontalHeader().setResizeMode(columns-1, QtGui.QHeaderView.Stretch)
         table.resizeRowsToContents()
+        table.resizeColumnsToContents()
+        table.horizontalHeader().stretchLastSection()
         table.setSortingEnabled(True)
+        #table.sortByColumn(0, 0)
 
     def __setSliderRange__(self, gui_name, minimum, maximum, step):
         slider = self.findChild(QtGui.QSlider, gui_name)
