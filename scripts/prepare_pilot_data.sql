@@ -138,7 +138,7 @@ INSERT INTO datasysteem.woonscenarios(
 	JOIN sources.w_2040_hoog_versie_22_januari_2016 AS wlo
 	ON (huidig.code = wlo.zone_id::text)
 ;
--- set density per hectar
+-- set density per hectare
 UPDATE datasysteem.woonscenarios SET dichtheid=huishoudens/area*10000.0;
 UPDATE datasysteem.woonscenarios 
 	SET procentuele_verandering = CASE
@@ -200,7 +200,7 @@ INSERT INTO datasysteem.knooppunten (geom, station_vdm_code, station_naam, halte
 	JOIN (
 		SELECT scenario_naam, dichtstbijzijnde_station, huishoudens, nieuwe_huishoudens
 		FROM datasysteem.woonscenarios
-		WHERE scenario_naam = 'Huidige situatie' AND op_loopafstand = TRUE OR op_fietsafstand = TRUE
+		WHERE scenario_naam = 'Huidige situatie' AND (op_loopafstand = TRUE OR op_fietsafstand = TRUE)
 	) AS woon
 	ON (stops.stop_name = woon.dichtstbijzijnde_station)
 	GROUP BY areas.geom, stops.stop_code, areas.alt_name, stops.stop_id, stops.stop_name
@@ -254,7 +254,7 @@ UPDATE datasysteem.knooppunten AS knop SET
 				SELECT route_id, ST_Multi((ST_DumpPoints(geom)).geom) geom
 				FROM datasysteem.ov_routes
 			) AS b, datasysteem.knooppunten a
-			WHERE ST_DWithin(a.geom,b.geom,200)
+			WHERE ST_DWithin(a.geom,b.geom,300)
 			GROUP BY a.sid, b.route_id
 		) c
 		GROUP BY c.sid
