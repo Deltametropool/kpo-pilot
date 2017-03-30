@@ -302,11 +302,9 @@ class KPOExplorer:
             fields.extend(['pr_plaatsen', 'pr_bezetting'])
             headers.extend(['Plaatsen', 'Bezetting %'])
             self.setLayerStyle(knooppunt_layer, '%s_%s' % (knooppunt_layer.lower(), 'pr_bezetting'))
-        fields.append('huishoudens')
-        headers.append('Huish.')
         # whenever there's a change at this level, update the values table
         if knooppunt_layer == 'Treinstations scenarios':
-            fields.append('procentuele_verandering')
+            fields.append('procent_knoop_verandering')
             headers.append('% verandering')
         feature_values = self.getFeatureValues(knooppunt_layer, fields)
         values = []

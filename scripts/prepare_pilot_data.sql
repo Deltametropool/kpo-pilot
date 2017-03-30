@@ -123,24 +123,24 @@ INSERT INTO datasysteem.woonscenarios(
 		op_loopafstand, op_fietsafstand, area, nieuwe_huishoudens
 	)
 	SELECT wlo.geom, wlo.zone_id, wlo.woonplaats, 'WLO 2040 Laag',
-		wlo.huish, FALSE, FALSE, ST_Area(wlo.geom), (wlo.huish-huidig.huish)
+		wlo.huish, FALSE, FALSE, ST_Area(wlo.geom), (wlo.huish - huidig.huishoudens)
 	FROM (
 		SELECT * FROM datasysteem.woonscenarios WHERE scenario_naam = 'Huidige situatie'
 	) AS huidig
 	JOIN sources.w_2040_laag_versie_22_januari_2016 AS wlo
-	USING(zone_id)
+	ON (huidig.code = wlo.zone_id::text)
 ;
 INSERT INTO datasysteem.woonscenarios(
 		geom, code, plaatsnaam, scenario_naam, huishoudens,
 		op_loopafstand, op_fietsafstand, area, nieuwe_huishoudens
 	)
 	SELECT wlo.geom, wlo.zone_id, wlo.woonplaats, 'WLO 2040 Hoog',
-		wlo.huish, FALSE, FALSE, ST_Area(wlo.geom), (wlo.huish-huidig.huish)
+		wlo.huish, FALSE, FALSE, ST_Area(wlo.geom), (wlo.huish - huidig.huishoudens)
 	FROM (
 		SELECT * FROM datasysteem.woonscenarios WHERE scenario_naam = 'Huidige situatie'
 	) AS huidig
 	JOIN sources.w_2040_hoog_versie_22_januari_2016 AS wlo
-	USING(zone_id)
+	ON (huidig.code = wlo.zone_id::text)
 ;
 -- set density per hectar
 UPDATE datasysteem.woonscenarios SET dichtheid=huishoudens/area*10000.0;
@@ -160,10 +160,12 @@ INSERT INTO datasysteem.ov_routes(geom, route_id, route_naam, modaliteit)
 	FROM (
 		SELECT ST_MakeLine(links.geom) geom, links.trip_id, min(links.trip_mode) AS trip_mode, 
 			min(links.route_name) AS route_name, sum(links.duration_in_secs) AS trip_duration
-		FROM (SELECT geom, trip_id, trip_mode, route_id, route_name, trip_sequence, duration_in_secs
-			FROM networks.ov_links
-			WHERE trip_mode !='trein'
-			ORDER BY trip_id, trip_sequence
+		FROM (SELECT links.geom, links.trip_id, links.trip_mode, links.route_id, 
+				links.route_name, links.trip_sequence, links.duration_in_secs
+			FROM networks.ov_links links,
+			(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') AS pilot
+			WHERE trip_mode !='trein' AND ST_Intersects(links.geom, pilot.geom)
+			ORDER BY links.trip_id, links.trip_sequence
 		) links
 		GROUP BY links.trip_id
 	) AS trips
@@ -273,10 +275,12 @@ UPDATE datasysteem.knooppunten AS knop SET
 INSERT INTO datasysteem.isochronen(geom, halte_id, halte_naam, halte_modaliteit, 
 	modaliteit, isochroon_afstand)
 	SELECT ST_Multi(ST_MakePolygon(ST_ExteriorRing((ST_Dump(
-		ST_Simplify(ST_Union(ST_Buffer(ST_Simplify(geom,10),100,'quad_segs=2')),20))).geom))), 
-		station_id, min(station_name), min(station_mode), travel_mode, min(travel_distance)
-	FROM isochrone_analysis.station_isochrone_wegen
-	GROUP BY station_id, travel_mode
+		ST_Simplify(ST_Union(ST_Buffer(ST_Simplify(iso.geom,10),100,'quad_segs=2')),20))).geom))), 
+		iso.station_id, min(iso.station_name), min(iso.station_mode), iso.travel_mode, min(iso.travel_distance)
+	FROM isochrone_analysis.station_isochrone_wegen iso,
+	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') AS pilot
+	WHERE ST_Intersects(iso.geom, pilot.geom)
+	GROUP BY iso.station_id, iso.travel_mode
 ;
 
 
@@ -387,11 +391,13 @@ INSERT INTO datasysteem.ontwikkellocaties (geom, plan_naam, plan_id, gemeente, p
 -- DELETE FROM datasysteem.ontwikkellocaties WHERE plan_naam = 'Plancapaciteit';
 INSERT INTO datasysteem.ontwikkellocaties(geom, plan_naam, plan_id, gemeente, plaatsnaam, adres,
 		bestaande_woningen, geplande_woningen, net_nieuwe_woningen, vlakte)
-	SELECT ST_Force2D(geom), 'Plancapaciteit', planid, gemnaam, naamplan, straat, 
-		te_slopen, (op2016 + op201719 + op202024 + op202550 + oplonb), 
-		(op2016 + op201719 + op202024 + op202550 + oplonb - te_slopen), 
-		round(ST_Area(geom)::numeric,0)
-	FROM sources.vdm_plancapaciteit_2016_update
+	SELECT ST_Force2D(plan.geom), 'Plancapaciteit', plan.planid, plan.gemnaam, plan.naamplan, plan.straat, 
+		plan.te_slopen, (plan.op2016 + plan.op201719 + plan.op202024 + plan.op202550 + plan.oplonb), 
+		(plan.op2016 + plan.op201719 + plan.op202024 + plan.op202550 + plan.oplonb - plan.te_slopen), 
+		round(ST_Area(plan.geom)::numeric,0)
+	FROM sources.vdm_plancapaciteit_2016_update plan,
+	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') AS pilot
+	WHERE ST_Intersects(plan.geom, pilot.geom)
 ;
 -- Insert Kantorenleegstand data
 -- DELETE FROM datasysteem.ontwikkellocaties WHERE plan_naam = 'Kantorleegstanden';
@@ -444,10 +450,12 @@ CREATE INDEX ontwikkellocaties_gidx ON datasysteem.ontwikkellocaties USING GIST 
 INSERT INTO datasysteem.isochronen(geom, halte_naam, halte_modaliteit, 
 		modaliteit, isochroon_afstand)
 	SELECT ST_Multi(ST_MakePolygon(ST_ExteriorRing((ST_Dump(
-		ST_Simplify(ST_Union(ST_Buffer(ST_Simplify(geom,10),100,'quad_segs=2')),20))).geom))), 
-		station_name, 'trein', stop_mode, 10
-	FROM isochrone_analysis.stop_isochrone_wegen
-	GROUP BY station_name, stop_mode
+		ST_Simplify(ST_Union(ST_Buffer(ST_Simplify(iso.geom,10),100,'quad_segs=2')),20))).geom))), 
+		iso.station_name, 'trein', iso.stop_mode, 10
+	FROM isochrone_analysis.stop_isochrone_wegen iso,
+	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') AS pilot
+	WHERE ST_Intersects(iso.geom, pilot.geom)
+	GROUP BY iso.station_name, iso.stop_mode
 ;
 UPDATE datasysteem.isochronen AS iso SET halte_id = halte.halte_id
 	FROM (SELECT * FROM datasysteem.ov_haltes WHERE trein = TRUE) AS halte
@@ -620,7 +628,7 @@ CREATE TEMP TABLE origin_destination_links AS
 	SELECT DISTINCT link.linknummer, stops.halte_naam station_naam
 	FROM networks.fiets_links AS link,
 	(SELECT * FROM datasysteem.ov_haltes WHERE trein = TRUE) AS stops
-	WHERE ST_DWithin(link.geom,stops.geom,100)
+	WHERE ST_DWithin(link.geom,stops.geom,200)
 ;
 -- build route geometry of routes that start/end at stations
 -- DROP TABLE selected_fiets_routes CASCADE;

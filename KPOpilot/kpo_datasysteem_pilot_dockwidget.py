@@ -578,9 +578,8 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
                 table.setItem(i, j, entry)
         table.resizeRowsToContents()
         table.resizeColumnsToContents()
-        table.horizontalHeader().stretchLastSection()
         table.setSortingEnabled(True)
-        #table.sortByColumn(0, 0)
+        table.horizontalHeader().setResizeMode(columns - 1, QtGui.QHeaderView.Stretch)
 
     def __setSliderRange__(self, gui_name, minimum, maximum, step):
         slider = self.findChild(QtGui.QSlider, gui_name)

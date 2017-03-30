@@ -1,4 +1,4 @@
--- KPO data system data model
+-- KPO data system woon scenario calculation
 -- author: Jorge Gil, 2017
 
 
@@ -25,6 +25,7 @@ UPDATE datasysteem.woonscenarios scenario
 	WHERE ST_Intersects(scenario.geom,isochrone.geom) 
 ;
 -- dichtstbijzijnde station
+-- UPDATE datasysteem.woonscenarios scenario SET dichtstbijzijnde_station = NULL;
 -- identify stations
 -- DROP TABLE top_station;
 CREATE TEMP TABLE top_station AS
@@ -140,13 +141,13 @@ UPDATE datasysteem.overzicht_woonscenarios
 
 
 -----
--- Kenmerken van knooppunten
+-- Knooppunten scenarios
 -- DELETE FROM datasysteem.knooppuntenscenarios;
 -- TOD 0
 -- insert knooppunten scenario values for TOD scenario 0, only stations within walking or cycling distance
 INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_naam, halte_id, halte_naam,
 		scenario_naam, tod_beleidsniveau, huishoudens, nieuwe_huishoudens, 
-		procentuele_verandering, procent_locale_reizigers)
+		procent_huis_verandering, procent_locale_reizigers)
 	SELECT stops.geom, stops.station_vdm_code, stops.station_naam, stops.halte_id, stops.halte_naam, 
 		woon.scenario_naam, 0, SUM(woon.huishoudens), SUM(woon.nieuwe_huishoudens),
 		CASE
@@ -176,7 +177,7 @@ INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_na
 -- insert knooppunten values for TOD scenario 50, 50% new households to nearest stations
 INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_naam, halte_id, halte_naam,
 		scenario_naam, tod_beleidsniveau, huishoudens, nieuwe_huishoudens, 
-		procentuele_verandering, procent_locale_reizigers)
+		procent_huis_verandering, procent_locale_reizigers)
 	SELECT stops.geom, stops.station_vdm_code, stops.station_naam, stops.halte_id, stops.halte_naam, 
 		woon.scenario_naam, 50, SUM(woon.huishoudens), SUM(woon.nieuwe_huishoudens),
 		CASE
@@ -216,7 +217,7 @@ INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_na
 -- insert knooppunten values for TOD scenario 100, 100% new households to nearest stations
 INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_naam, halte_id, halte_naam,
 		scenario_naam, tod_beleidsniveau, huishoudens, nieuwe_huishoudens, 
-		procentuele_verandering, procent_locale_reizigers)
+		procent_huis_verandering, procent_locale_reizigers)
 	SELECT stops.geom, stops.station_vdm_code, stops.station_naam, stops.halte_id, stops.halte_naam, 
 		woon.scenario_naam, 100, SUM(woon.huishoudens), SUM(woon.nieuwe_huishoudens),
 		CASE
@@ -250,35 +251,22 @@ INSERT INTO datasysteem.knooppuntenscenarios (geom, station_vdm_code, station_na
 	GROUP BY stops.geom, stops.station_vdm_code, stops.station_naam, stops.halte_id, stops.halte_naam, 
 		stops.lopen_voortransport, stops.fiets_voortransport, woon.scenario_naam
 ;
-UPDATE datasysteem.knooppuntenscenarios SET procentuele_verandering = round(procentuele_verandering::numeric*100.0,2);
+UPDATE datasysteem.knooppuntenscenarios SET procent_huis_verandering = round(procent_huis_verandering::numeric*100.0,2);
+-- get the actual change from huising change and local train users
+UPDATE datasysteem.knooppuntenscenarios SET procent_knoop_verandering = CASE
+	WHEN procent_locale_reizigers IS NOT NULL
+	THEN (procent_huis_verandering/100) * (procent_locale_reizigers/100)
+	ELSE (procent_huis_verandering/100)
+	END;
 -- update knooppunt scenario characteristics
 UPDATE datasysteem.knooppuntenscenarios knoop SET
 	fiets_plaatsen = stations.fiets_plaatsen,
 	pr_plaatsen = stations.pr_plaatsen,
-	in_uit_trein = CASE 
-		WHEN procent_locale_reizigers IS NOT NULL
-		THEN ((knoop.procentuele_verandering/100) * (procent_locale_reizigers/100) * 
-			stations.in_uit_trein) + stations.in_uit_trein
-		ELSE ((knoop.procentuele_verandering/100) * stations.in_uit_trein) + stations.in_uit_trein
-		END,
-	in_uit_btm = CASE
-		WHEN procent_locale_reizigers IS NOT NULL
-		THEN ((knoop.procentuele_verandering/100) * (procent_locale_reizigers/100) * 
-			stations.in_uit_btm) + stations.in_uit_btm
-		ELSE ((knoop.procentuele_verandering/100) * stations.in_uit_btm) + stations.in_uit_btm
-		END,
-	fiets_bezetting = CASE
-		WHEN procent_locale_reizigers IS NOT NULL
-		THEN ((knoop.procentuele_verandering/100) * (procent_locale_reizigers/100) * 
-			stations.fiets_bezetting) + stations.fiets_bezetting
-		ELSE ((knoop.procentuele_verandering/100) * stations.fiets_bezetting) + stations.fiets_bezetting
-		END,
-	pr_bezetting = CASE
-		WHEN procent_locale_reizigers IS NOT NULL
-		THEN ((knoop.procentuele_verandering/100) * (procent_locale_reizigers/100) * 
-			stations.pr_bezetting) + stations.pr_bezetting
-		ELSE ((knoop.procentuele_verandering/100) * stations.pr_bezetting) + stations.pr_bezetting
-		END
+	in_uit_trein = (procent_knoop_verandering * stations.in_uit_trein) + stations.in_uit_trein,
+	in_uit_btm = (procent_knoop_verandering * stations.in_uit_btm) + stations.in_uit_btm,
+	fiets_bezetting = (procent_knoop_verandering * stations.fiets_bezetting) + stations.fiets_bezetting,
+	pr_bezetting = (procent_knoop_verandering * stations.pr_bezetting) + stations.pr_bezetting
 	FROM datasysteem.knooppunten AS stations
 	WHERE knoop.halte_id = stations.halte_id
 ;
+UPDATE datasysteem.knooppuntenscenarios SET procent_knoop_verandering = round(procent_knoop_verandering::numeric*100.0,2);

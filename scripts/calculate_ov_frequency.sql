@@ -13,9 +13,11 @@ aggregating platforms/sides of road. frequency per hour on:
 -- DELETE FROM datasysteem.ov_haltes;
 INSERT INTO datasysteem.ov_haltes(geom, halte_id, halte_zone, halte_naam, halte_gemeente, 
 	tram, metro, trein, bus, veerboot)
-	SELECT geom, stop_id, stop_area, stop_name, stop_descr, tram, metro, trein, bus, veerboot
-	FROM networks.ov_stops
-	WHERE parent_station IS NULL
+	SELECT stops.geom, stops.stop_id, stops.stop_area, stops.stop_name, stops.stop_descr, 
+		stops.tram, stops.metro, stops.trein, stops.bus, stops.veerboot
+	FROM networks.ov_stops stops,
+	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') AS pilot
+	WHERE stops.parent_station IS NULL AND ST_Intersects(stops.geom, pilot.geom)
 ;
 
 ----
