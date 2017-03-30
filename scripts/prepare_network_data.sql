@@ -51,7 +51,7 @@ INSERT INTO networks.t10_wegen(geom, length, t10_id, type_weg, verkeer, fysiek, 
 		AND verhardingstype != 'onverhard'
 		AND typeweg NOT IN ('(1:startbaan, landingsbaan)','(1:rolbaan, platform)')
 	) weg,
-	(SELECT geom FROM datasysteem.boundary LIMIT 1) pilot
+	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') pilot
 	WHERE ST_Intersects(weg.wkb_geometry, pilot.geom)
 ;
 -- update mode columns
@@ -79,7 +79,7 @@ INSERT INTO networks.fiets_links(geom, length, linknummer, intensiteit, speed)
 	SELECT (ST_Dump(fiets.geom)).geom, ST_Length(fiets.geom), fiets.linknummer, 
 		(fiets.intensitei+fiets.intensi_01) AS intensiteit, fiets.speed
 	FROM sources.fietstelweek_netwerk_2016 AS fiets,
-	(SELECT geom FROM datasysteem.boundary LIMIT 1) AS pilot
+	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') AS pilot
 	WHERE ST_Intersects(fiets.geom, pilot.geom)
 ;
 CREATE INDEX fiets_links_geom_idx ON networks.fiets_links USING GIST(geom);
@@ -147,7 +147,7 @@ INSERT INTO networks.ov_stops(geom, stop_id, stop_code, stop_name, stop_descr, p
 		CASE WHEN parent_station='' THEN NULL 
 		ELSE parent_station END AS parent_station 
 		FROM gtfs.stops) gtfs,
-	(SELECT geom geom FROM networks.boundary LIMIT 1) study
+	(SELECT geom geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') study
 	WHERE ST_Intersects(gtfs.geom,study.geom)
 ;
 CREATE INDEX ov_stops_geom_idx ON networks.ov_stops USING GIST (geom);

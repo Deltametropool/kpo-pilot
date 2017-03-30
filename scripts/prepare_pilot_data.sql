@@ -21,10 +21,6 @@ INSERT INTO datasysteem.grens (geom, grens_naam)
 	FROM sources.cbs_bestuurlijke_grenzen_provincie 
 	WHERE provincie_naam = 'Noord-Holland'
 ;
-INSERT INTO datasysteem.grens (geom, grens_naam) 
-	SELECT geom, 'MRA'
-	FROM sources.metropoolregio_mra
-;
 CREATE INDEX datasysteem_grens_idx ON datasysteem.grens USING GIST (geom);
 -- rail and metro tracks
 -- DROP TABLE datasysteem.spoorwegen CASCADE;
@@ -160,12 +156,11 @@ INSERT INTO datasysteem.ov_routes(geom, route_id, route_naam, modaliteit)
 	FROM (
 		SELECT ST_MakeLine(links.geom) geom, links.trip_id, min(links.trip_mode) AS trip_mode, 
 			min(links.route_name) AS route_name, sum(links.duration_in_secs) AS trip_duration
-		FROM (SELECT links.geom, links.trip_id, links.trip_mode, links.route_id, 
-				links.route_name, links.trip_sequence, links.duration_in_secs
-			FROM networks.ov_links links,
-			(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') AS pilot
-			WHERE trip_mode !='trein' AND ST_Intersects(links.geom, pilot.geom)
-			ORDER BY links.trip_id, links.trip_sequence
+		FROM (SELECT geom, trip_id, trip_mode, route_id, 
+				route_name, trip_sequence, duration_in_secs
+			FROM networks.ov_links
+			WHERE trip_mode !='trein'
+			ORDER BY trip_id, trip_sequence
 		) links
 		GROUP BY links.trip_id
 	) AS trips
@@ -275,12 +270,10 @@ UPDATE datasysteem.knooppunten AS knop SET
 INSERT INTO datasysteem.isochronen(geom, halte_id, halte_naam, halte_modaliteit, 
 	modaliteit, isochroon_afstand)
 	SELECT ST_Multi(ST_MakePolygon(ST_ExteriorRing((ST_Dump(
-		ST_Simplify(ST_Union(ST_Buffer(ST_Simplify(iso.geom,10),100,'quad_segs=2')),20))).geom))), 
-		iso.station_id, min(iso.station_name), min(iso.station_mode), iso.travel_mode, min(iso.travel_distance)
-	FROM isochrone_analysis.station_isochrone_wegen iso,
-	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') AS pilot
-	WHERE ST_Intersects(iso.geom, pilot.geom)
-	GROUP BY iso.station_id, iso.travel_mode
+		ST_Simplify(ST_Union(ST_Buffer(ST_Simplify(geom,10),100,'quad_segs=2')),20))).geom))), 
+		station_id, min(station_name), min(station_mode), travel_mode, min(travel_distance)
+	FROM isochrone_analysis.station_isochrone_wegen
+	GROUP BY station_id, travel_mode
 ;
 
 
@@ -450,12 +443,10 @@ CREATE INDEX ontwikkellocaties_gidx ON datasysteem.ontwikkellocaties USING GIST 
 INSERT INTO datasysteem.isochronen(geom, halte_naam, halte_modaliteit, 
 		modaliteit, isochroon_afstand)
 	SELECT ST_Multi(ST_MakePolygon(ST_ExteriorRing((ST_Dump(
-		ST_Simplify(ST_Union(ST_Buffer(ST_Simplify(iso.geom,10),100,'quad_segs=2')),20))).geom))), 
-		iso.station_name, 'trein', iso.stop_mode, 10
-	FROM isochrone_analysis.stop_isochrone_wegen iso,
-	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') AS pilot
-	WHERE ST_Intersects(iso.geom, pilot.geom)
-	GROUP BY iso.station_name, iso.stop_mode
+		ST_Simplify(ST_Union(ST_Buffer(ST_Simplify(geom,10),100,'quad_segs=2')),20))).geom))), 
+		station_name, 'trein', stop_mode, 10
+	FROM isochrone_analysis.stop_isochrone_wegen
+	GROUP BY station_name, stop_mode
 ;
 UPDATE datasysteem.isochronen AS iso SET halte_id = halte.halte_id
 	FROM (SELECT * FROM datasysteem.ov_haltes WHERE trein = TRUE) AS halte

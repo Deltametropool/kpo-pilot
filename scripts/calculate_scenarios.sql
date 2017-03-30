@@ -46,7 +46,7 @@ CREATE TEMP TABLE top_station AS
 		WHERE a.halte_id = b.halte_id
 	) AS iso
 	WHERE ST_Intersects(woon.geom,iso.geom)
-	ORDER BY woon.code ASC, 
+	ORDER BY woon.code ASC,
 		iso.isochroon_afstand ASC, -- comment this out to link to the strongest station
 		coalesce(iso.hsl_avondspits,0) DESC, 
 		coalesce(iso.ic_avondspits,0) DESC, 
