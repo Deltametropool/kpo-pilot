@@ -941,7 +941,6 @@ class KPOExplorer:
             self.showStopFrequency(True)
         else:
             self.hideStopFrequency()
-        self.zoomOutStop()
         self.updateStopSummaryTable()
 
     def showStopFrequency(self, onoff):
@@ -1031,16 +1030,14 @@ class KPOExplorer:
             feature_values.update(more_values)
             more_values = self.getFeatureValues('Bus frequentie', fields)
             feature_values.update(more_values)
-            self.setExtentToLayer('Bus frequentie')
+            #self.setExtentToLayer('Bus frequentie')
         else:
             feature_values = self.getFeatureValues(stops_layer, fields)
-            self.setExtentToLayer(stops_layer)
+            #self.setExtentToLayer(stops_layer)
         values = []
         for feat in feature_values.itervalues():
             values.append(feat)
         self.dlg.updateStopsTable(headers, values)
-        if self.selected_stop:
-            self.zoomToStop(self.selected_stop)
 
     def zoomToStop(self, stop_name):
         current_type = self.dlg.getStops()

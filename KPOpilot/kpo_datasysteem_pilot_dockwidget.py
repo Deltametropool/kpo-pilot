@@ -102,6 +102,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.knooppuntenAttributeCombo.currentIndexChanged.connect(self.__setKnooppuntKenmerk__)
         self.knooppuntenShowCheck.stateChanged.connect(self.__showKnooppunt__)
         self.knooppuntenSummaryTable.itemClicked.connect(self.__setKnooppunt__)
+        self.knooppuntenSummaryTable.horizontalHeader().sortIndicatorChanged.connect(self.__updateKnooppunt__)
         # Verstedelijking
         self.locatiesShowCheck.stateChanged.connect(self.__showOnderbenutLocaties__)
         self.intensitySelectCombo.currentIndexChanged.connect(self.__setIntensity__)
@@ -112,13 +113,16 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.planSelectCombo.currentIndexChanged.connect(self.__setPlan__)
         self.planShowCheck.stateChanged.connect(self.__showPlan__)
         self.planAttributeTable.itemClicked.connect(self.__setPlanLocation__)
+        self.planAttributeTable.horizontalHeader().sortIndicatorChanged.connect(self.__updatePlanLocation__)
         # Verbindingen
         self.overbelastAttributeCombo.currentIndexChanged.connect(self.__setStationKenmerk__)
         self.overbelastShowCheck.stateChanged.connect(self.__showStations__)
         self.overbelastAttributeTable.itemClicked.connect(self.__setStation__)
+        self.overbelastAttributeTable.horizontalHeader().sortIndicatorChanged.connect(self.__updateStation__)
         self.locationSelectCombo.currentIndexChanged.connect(self.__setLocationType__)
         self.locationShowCheck.stateChanged.connect(self.__showLocations__)
         self.locationAttributeTable.itemClicked.connect(self.__setLocation__)
+        self.locationAttributeTable.horizontalHeader().sortIndicatorChanged.connect(self.__updateLocation__)
         # Mobiliteit
         self.isochroneWalkCheck.stateChanged.connect(self.__showWalk__)
         self.isochroneBikeCheck.stateChanged.connect(self.__showBike__)
@@ -129,6 +133,7 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.stopSelectCombo.currentIndexChanged.connect(self.__setStopType__)
         self.stopFrequencyCheck.stateChanged.connect(self.__showStops__)
         self.stopSummaryTable.itemClicked.connect(self.__setStops__)
+        self.stopSummaryTable.horizontalHeader().sortIndicatorChanged.connect(self.__updateStops__)
 
         # some globals
         self.current_tab = 0
@@ -270,9 +275,24 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         self.knooppuntShow.emit(state)
 
     def updateKnooppuntenTable(self, headers, data_values):
-        self.__populateDataTable__('knooppuntenSummaryTable', headers, data_values)
-        if self.current_knooppunt >= 0:
-            self.knooppuntenSummaryTable.selectRow(self.current_knooppunt)
+        # get the current selection
+        current_row = self.knooppuntenSummaryTable.currentRow()
+        if current_row >= 0:
+            current_item = self.knooppuntenSummaryTable.item(current_row, 0)
+            station_name = current_item.text()
+            # update the table
+            self.__populateDataTable__('knooppuntenSummaryTable', headers, data_values)
+            # reselect the current selection (can be in a different row)
+            for row in xrange(self.knooppuntenSummaryTable.rowCount()):
+                item = self.knooppuntenSummaryTable.item(row, 0)
+                text = str(item.text())
+                if text == station_name:
+                    self.knooppuntenSummaryTable.selectRow(row)
+                    self.current_knooppunt = row
+                    break
+        else:
+            # simply update the table
+            self.__populateDataTable__('knooppuntenSummaryTable', headers, data_values)
 
     def __setKnooppunt__(self):
         current_row = self.knooppuntenSummaryTable.currentRow()
@@ -293,6 +313,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
             return True
         else:
             return False
+
+    def __updateKnooppunt__(self):
+        current_row = self.knooppuntenSummaryTable.currentRow()
+        if current_row >= 0:
+            self.current_knooppunt = current_row
+        else:
+            self.current_knooppunt = -1
 
     #####
     # Verstedelijking
@@ -365,9 +392,24 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
             self.__setTextField__('planSummaryText', text_list)
 
     def updatePlanTable(self, headers, data_values):
-        self.__populateDataTable__('planAttributeTable', headers, data_values)
-        if self.current_plan >= 0:
-            self.planAttributeTable.selectRow(self.current_plan)
+        # get the current selection
+        current_row = self.planAttributeTable.currentRow()
+        if current_row >= 0:
+            current_item = self.planAttributeTable.item(current_row, 0)
+            location_name = current_item.text()
+            # update the table
+            self.__populateDataTable__('planAttributeTable', headers, data_values)
+            # reselect the current selection (can be in a different row)
+            for row in xrange(self.planAttributeTable.rowCount()):
+                item = self.planAttributeTable.item(row, 0)
+                text = str(item.text())
+                if text == location_name:
+                    self.planAttributeTable.selectRow(row)
+                    self.current_plan = row
+                    break
+        else:
+            # simply update the table
+            self.__populateDataTable__('planAttributeTable', headers, data_values)
 
     def __setPlanLocation__(self):
         current_row = self.planAttributeTable.currentRow()
@@ -389,6 +431,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         else:
             return False
 
+    def __updatePlanLocation__(self):
+        current_row = self.planAttributeTable.currentRow()
+        if current_row >= 0:
+            self.current_plan = current_row
+        else:
+            self.current_plan = -1
+
     #####
     # Verbindingen
     # Methods for Overbelast stations
@@ -406,9 +455,24 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return self.overbelastAttributeCombo.currentText()
 
     def updateStationsTable(self, headers, data_values):
-        self.__populateDataTable__('overbelastAttributeTable', headers, data_values)
-        if self.current_station >= 0:
-            self.overbelastAttributeTable.selectRow(self.current_station)
+        # get the current selection
+        current_row = self.overbelastAttributeTable.currentRow()
+        if current_row >= 0:
+            current_item = self.overbelastAttributeTable.item(current_row, 0)
+            station_name = current_item.text()
+            # update the table
+            self.__populateDataTable__('overbelastAttributeTable', headers, data_values)
+            # reselect the current selection (can be in a different row)
+            for row in xrange(self.overbelastAttributeTable.rowCount()):
+                item = self.overbelastAttributeTable.item(row, 0)
+                text = str(item.text())
+                if text == station_name:
+                    self.overbelastAttributeTable.selectRow(row)
+                    self.current_station = row
+                    break
+        else:
+            # simply update the table
+            self.__populateDataTable__('overbelastAttributeTable', headers, data_values)
 
     def __setStation__(self):
         current_row = self.overbelastAttributeTable.currentRow()
@@ -430,6 +494,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         else:
             return False
 
+    def __updateStation__(self):
+        current_row = self.overbelastAttributeTable.currentRow()
+        if current_row >= 0:
+            self.current_station = current_row
+        else:
+            self.current_station = -1
+
     # Methods for Locaties
     def __showLocations__(self, state):
         self.locationShow.emit(state)
@@ -445,9 +516,24 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return self.locationSelectCombo.currentText()
 
     def updateLocationsTable(self, headers, data_values):
-        self.__populateDataTable__('locationAttributeTable', headers, data_values)
-        if self.current_location >= 0:
-            self.locationAttributeTable.selectRow(self.current_location)
+        # get the current selection
+        current_row = self.locationAttributeTable.currentRow()
+        if current_row >= 0:
+            current_item = self.locationAttributeTable.item(current_row, 0)
+            location_name = current_item.text()
+            # update the table
+            self.__populateDataTable__('locationAttributeTable', headers, data_values)
+            # reselect the current selection (can be in a different row)
+            for row in xrange(self.locationAttributeTable.rowCount()):
+                item = self.locationAttributeTable.item(row, 0)
+                text = str(item.text())
+                if text == location_name:
+                    self.locationAttributeTable.selectRow(row)
+                    self.current_location = row
+                    break
+        else:
+            # simply update the table
+            self.__populateDataTable__('locationAttributeTable', headers, data_values)
 
     def __setLocation__(self):
         current_row = self.locationAttributeTable.currentRow()
@@ -468,6 +554,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
             return True
         else:
             return False
+
+    def __updateLocation__(self):
+        current_row = self.locationAttributeTable.currentRow()
+        if current_row >= 0:
+            self.current_location = current_row
+        else:
+            self.current_location = -1
 
     #####
     # Mobiliteit
@@ -527,9 +620,29 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
         return self.frequencyTimeCombo.currentText()
 
     def updateStopsTable(self, headers, data_values):
-        self.__populateDataTable__('stopSummaryTable', headers, data_values)
-        if self.current_stop >= 0:
-            self.stopSummaryTable.selectRow(self.current_stop)
+        # get the current selection
+        current_row = self.stopSummaryTable.currentRow()
+        if current_row >= 0:
+            current_item = self.stopSummaryTable.item(current_row, 0)
+            stop_name = current_item.text()
+            # update the table
+            self.__populateDataTable__('stopSummaryTable', headers, data_values)
+            # reselect the current selection (can be in a different row)
+            self.current_stop = -1
+            for row in xrange(self.stopSummaryTable.rowCount()):
+                item = self.stopSummaryTable.item(row, 0)
+                text = str(item.text())
+                if text == stop_name:
+                    self.stopSummaryTable.selectRow(row)
+                    self.current_stop = row
+                    break
+            # if the stop type changes there might be a different list
+            if self.current_stop == -1:
+                self.stopSummaryTable.clearSelection()
+                self.stopsDeselected.emit(stop_name)
+        else:
+            # simply update the table
+            self.__populateDataTable__('stopSummaryTable', headers, data_values)
 
     def __setStops__(self):
         current_row = self.stopSummaryTable.currentRow()
@@ -550,6 +663,13 @@ class KPOpilotDockWidget(QtGui.QDockWidget, FORM_CLASS):
             return True
         else:
             return False
+
+    def __updateStops__(self):
+        current_row = self.stopSummaryTable.currentRow()
+        if current_row >= 0:
+            self.current_stop = current_row
+        else:
+            self.current_stop = -1
 
     #####
     # General functions
