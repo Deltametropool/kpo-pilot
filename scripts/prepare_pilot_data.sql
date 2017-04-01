@@ -275,6 +275,15 @@ INSERT INTO datasysteem.isochronen(geom, halte_id, halte_naam, halte_modaliteit,
 	FROM isochrone_analysis.station_isochrone_wegen
 	GROUP BY station_id, travel_mode
 ;
+-- DELETE FROM datasysteem.isochronen_expanded WHERE modaliteit IN ('fiets','walk');
+INSERT INTO datasysteem.isochronen_expanded(geom, halte_id, halte_naam, halte_modaliteit, 
+	modaliteit, isochroon_afstand)
+	SELECT ST_Multi(ST_MakePolygon(ST_ExteriorRing((ST_Dump(
+		ST_Simplify(ST_Union(ST_Buffer(ST_Simplify(geom,10),100,'quad_segs=2')),20))).geom))), 
+		station_id, min(station_name), min(station_mode), travel_mode, min(travel_distance)
+	FROM isochrone_analysis_expanded.station_isochrone_wegen
+	GROUP BY station_id, travel_mode
+;
 
 
 ----
@@ -449,6 +458,19 @@ INSERT INTO datasysteem.isochronen(geom, halte_naam, halte_modaliteit,
 	GROUP BY station_name, stop_mode
 ;
 UPDATE datasysteem.isochronen AS iso SET halte_id = halte.halte_id
+	FROM (SELECT * FROM datasysteem.ov_haltes WHERE trein = TRUE) AS halte
+	WHERE iso.halte_naam = halte.halte_naam AND iso.halte_id IS NULL
+;
+-- DELETE FROM datasysteem.isochronen_expanded WHERE modaliteit IN ('bus','tram','metro');
+INSERT INTO datasysteem.isochronen_expanded(geom, halte_naam, halte_modaliteit, 
+		modaliteit, isochroon_afstand)
+	SELECT ST_Multi(ST_MakePolygon(ST_ExteriorRing((ST_Dump(
+		ST_Simplify(ST_Union(ST_Buffer(ST_Simplify(geom,10),100,'quad_segs=2')),20))).geom))), 
+		station_name, 'trein', stop_mode, 10
+	FROM isochrone_analysis.stop_isochrone_wegen
+	GROUP BY station_name, stop_mode
+;
+UPDATE datasysteem.isochronen_expanded AS iso SET halte_id = halte.halte_id
 	FROM (SELECT * FROM datasysteem.ov_haltes WHERE trein = TRUE) AS halte
 	WHERE iso.halte_naam = halte.halte_naam AND iso.halte_id IS NULL
 ;

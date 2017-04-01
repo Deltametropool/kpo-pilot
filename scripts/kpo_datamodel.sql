@@ -204,6 +204,18 @@ CREATE TABLE datasysteem.isochronen(
 	CONSTRAINT isochronen_pkey PRIMARY KEY (sid)
 );
 
+-- DROP TABLE IF EXISTS datasysteem.isochronen_expanded CASCADE;
+CREATE TABLE datasysteem.isochronen_expanded(
+	sid serial NOT NULL,
+	geom geometry(MultiPolygon,28992),
+	halte_id character varying,
+	halte_naam character varying,
+	halte_modaliteit character varying,
+	modaliteit character varying,
+	isochroon_afstand smallint,
+	CONSTRAINT isochronen_expanded_pkey PRIMARY KEY (sid)
+);
+
 -- DROP TABLE IF EXISTS datasysteem.ov_haltes CASCADE;
 CREATE TABLE datasysteem.ov_haltes(
 	sid serial NOT NULL,

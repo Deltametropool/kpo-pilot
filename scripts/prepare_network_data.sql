@@ -147,7 +147,7 @@ INSERT INTO networks.ov_stops(geom, stop_id, stop_code, stop_name, stop_descr, p
 		CASE WHEN parent_station='' THEN NULL 
 		ELSE parent_station END AS parent_station 
 		FROM gtfs.stops) gtfs,
-	(SELECT geom geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') study
+	(SELECT geom FROM datasysteem.grens WHERE grens_naam = 'Noord-Holland') study
 	WHERE ST_Intersects(gtfs.geom,study.geom)
 ;
 CREATE INDEX ov_stops_geom_idx ON networks.ov_stops USING GIST (geom);
