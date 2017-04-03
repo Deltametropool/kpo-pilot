@@ -964,7 +964,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>553914.4690212820423767</ymax>
       </extent>
       <id>Isochronen_copy20170226102544751</id>
-      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen" (geom) sql="modaliteit" = 'fiets'</datasource>
+      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen_expanded" (geom) sql="modaliteit" = 'fiets'</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -1244,7 +1244,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>553011.24713259795680642</ymax>
       </extent>
       <id>Isochronen_copy20170226191132165</id>
-      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen" (geom) sql="modaliteit" = 'walk'</datasource>
+      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen_expanded" (geom) sql="modaliteit" = 'walk'</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -1524,7 +1524,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>489182.79021701100282371</ymax>
       </extent>
       <id>Isochronen_copy_copy20170226102549083</id>
-      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen" (geom) sql="modaliteit" = 'tram'</datasource>
+      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen_expanded" (geom) sql="modaliteit" = 'tram'</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -1804,7 +1804,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>553011.24713259795680642</ymax>
       </extent>
       <id>Isochronen_fiets_copy20170226102614027</id>
-      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen" (geom) sql="modaliteit" ='walk'</datasource>
+      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen_expanded" (geom) sql="modaliteit" ='walk'</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -2084,7 +2084,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>553914.4690212820423767</ymax>
       </extent>
       <id>Isochronen_loop_copy20170226134530517</id>
-      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen" (geom) sql="modaliteit" = 'fiets'</datasource>
+      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen_expanded" (geom) sql="modaliteit" = 'fiets'</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -2364,7 +2364,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>553914.4690212820423767</ymax>
       </extent>
       <id>Isochronen_metro_copy20170226102845931</id>
-      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen" (geom) sql=</datasource>
+      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen_expanded" (geom) sql=</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -2709,7 +2709,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>552861.73534662695601583</ymax>
       </extent>
       <id>Isochronen_metro_copy20170226102859033</id>
-      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen" (geom) sql="modaliteit" = 'bus'</datasource>
+      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen_expanded" (geom) sql="modaliteit" = 'bus'</datasource>
       <keywordList>
         <value></value>
       </keywordList>
@@ -2989,7 +2989,7 @@ def my_form_open(dialog, layer, feature):
         <ymax>489319.49687381397234276</ymax>
       </extent>
       <id>Isochronen_tram_copy20170226102829721</id>
-      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen" (geom) sql="modaliteit" = 'metro'</datasource>
+      <datasource>dbname='./kpo_datasysteem.sqlite' table="isochronen_expanded" (geom) sql="modaliteit" = 'metro'</datasource>
       <keywordList>
         <value></value>
       </keywordList>

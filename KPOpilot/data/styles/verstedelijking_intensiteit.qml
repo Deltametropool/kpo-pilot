@@ -31,12 +31,12 @@
   </edittypes>
   <renderer-v2 attr="intensiteit" forceraster="0" symbollevels="0" type="graduatedSymbol" graduatedMethod="GraduatedColor" enableorderby="0">
     <ranges>
-      <range render="true" symbol="0" lower="0.000000000000000" upper="50.000000000000000" label=" 0 - 50 "/>
-      <range render="true" symbol="1" lower="50.000000000000000" upper="100.000000000000000" label=" 50 - 100 "/>
-      <range render="true" symbol="2" lower="100.000000000000000" upper="200.000000000000000" label=" 100 - 200 "/>
-      <range render="true" symbol="3" lower="200.000000000000000" upper="400.000000000000000" label=" 200 - 400 "/>
-      <range render="true" symbol="4" lower="400.000000000000000" upper="600.000000000000000" label=" 400 - 600 "/>
-      <range render="true" symbol="5" lower="600.000000000000000" upper="800.000000000000000" label=" 600 - 800 "/>
+      <range render="true" symbol="0" lower="0.000000000000000" upper="25.000000000000000" label=" 0 - 25 "/>
+      <range render="true" symbol="1" lower="25.000000000000000" upper="50.000000000000000" label=" 25 - 50 "/>
+      <range render="true" symbol="2" lower="50.000000000000000" upper="100.000000000000000" label=" 50 - 100 "/>
+      <range render="true" symbol="3" lower="100.000000000000000" upper="200.000000000000000" label=" 100 - 200 "/>
+      <range render="true" symbol="4" lower="200.000000000000000" upper="400.000000000000000" label=" 200 - 400 "/>
+      <range render="true" symbol="5" lower="400.000000000000000" upper="800.000000000000000" label=" 400 - 800 "/>
       <range render="true" symbol="6" lower="800.000000000000000" upper="7000.000000000000000" label="800 of meer"/>
     </ranges>
     <symbols>
