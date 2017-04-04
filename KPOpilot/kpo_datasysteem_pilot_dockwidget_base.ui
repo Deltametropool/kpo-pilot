@@ -789,12 +789,12 @@ p, li { white-space: pre-wrap; }
             <widget class="QComboBox" name="intensitySelectCombo">
              <item>
               <property name="text">
-               <string>Huishoudens</string>
+               <string>Intensiteit (inwoners, werknemer, studenten)</string>
               </property>
              </item>
              <item>
               <property name="text">
-               <string>Intensiteit (inwoners, werknemer, studenten)</string>
+               <string>Huishoudens</string>
               </property>
              </item>
              <item>
@@ -1149,9 +1149,6 @@ p, li { white-space: pre-wrap; }
              </property>
              <attribute name="horizontalHeaderDefaultSectionSize">
               <number>100</number>
-             </attribute>
-             <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
-              <bool>false</bool>
              </attribute>
              <attribute name="horizontalHeaderStretchLastSection">
               <bool>true</bool>
