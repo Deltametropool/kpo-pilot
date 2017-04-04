@@ -963,9 +963,15 @@ class KPOExplorer:
 
     def showStopFrequency(self, onoff):
         current_type = self.dlg.getStops()
-        if current_type == 'Alle OV haltes':
+        # adjust background layers
+        if onoff:
             self.setLayerVisible('Treinstations (voorgrond)', False)
-            self.setLayerVisible('Treinstations (achtergrond)', False)
+            if current_type in ('Alle OV haltes', 'Treinstations'):
+                self.setLayerVisible('Treinstations (achtergrond)', False)
+            else:
+                self.setLayerVisible('Treinstations (achtergrond)', True)
+        # adjust main layers
+        if current_type == 'Alle OV haltes':
             self.setLayerVisible('Trein frequentie', onoff)
             self.setLayerExpanded('Trein frequentie', onoff)
             self.setCurrentLayer('Trein frequentie')
@@ -977,10 +983,7 @@ class KPOExplorer:
             self.setLayerExpanded('Bus frequentie', onoff)
         else:
             self.hideStopFrequency()
-            self.setLayerVisible('Treinstations (voorgrond)', False)
-            self.setLayerVisible('Treinstations (achtergrond)', True)
             if current_type == 'Treinstations':
-                self.setLayerVisible('Treinstations (achtergrond)', False)
                 self.setLayerVisible('Trein frequentie', onoff)
                 self.setLayerExpanded('Trein frequentie', onoff)
                 self.setCurrentLayer('Trein frequentie')
