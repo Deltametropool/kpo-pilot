@@ -146,6 +146,10 @@ class KPOExplorer:
     # General
     def onShow(self, onoff):
         if onoff:
+            # reset all the default configurations
+            self.dlg.resetDefaults()
+            # show intro tab
+            self.dlg.resetQuestionTab()
             # load the project file with all the data layers
             project_path = self.plugin_dir + '/data/kpo_datasysteem.qgs'
             self.iface.addProject(project_path)
@@ -159,10 +163,6 @@ class KPOExplorer:
             self.data_layers = {}
             for layer in self.iface.legendInterface().layers():
                 self.data_layers[layer.name()] = layer
-            # reset all the default configurations
-            self.dlg.resetDefaults()
-            # show intro tab
-            self.dlg.resetQuestionTab()
 
     def loadTabLayers(self, tab_id):
         # hide all groups
