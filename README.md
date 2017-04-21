@@ -1,5 +1,5 @@
 # kpo-pilot
-Plugin for the project Informatiesysteem Knooppuntenontwikkeling, developed by [Jorge Gil](https://www.linkedin.com/in/jorge-gil-40a17a2/) in collaboration with the Vereniging Deltametropool, the Provincie Noord Holland, the Ministerie van Infrastructuur en Milieu, and the College van Rijksadviseurs.
+Plugin for the project Informatiesysteem Knooppuntenontwikkeling, developed by [Jorge Gil](https://www.linkedin.com/in/jorge-gil-40a17a2/) in collaboration with the Vereniging Deltametropool, the Provincie Noord Holland, the Ministerie van Infrastructuur en Milieu, and the College van Rijksadviseurs. More information here (in Dutch): deltametropool.nl/nl/informatiesysteem_knooppunten
 
 The ‘KPO pilot’ plugin is an extension for QGIS, an open source GIS package available from: http://qgis.org/en/site/
 The recommended version of QGIS for installation is 2.14 LTR (Long Term Release).
