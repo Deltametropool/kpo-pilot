@@ -5,7 +5,7 @@ The ‘KPO pilot’ plugin is an extension for QGIS, an open source GIS package 
 The recommended version of QGIS for installation is 2.14 LTR (Long Term Release).
 
 The ‘KPO pilot’ plugin is not available from the official QGIS plugins repository and must be downloaded from this site:
-https://github.com/jorgegil/kpo-pilot/releases
+https://github.com/Deltametropool/kpo-pilot/releases
 
 After downloading it, you must install the plugin in the QGIS plugins folder, located under your user profile in: .qgis2/python/plugins. Simply unzip the KPOpilot.zip file and move the folder into this folder, then start QGIS and load the plugin ‘KPO pilot’ from the ‘Plugins Manager’ window.
 
