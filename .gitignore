@@ -91,3 +91,4 @@ ENV/
 KPOpilot/data/kpo_datasysteem.sqlite
 
 KPOpilot/data/kpo_datasysteem_old.sqlite
+.DS_Store
